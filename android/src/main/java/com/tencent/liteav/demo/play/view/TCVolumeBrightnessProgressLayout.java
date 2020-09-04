@@ -7,7 +7,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 
-import com.tencent.liteav.demo.play.R;
+import dev.learn_flutter.plugins.flutter_superplayer.R;
 
 
 /**

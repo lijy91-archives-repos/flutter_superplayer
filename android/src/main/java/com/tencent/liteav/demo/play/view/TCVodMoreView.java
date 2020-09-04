@@ -16,9 +16,10 @@ import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.Switch;
 
-import com.tencent.liteav.demo.play.R;
 import com.tencent.liteav.demo.play.SuperPlayerConst;
 import com.tencent.liteav.demo.play.SuperPlayerGlobalConfig;
+
+import dev.learn_flutter.plugins.flutter_superplayer.R;
 
 /**
  * Created by yuejiaoli on 2018/7/4.

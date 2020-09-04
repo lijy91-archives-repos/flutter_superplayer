@@ -13,9 +13,9 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.RelativeLayout;
 
-import com.tencent.liteav.demo.play.R;
-
 import java.util.List;
+
+import dev.learn_flutter.plugins.flutter_superplayer.R;
 
 /**
  * 一个带有打点的，模仿seekbar的view

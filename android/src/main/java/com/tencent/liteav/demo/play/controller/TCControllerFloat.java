@@ -9,7 +9,6 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
-import com.tencent.liteav.demo.play.R;
 import com.tencent.liteav.demo.play.SuperPlayerConst;
 import com.tencent.liteav.demo.play.SuperPlayerGlobalConfig;
 import com.tencent.liteav.demo.play.bean.TCPlayImageSpriteInfo;
@@ -19,6 +18,8 @@ import com.tencent.rtmp.ui.TXCloudVideoView;
 
 import java.lang.reflect.Field;
 import java.util.List;
+
+import dev.learn_flutter.plugins.flutter_superplayer.R;
 
 /**
  * 悬浮窗模式播放控件

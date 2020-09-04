@@ -9,7 +9,7 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.tencent.liteav.demo.play.R;
+import dev.learn_flutter.plugins.flutter_superplayer.R;
 
 /**
  * 滑动手势控制播放进度时显示的进度提示view

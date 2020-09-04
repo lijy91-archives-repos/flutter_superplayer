@@ -11,11 +11,12 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.tencent.liteav.demo.play.R;
 import com.tencent.liteav.demo.play.bean.TCVideoQuality;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import dev.learn_flutter.plugins.flutter_superplayer.R;
 
 /**
  * Created by yuejiaoli on 2018/7/4.

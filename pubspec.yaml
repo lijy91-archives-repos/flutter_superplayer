@@ -1,8 +1,8 @@
 name: flutter_superplayer
-description: A new flutter plugin project.
+description: 适用于 Flutter 的腾讯云超级播放器插件
 version: 0.0.1
-author:
-homepage:
+author: LiJianying <lijy91@foxmail.com>
+homepage: https://github.com/learn-flutter-dev/flutter_superplayer
 
 environment:
   sdk: ">=2.7.0 <3.0.0"

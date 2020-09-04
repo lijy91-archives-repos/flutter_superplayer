@@ -25,9 +25,20 @@ android {
     compileSdkVersion 28
 
     defaultConfig {
-        minSdkVersion 16
+        minSdkVersion 19
     }
     lintOptions {
         disable 'InvalidPackage'
+    }
+    android {
+        compileOptions {
+            sourceCompatibility 1.8
+            targetCompatibility 1.8
+        }
+    }
+
+    dependencies {
+        implementation 'com.tencent.liteav:LiteAVSDK_Player:latest.release'
+        implementation 'com.github.ctiao:DanmakuFlameMaster:0.5.4'
     }
 }

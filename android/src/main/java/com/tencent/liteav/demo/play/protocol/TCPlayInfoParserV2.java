@@ -214,6 +214,8 @@ public class TCPlayInfoParserV2 implements IPlayInfoParser{
      * @return 源视频流信息对象
      */
     private TCPlayInfoStream parseSourceStream(JSONObject videoInfo) throws JSONException {
+        if (!videoInfo.has("sourceVideo"))
+            return null;
         JSONObject sourceVideo = videoInfo.getJSONObject("sourceVideo");
         if (sourceVideo != null) {
             TCPlayInfoStream stream = new TCPlayInfoStream();

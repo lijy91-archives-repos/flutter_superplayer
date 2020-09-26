@@ -2,7 +2,7 @@ name: flutter_superplayer
 description: 适用于 Flutter 的腾讯云超级播放器插件
 version: 0.0.1
 author: LiJianying <lijy91@foxmail.com>
-homepage: https://github.com/learn-flutter-dev/flutter_superplayer
+homepage: https://github.com/leanflutter/flutter_superplayer
 
 environment:
   sdk: ">=2.7.0 <3.0.0"
@@ -28,7 +28,7 @@ flutter:
   plugin:
     platforms:
       android:
-        package: dev.learn_flutter.plugins.flutter_superplayer
+        package: org.leanflutter.plugins.flutter_superplayer
         pluginClass: FlutterSuperplayerPlugin
       ios:
         pluginClass: FlutterSuperplayerPlugin

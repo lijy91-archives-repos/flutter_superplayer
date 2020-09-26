@@ -19,7 +19,7 @@ import com.tencent.rtmp.ui.TXCloudVideoView;
 import java.lang.reflect.Field;
 import java.util.List;
 
-import dev.learn_flutter.plugins.flutter_superplayer.R;
+import org.leanflutter.plugins.flutter_superplayer.R;
 
 /**
  * 悬浮窗模式播放控件

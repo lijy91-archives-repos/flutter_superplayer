@@ -15,7 +15,7 @@ import android.widget.RelativeLayout;
 
 import java.util.List;
 
-import dev.learn_flutter.plugins.flutter_superplayer.R;
+import org.leanflutter.plugins.flutter_superplayer.R;
 
 /**
  * 一个带有打点的，模仿seekbar的view

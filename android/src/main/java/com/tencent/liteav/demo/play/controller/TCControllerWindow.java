@@ -28,7 +28,7 @@ import com.tencent.liteav.demo.play.view.TCVolumeBrightnessProgressLayout;
 
 import java.util.List;
 
-import dev.learn_flutter.plugins.flutter_superplayer.R;
+import org.leanflutter.plugins.flutter_superplayer.R;
 
 /**
  * 窗口模式播放控件

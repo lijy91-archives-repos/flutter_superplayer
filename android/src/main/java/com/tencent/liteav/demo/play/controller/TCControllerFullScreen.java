@@ -33,7 +33,7 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
-import dev.learn_flutter.plugins.flutter_superplayer.R;
+import org.leanflutter.plugins.flutter_superplayer.R;
 
 /**
  * 全屏模式播放控件

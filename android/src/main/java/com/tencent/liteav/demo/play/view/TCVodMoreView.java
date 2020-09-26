@@ -19,7 +19,7 @@ import android.widget.Switch;
 import com.tencent.liteav.demo.play.SuperPlayerConst;
 import com.tencent.liteav.demo.play.SuperPlayerGlobalConfig;
 
-import dev.learn_flutter.plugins.flutter_superplayer.R;
+import org.leanflutter.plugins.flutter_superplayer.R;
 
 /**
  * Created by yuejiaoli on 2018/7/4.

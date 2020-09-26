@@ -1,4 +1,4 @@
-package dev.learn_flutter.plugins.flutter_superplayer;
+package org.leanflutter.plugins.flutter_superplayer;
 
 import android.app.Activity;
 import android.content.Context;

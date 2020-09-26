@@ -1,4 +1,4 @@
-package dev.learn_flutter.plugins.flutter_superplayer;
+package org.leanflutter.plugins.flutter_superplayer;
 
 import android.content.Context;
 import android.os.Handler;
@@ -18,17 +18,23 @@ import java.util.HashMap;
 import java.util.Map;
 
 import io.flutter.plugin.common.BinaryMessenger;
+import io.flutter.plugin.common.EventChannel;
+import io.flutter.plugin.common.EventChannel.StreamHandler;
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
 import io.flutter.plugin.common.MethodChannel.Result;
 import io.flutter.plugin.platform.PlatformView;
 
-import static dev.learn_flutter.plugins.flutter_superplayer.Constants.SUPER_PLAYER_VIEW_TYPE;
+import static org.leanflutter.plugins.flutter_superplayer.Constants.SUPER_PLAYER_VIEW_CHANNEL_NAME;
+import static org.leanflutter.plugins.flutter_superplayer.Constants.SUPER_PLAYER_VIEW_EVENT_CHANNEL_NAME;
 
-public class FlutterSuperPlayerView implements PlatformView, MethodCallHandler, SuperPlayerView.OnSuperPlayerViewCallback {
+public class FlutterSuperPlayerView implements PlatformView, MethodCallHandler, StreamHandler, SuperPlayerView.OnSuperPlayerViewCallback {
     private final MethodChannel methodChannel;
+    private final EventChannel eventChannel;
     private final Handler platformThreadHandler = new Handler(Looper.getMainLooper());
+
+    private EventChannel.EventSink eventSink;
 
     private FrameLayout containerView;
     private SuperPlayerView superPlayerView;
@@ -39,8 +45,12 @@ public class FlutterSuperPlayerView implements PlatformView, MethodCallHandler, 
             int viewId,
             Map<String, Object> params) {
 
-        methodChannel = new MethodChannel(messenger, SUPER_PLAYER_VIEW_TYPE + "_" + viewId);
+        methodChannel = new MethodChannel(messenger, SUPER_PLAYER_VIEW_CHANNEL_NAME + "_" + viewId);
         methodChannel.setMethodCallHandler(this);
+
+        eventChannel = new EventChannel(messenger, SUPER_PLAYER_VIEW_EVENT_CHANNEL_NAME + "_" + viewId);
+        eventChannel.setStreamHandler(this);
+
 
         FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(
                 FrameLayout.LayoutParams.MATCH_PARENT,
@@ -69,6 +79,16 @@ public class FlutterSuperPlayerView implements PlatformView, MethodCallHandler, 
     }
 
     @Override
+    public void onListen(Object args, EventChannel.EventSink eventSink) {
+        this.eventSink = eventSink;
+    }
+
+    @Override
+    public void onCancel(Object args) {
+        this.eventSink = null;
+    }
+
+    @Override
     public void onMethodCall(@NonNull MethodCall call, @NonNull MethodChannel.Result result) {
         if (call.method.equals("playWithModel")) {
             playWithModel(call, result);
@@ -92,7 +112,8 @@ public class FlutterSuperPlayerView implements PlatformView, MethodCallHandler, 
 
         if (call.hasArgument("appId"))
             model.appId = (int) call.argument("appId");
-
+        if (call.hasArgument("url"))
+            model.url = (String) call.argument("url");
 
         if (call.hasArgument("videoId")) {
             HashMap<String, Object> videoIdJson = call.argument("videoId");
@@ -101,6 +122,8 @@ public class FlutterSuperPlayerView implements PlatformView, MethodCallHandler, 
             SuperPlayerVideoId videoId = new SuperPlayerVideoId();
             if (videoIdJson.containsKey("fileId"))
                 videoId.fileId = (String) videoIdJson.get("fileId");
+            if (videoIdJson.containsKey("pSign"))
+                videoId.pSign = (String) videoIdJson.get("pSign");
 
             model.videoId = videoId;
         }
@@ -133,26 +156,48 @@ public class FlutterSuperPlayerView implements PlatformView, MethodCallHandler, 
 
     @Override
     public void onStartFullScreenPlay() {
+        final Map<String, Object> eventData = new HashMap<>();
+        eventData.put("listener", "SuperPlayerListener");
+        eventData.put("method", "onStartFullScreenPlay");
 
+        eventSink.success(eventData);
     }
 
     @Override
     public void onStopFullScreenPlay() {
+        final Map<String, Object> eventData = new HashMap<>();
+        eventData.put("listener", "SuperPlayerListener");
+        eventData.put("method", "onStopFullScreenPlay");
 
+        eventSink.success(eventData);
     }
 
     @Override
     public void onClickFloatCloseBtn() {
+        final Map<String, Object> eventData = new HashMap<>();
+        eventData.put("listener", "SuperPlayerListener");
+        eventData.put("method", "onClickFloatCloseBtn");
 
+        eventSink.success(eventData);
     }
 
     @Override
     public void onClickSmallReturnBtn() {
+        final Map<String, Object> eventData = new HashMap<>();
+        eventData.put("listener", "SuperPlayerListener");
+        eventData.put("method", "onClickSmallReturnBtn");
+
+        eventSink.success(eventData);
 
     }
 
     @Override
     public void onStartFloatWindowPlay() {
+        final Map<String, Object> eventData = new HashMap<>();
+        eventData.put("listener", "SuperPlayerListener");
+        eventData.put("method", "onStartFloatWindowPlay");
+
+        eventSink.success(eventData);
 
     }
 }

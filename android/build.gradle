@@ -1,4 +1,4 @@
-group 'dev.learn_flutter.plugins.flutter_superplayer'
+group 'org.leanflutter.plugins.flutter_superplayer'
 version '1.0'
 
 buildscript {
@@ -38,7 +38,7 @@ android {
     }
 
     dependencies {
-        implementation 'com.tencent.liteav:LiteAVSDK_Player:latest.release'
+        implementation 'com.tencent.liteav:LiteAVSDK_Professional:latest.release'
         implementation 'com.github.ctiao:DanmakuFlameMaster:0.5.4'
     }
 }

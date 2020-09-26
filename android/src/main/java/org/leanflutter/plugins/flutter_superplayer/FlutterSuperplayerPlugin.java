@@ -1,4 +1,4 @@
-package dev.learn_flutter.plugins.flutter_superplayer;
+package org.leanflutter.plugins.flutter_superplayer;
 
 import android.app.Activity;
 
@@ -15,8 +15,8 @@ import io.flutter.plugin.common.PluginRegistry.Registrar;
 import io.flutter.plugin.platform.PlatformViewFactory;
 import io.flutter.plugin.platform.PlatformViewRegistry;
 
-import static dev.learn_flutter.plugins.flutter_superplayer.Constants.CHANNEL_NAME;
-import static dev.learn_flutter.plugins.flutter_superplayer.Constants.SUPER_PLAYER_VIEW_TYPE;
+import static org.leanflutter.plugins.flutter_superplayer.Constants.CHANNEL_NAME;
+import static org.leanflutter.plugins.flutter_superplayer.Constants.SUPER_PLAYER_VIEW_TYPE;
 
 /**
  * FlutterSuperplayerPlugin

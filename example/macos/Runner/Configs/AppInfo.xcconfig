@@ -11,4 +11,4 @@ PRODUCT_NAME = flutter_superplayer_example
 PRODUCT_BUNDLE_IDENTIFIER = dev.learnflutter.plugins.flutterSuperplayer
 
 // The copyright displayed in application information
-PRODUCT_COPYRIGHT = Copyright © 2020 dev.learn_flutter.plugins. All rights reserved.
+PRODUCT_COPYRIGHT = Copyright © 2020 org.leanflutter.plugins. All rights reserved.

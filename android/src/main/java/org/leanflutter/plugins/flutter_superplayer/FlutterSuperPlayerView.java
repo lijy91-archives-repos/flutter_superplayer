@@ -10,6 +10,7 @@ import android.widget.FrameLayout;
 import androidx.annotation.NonNull;
 
 import com.tencent.liteav.demo.play.SuperPlayerConst;
+import com.tencent.liteav.demo.play.SuperPlayerGlobalConfig;
 import com.tencent.liteav.demo.play.SuperPlayerModel;
 import com.tencent.liteav.demo.play.SuperPlayerVideoId;
 import com.tencent.liteav.demo.play.SuperPlayerView;
@@ -36,6 +37,7 @@ public class FlutterSuperPlayerView implements PlatformView, MethodCallHandler, 
 
     private EventChannel.EventSink eventSink;
 
+    private Context context;
     private FrameLayout containerView;
     private SuperPlayerView superPlayerView;
 
@@ -45,12 +47,15 @@ public class FlutterSuperPlayerView implements PlatformView, MethodCallHandler, 
             int viewId,
             Map<String, Object> params) {
 
+        this.context = context;
+
         methodChannel = new MethodChannel(messenger, SUPER_PLAYER_VIEW_CHANNEL_NAME + "_" + viewId);
         methodChannel.setMethodCallHandler(this);
 
         eventChannel = new EventChannel(messenger, SUPER_PLAYER_VIEW_EVENT_CHANNEL_NAME + "_" + viewId);
         eventChannel.setStreamHandler(this);
 
+        SuperPlayerGlobalConfig.getInstance().enableFloatWindow = false;
 
         FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(
                 FrameLayout.LayoutParams.MATCH_PARENT,
@@ -90,21 +95,44 @@ public class FlutterSuperPlayerView implements PlatformView, MethodCallHandler, 
 
     @Override
     public void onMethodCall(@NonNull MethodCall call, @NonNull MethodChannel.Result result) {
-        if (call.method.equals("playWithModel")) {
-            playWithModel(call, result);
-        } else if (call.method.equals("resetPlayer")) {
+        if (call.method.equals("resetPlayer")) {
             resetPlayer(call, result);
-        } else if (call.method.equals("requestPlayMode")) {
-            requestPlayMode(call, result);
         } else if (call.method.equals("getPlayMode")) {
             getPlayMode(call, result);
         } else if (call.method.equals("getPlayState")) {
             getPlayState(call, result);
+        } else if (call.method.equals("requestPlayMode")) {
+            requestPlayMode(call, result);
+        } else if (call.method.equals("playWithModel")) {
+            playWithModel(call, result);
+        } else if (call.method.equals("pause")) {
+            pause(call, result);
+        } else if (call.method.equals("resume")) {
+            resume(call, result);
         } else if (call.method.equals("release")) {
             release(call, result);
         } else {
             result.notImplemented();
         }
+    }
+
+    void resetPlayer(@NonNull MethodCall call, @NonNull Result result) {
+        superPlayerView.resetPlayer();
+    }
+
+    void getPlayMode(@NonNull MethodCall call, @NonNull Result result) {
+        int playMode = superPlayerView.getPlayState();
+        result.success(playMode);
+    }
+
+    void getPlayState(@NonNull MethodCall call, @NonNull Result result) {
+        int playState = superPlayerView.getPlayState();
+        result.success(playState);
+    }
+
+    void requestPlayMode(@NonNull MethodCall call, @NonNull Result result) {
+        int playMode = (int) call.argument("playMode");
+        superPlayerView.requestPlayMode(playMode);
     }
 
     private void playWithModel(@NonNull MethodCall call, @NonNull Result result) {
@@ -114,6 +142,8 @@ public class FlutterSuperPlayerView implements PlatformView, MethodCallHandler, 
             model.appId = (int) call.argument("appId");
         if (call.hasArgument("url"))
             model.url = (String) call.argument("url");
+        if (call.hasArgument("title"))
+            model.title = (String) call.argument("title");
 
         if (call.hasArgument("videoId")) {
             HashMap<String, Object> videoIdJson = call.argument("videoId");
@@ -131,23 +161,12 @@ public class FlutterSuperPlayerView implements PlatformView, MethodCallHandler, 
         superPlayerView.playWithModel(model);
     }
 
-    void resetPlayer(@NonNull MethodCall call, @NonNull Result result) {
-        superPlayerView.resetPlayer();
+    void pause(@NonNull MethodCall call, @NonNull Result result) {
+        superPlayerView.onPause();
     }
 
-    void requestPlayMode(@NonNull MethodCall call, @NonNull Result result) {
-        int playMode = (int) call.argument("playMode");
-        superPlayerView.requestPlayMode(playMode);
-    }
-
-    void getPlayMode(@NonNull MethodCall call, @NonNull Result result) {
-        int playMode = superPlayerView.getPlayState();
-        result.success(playMode);
-    }
-
-    void getPlayState(@NonNull MethodCall call, @NonNull Result result) {
-        int playState = superPlayerView.getPlayState();
-        result.success(playState);
+    void resume(@NonNull MethodCall call, @NonNull Result result) {
+        superPlayerView.onResume();
     }
 
     void release(@NonNull MethodCall call, @NonNull Result result) {
@@ -156,18 +175,26 @@ public class FlutterSuperPlayerView implements PlatformView, MethodCallHandler, 
 
     @Override
     public void onStartFullScreenPlay() {
+        final Map<String, Object> dataMap = new HashMap<>();
+        dataMap.put("isFullScreen", true);
+
         final Map<String, Object> eventData = new HashMap<>();
         eventData.put("listener", "SuperPlayerListener");
-        eventData.put("method", "onStartFullScreenPlay");
+        eventData.put("method", "onFullScreenChange");
+        eventData.put("data", dataMap);
 
         eventSink.success(eventData);
     }
 
     @Override
     public void onStopFullScreenPlay() {
+        final Map<String, Object> dataMap = new HashMap<>();
+        dataMap.put("isFullScreen", false);
+
         final Map<String, Object> eventData = new HashMap<>();
         eventData.put("listener", "SuperPlayerListener");
-        eventData.put("method", "onStopFullScreenPlay");
+        eventData.put("method", "onFullScreenChange");
+        eventData.put("data", dataMap);
 
         eventSink.success(eventData);
     }
@@ -199,5 +226,32 @@ public class FlutterSuperPlayerView implements PlatformView, MethodCallHandler, 
 
         eventSink.success(eventData);
 
+    }
+
+    @Override
+    public void onPlayStateChange(int playState) {
+        final Map<String, Object> dataMap = new HashMap<>();
+        dataMap.put("playState", playState);
+
+        final Map<String, Object> eventData = new HashMap<>();
+        eventData.put("listener", "SuperPlayerListener");
+        eventData.put("method", "onPlayStateChange");
+        eventData.put("data", dataMap);
+
+        eventSink.success(eventData);
+    }
+
+    @Override
+    public void onPlayProgressChange(long current, long duration) {
+        final Map<String, Object> dataMap = new HashMap<>();
+        dataMap.put("current", current);
+        dataMap.put("duration", duration);
+
+        final Map<String, Object> eventData = new HashMap<>();
+        eventData.put("listener", "SuperPlayerListener");
+        eventData.put("method", "onPlayProgressChange");
+        eventData.put("data", dataMap);
+
+        eventSink.success(eventData);
     }
 }

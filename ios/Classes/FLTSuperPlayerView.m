@@ -8,9 +8,12 @@
 
 // FLTSuperPlayerViewController
 @implementation FLTSuperPlayerViewController {
+    UIView* _containerView;
     FLTSuperPlayerView* _superPlayerView;
     int64_t _viewId;
     FlutterMethodChannel* _channel;
+    FlutterEventChannel* _eventChannel;
+    FlutterEventSink _eventSink;
 }
 
 - (instancetype)initWithFrame:(CGRect)frame
@@ -20,37 +23,108 @@
     if (self = [super init]) {
         _viewId = viewId;
         
-        NSString* channelName = [NSString stringWithFormat:@"plugins.learn_flutter.dev/superplayer_view_%lld", viewId];
+        NSString* channelName = [NSString stringWithFormat:@"leanflutter.org/superplayer_view/channel_%lld", viewId];
         _channel = [FlutterMethodChannel methodChannelWithName:channelName binaryMessenger:messenger];
+        
+        NSString* eventChannelName = [NSString stringWithFormat:@"leanflutter.org/superplayer_view/event_channel_%lld", viewId];
+        _eventChannel = [FlutterEventChannel eventChannelWithName:eventChannelName
+                                                  binaryMessenger:messenger];
+        [_eventChannel setStreamHandler:self];
         
         __weak __typeof__(self) weakSelf = self;
         [_channel setMethodCallHandler:^(FlutterMethodCall* call, FlutterResult result) {
-          [weakSelf onMethodCall:call result:result];
+            [weakSelf onMethodCall:call result:result];
         }];
         
-        _superPlayerView = [[FLTSuperPlayerView alloc] initWithFrame:frame];
+        _containerView = [[UIView alloc] initWithFrame:frame];
+        
+        _superPlayerView = [[FLTSuperPlayerView alloc] init];
+        _superPlayerView.fatherView = _containerView;
+        _superPlayerView.delegate = self;
     }
     return self;
 }
 
 - (UIView*)view {
-    return _superPlayerView;
+    return _containerView;
+}
+
+- (FlutterError*)onListenWithArguments:(id)arguments eventSink:(FlutterEventSink)eventSink {
+    _eventSink = eventSink;
+    
+    return nil;
+}
+
+- (FlutterError*)onCancelWithArguments:(id)arguments {
+    _eventSink = nil;
+    
+    return nil;
 }
 
 - (void)onMethodCall:(FlutterMethodCall*)call result:(FlutterResult)result {
-    if ([[call method] isEqualToString:@"playWithModel"]) {
-        [self playWithModel:call result: result];
-    } else if ([[call method] isEqualToString:@"resetPlayer"]) {
-        [self resetPlayer:call result: result];
-    } else if ([[call method] isEqualToString:@"getPlayMode"]) {
+    if ([[call method] isEqualToString:@"getPlayMode"]) {
         [self getPlayMode:call result: result];
     } else if ([[call method] isEqualToString:@"getPlayState"]) {
         [self getPlayState:call result: result];
+    } else if ([[call method] isEqualToString:@"getPlayRate"]) {
+        [self getPlayRate:call result: result];
+    } else if ([[call method] isEqualToString:@"setPlayRate"]) {
+        [self setPlayRate:call result: result];
+    } else if ([[call method] isEqualToString:@"resetPlayer"]) {
+        [self resetPlayer:call result: result];
+    } else if ([[call method] isEqualToString:@"requestPlayMode"]) {
+        [self requestPlayMode:call result: result];
+    } else if ([[call method] isEqualToString:@"playWithModel"]) {
+        [self playWithModel:call result: result];
+    } else if ([[call method] isEqualToString:@"pause"]) {
+        [self pause:call result: result];
+    } else if ([[call method] isEqualToString:@"resume"]) {
+        [self resume:call result: result];
     } else if ([[call method] isEqualToString:@"release"]) {
         [self release:call result: result];
+    } else if ([[call method] isEqualToString:@"seekTo"]) {
+        [self seekTo:call result: result];
     } else {
         result(FlutterMethodNotImplemented);
     }
+}
+
+- (void)getPlayMode:(FlutterMethodCall*)call
+             result:(FlutterResult)result
+{
+    [_superPlayerView setPlayerConfig:nil];
+}
+
+- (void)getPlayState:(FlutterMethodCall*)call
+              result:(FlutterResult)result
+{
+    result([NSNumber numberWithInt:_superPlayerView.state]);
+}
+
+- (void)getPlayRate:(FlutterMethodCall*)call
+             result:(FlutterResult)result
+{
+    CGFloat playRate = [[_superPlayerView playerConfig] playRate];
+    result([NSNumber numberWithDouble:playRate]);
+}
+
+- (void)setPlayRate:(FlutterMethodCall*)call
+             result:(FlutterResult)result
+{
+    NSNumber *playRate = call.arguments[@"playRate"];
+    [_superPlayerView setPlayRate:playRate.floatValue];
+}
+
+- (void)resetPlayer:(FlutterMethodCall*)call
+             result:(FlutterResult)result
+{
+    [_superPlayerView resetPlayer];
+}
+
+- (void)requestPlayMode:(FlutterMethodCall*)call
+                 result:(FlutterResult)result
+{
+    // skip
 }
 
 
@@ -60,8 +134,11 @@
     SuperPlayerModel *model = [[SuperPlayerModel alloc] init];
     
     NSNumber *appId = call.arguments[@"appId"];
+    NSString *url = call.arguments[@"url"];
     if (appId)
         [model setAppId: appId.longValue];
+    if (url)
+        [model setVideoURL:url];
     
     NSDictionary *videoIdJson = call.arguments[@"videoId"];
     if (videoIdJson) {
@@ -73,37 +150,97 @@
         
         [model setVideoId:videoId];
     }
-
+    
     [_superPlayerView playWithModel:model];
-    
 }
 
-- (void)resetPlayer:(FlutterMethodCall*)call
-             result:(FlutterResult)result
+- (void)pause:(FlutterMethodCall*)call
+       result:(FlutterResult)result
 {
-    [_superPlayerView resetPlayer];
+    [_superPlayerView pause];
 }
 
-- (void)getPlayMode:(FlutterMethodCall*)call
-             result:(FlutterResult)result
+- (void)resume:(FlutterMethodCall*)call
+        result:(FlutterResult)result
 {
-    
-}
-- (void)getPlayState:(FlutterMethodCall*)call
-              result:(FlutterResult)result
-{
-    
+    [_superPlayerView resume];
 }
 
 - (void)release:(FlutterMethodCall*)call
          result:(FlutterResult)result
 {
+    // skip
+}
+
+- (void)seekTo:(FlutterMethodCall*)call
+        result:(FlutterResult)result
+{
+    NSNumber *time = call.arguments[@"time"];
+    [_superPlayerView seekToTime:time.intValue];
+}
+
+/// 返回事件
+- (void)superPlayerBackAction:(SuperPlayerView *)player {
+    NSDictionary<NSString *, id> *eventData = @{
+        @"listener": @"SuperPlayerListener",
+        @"method": @"onClickSmallReturnBtn",
+    };
+    self->_eventSink(eventData);
+}
+
+/// 全屏改变通知
+- (void)superPlayerFullScreenChanged:(SuperPlayerView *)player {
+    NSDictionary<NSString *, id> *eventData = @{
+        @"listener": @"SuperPlayerListener",
+        @"method": @"onFullScreenChange",
+        @"data": @{
+                @"isFullScreen": [NSNumber numberWithBool:[player isFullScreen]],
+        },
+    };
+    self->_eventSink(eventData);
+}
+
+/// 播放开始通知
+- (void)superPlayerDidStart:(SuperPlayerView *)player {
     
+}
+/// 播放结束通知
+- (void)superPlayerDidEnd:(SuperPlayerView *)player {
+    
+}
+/// 播放错误通知
+- (void)superPlayerError:(SuperPlayerView *)player errCode:(int)code errMessage:(NSString *)why {
+    
+}
+
+/// 播放状态发生变化
+- (void)onPlayStateChange:(int) playState {
+    NSDictionary<NSString *, id> *eventData = @{
+        @"listener": @"SuperPlayerListener",
+        @"method": @"onPlayStateChange",
+        @"data": @{
+                @"playState": [NSNumber numberWithInt:playState],
+        },
+    };
+    self->_eventSink(eventData);
+}
+
+/// 播放进度发生变化
+- (void)onPlayProgressChange:(int) current duration:(int) duration {
+    NSDictionary<NSString *, id> *eventData = @{
+        @"listener": @"SuperPlayerListener",
+        @"method": @"onPlayProgressChange",
+        @"data": @{
+                @"current": [NSNumber numberWithInt:current],
+                @"duration": [NSNumber numberWithInt:duration],
+        },
+    };
+    self->_eventSink(eventData);
 }
 
 @end
 
-//
+// FLTSuperPlayerViewFactory
 @implementation FLTSuperPlayerViewFactory{
     NSObject<FlutterBinaryMessenger>* _messenger;
 }
@@ -131,6 +268,7 @@
 }
 @end
 
+// FLTSuperPlayerView
 @implementation FLTSuperPlayerView
 - (instancetype)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
@@ -140,7 +278,6 @@
     
     return self;
 }
-
 
 - (void)layoutSubviews {
     [super layoutSubviews];

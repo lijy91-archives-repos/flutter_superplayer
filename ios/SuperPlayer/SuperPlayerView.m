@@ -885,6 +885,14 @@ static UISlider * _volumeSlider;
     }
 }
 
+- (void)setPlayRate:(CGFloat)playRate {
+    if (self.isLive) {
+        return;
+    }
+    self.playerConfig.playRate = playRate;
+    [self.vodPlayer setRate:playRate];
+}
+
 #pragma mark - UIPanGestureRecognizer手势方法
 - (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer
 {
@@ -1136,7 +1144,10 @@ static UISlider * _volumeSlider;
  *  @param state SuperPlayerState
  */
 - (void)setState:(SuperPlayerState)state {
-        
+    if (_state != state) {
+        [self.delegate onPlayStateChange:state];
+    }
+
     _state = state;
     // 控制菊花显示、隐藏
     if (state == StateBuffering) {
@@ -1497,6 +1508,10 @@ static UISlider * _volumeSlider;
         if (EvtID == PLAY_EVT_PLAY_PROGRESS) {
             if (self.state == StateStopped)
                 return;
+            if ((int) self.playCurrentTime != (int) player.currentPlaybackTime) {
+                [self.delegate onPlayProgressChange:(int) player.currentPlaybackTime
+                                           duration:(int) duration];
+            }
 
             self.playCurrentTime  = player.currentPlaybackTime;
             CGFloat totalTime     = duration;

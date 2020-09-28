@@ -127,7 +127,7 @@ public class SuperPlayerView extends RelativeLayout implements ITXVodPlayListene
     private String  mCurrentPlayVideoURL;                                       // 当前播放的url
     private int     mCurrentPlayType;                                           // 当前播放类型
     private int     mCurrentPlayMode    = SuperPlayerConst.PLAYMODE_WINDOW;     // 当前播放模式
-    private int     mCurrentPlayState   = SuperPlayerConst.PLAYSTATE_PLAYING;   // 当前播放状态
+    private int     mCurrentPlayState   = SuperPlayerConst.PLAYSTATE_FAILED;    // 当前播放状态
     private int     mSeekPos;                                                   // 记录切换硬解时的播放时间
     private long    mReportLiveStartTime = -1;                                  // 直播开始时间，用于上报使用时长
     private long    mReportVodStartTime = -1;                                   // 点播开始时间，用于上报使用时长
@@ -496,6 +496,8 @@ public class SuperPlayerView extends RelativeLayout implements ITXVodPlayListene
      * @param duration 总时长(秒)
      */
     private void updateVideoProgress(long current, long duration) {
+        mPlayerViewCallback.onPlayProgressChange(current, duration);
+
         mControllerWindow.updateVideoProgress(current, duration);
         mControllerFullScreen.updateVideoProgress(current, duration);
     }
@@ -517,6 +519,8 @@ public class SuperPlayerView extends RelativeLayout implements ITXVodPlayListene
      * @param playState
      */
     private void updatePlayState(int playState) {
+        mPlayerViewCallback.onPlayStateChange(playState);
+
         mCurrentPlayState = playState;
         mControllerWindow.updatePlayState(playState);
         mControllerFullScreen.updatePlayState(playState);
@@ -1290,6 +1294,16 @@ public class SuperPlayerView extends RelativeLayout implements ITXVodPlayListene
          * 开始悬浮窗播放
          */
         void onStartFloatWindowPlay();
+
+        /**
+         * 播放状态发生变化
+         */
+        void onPlayStateChange(int playState);
+
+        /**
+         * 播放进度发生变化
+         */
+        void onPlayProgressChange(long current, long duration);
     }
 
     public void release() {

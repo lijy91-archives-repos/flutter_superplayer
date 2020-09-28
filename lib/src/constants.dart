@@ -1,1 +1,3 @@
-const kSuperPlayerViewViewType = "plugins.learn_flutter.dev/superplayer_view";
+const kSuperPlayerViewViewType = "leanflutter.org/superplayer_view";
+const kSuperPlayerViewChannelName = "leanflutter.org/superplayer_view/channel";
+const kSuperPlayerViewEventChannelName = "leanflutter.org/superplayer_view/event_channel";

@@ -1,7 +1,5 @@
 package org.leanflutter.plugins.flutter_superplayer;
 
-import android.app.Activity;
-
 import androidx.annotation.NonNull;
 
 import io.flutter.embedding.engine.plugins.FlutterPlugin;

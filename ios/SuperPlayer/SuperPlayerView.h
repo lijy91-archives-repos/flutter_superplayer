@@ -19,16 +19,20 @@
 - (void)superPlayerDidEnd:(SuperPlayerView *)player;
 /// 播放错误通知
 - (void)superPlayerError:(SuperPlayerView *)player errCode:(int)code errMessage:(NSString *)why;
+/// 播放状态发生变化
+- (void)onPlayStateChange:(int) playState;
+/// 播放进度发生变化
+- (void)onPlayProgressChange:(int) current duration:(int) duration;
 // 需要通知到父view的事件在此添加
 @end
 
 /// 播放器的状态
 typedef NS_ENUM(NSInteger, SuperPlayerState) {
-    StateFailed,     // 播放失败
-    StateBuffering,  // 缓冲中
-    StatePlaying,    // 播放中
-    StateStopped,    // 停止播放
-    StatePause,      // 暂停播放
+    StateFailed = 5,     // 播放失败
+    StateBuffering = 3,  // 缓冲中
+    StatePlaying = 1,    // 播放中
+    StateStopped = 4,    // 停止播放
+    StatePause = 2,      // 暂停播放
 };
 
 
@@ -121,5 +125,11 @@ typedef NS_ENUM(NSInteger, SuperPlayerLayoutStyle) {
  *  @param dragedSeconds 视频跳转的秒数
  */
 - (void)seekToTime:(NSInteger)dragedSeconds;
+
+
+/**
+ * 设置播放速率
+ */
+- (void)setPlayRate:(CGFloat)playRate;
 
 @end

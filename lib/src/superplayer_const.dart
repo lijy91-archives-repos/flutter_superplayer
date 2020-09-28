@@ -10,6 +10,7 @@ class SuperPlayerConst {
   static final int PLAYSTATE_PAUSE = 2;
   static final int PLAYSTATE_LOADING = 3;
   static final int PLAYSTATE_END = 4;
+  static final int PLAYSTATE_FAILED = 5;
 
   // 屏幕方向
   static final int ORIENTATION_LANDSCAPE = 1; // 横屏

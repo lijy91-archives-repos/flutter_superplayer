@@ -9,7 +9,7 @@
     [registrar addMethodCallDelegate:instance channel:channel];
 
     FLTSuperPlayerViewFactory* platformViewFactory = [[FLTSuperPlayerViewFactory alloc] initWithMessenger:registrar.messenger];
-    [registrar registerViewFactory:platformViewFactory withId:@"plugins.learn_flutter.dev/superplayer_view"];
+    [registrar registerViewFactory:platformViewFactory withId:@"leanflutter.org/superplayer_view"];
 }
 
 - (void)handleMethodCall:(FlutterMethodCall*)call result:(FlutterResult)result {

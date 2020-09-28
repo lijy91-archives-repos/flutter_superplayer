@@ -70,7 +70,7 @@ class SuperPlayerURL {
     if (qualityName != null)
       jsonObject.putIfAbsent("qualityName", () => qualityName);
     if (url != null) jsonObject.putIfAbsent("url", () => url);
-    
+
     return jsonObject;
   }
 }

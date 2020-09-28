@@ -10,7 +10,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 // FLTSuperPlayerViewController
-@interface FLTSuperPlayerViewController : NSObject <FlutterPlatformView>
+@interface FLTSuperPlayerViewController : NSObject <FlutterPlatformView, FlutterStreamHandler, SuperPlayerDelegate>
 
 - (instancetype)initWithFrame:(CGRect)frame
                viewIdentifier:(int64_t)viewId

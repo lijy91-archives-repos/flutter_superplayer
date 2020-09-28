@@ -18,12 +18,12 @@ A new flutter plugin project.
   s.dependency 'Flutter'
   s.platform = :ios, '8.0'
 
-  s.default_subspec = 'SuperPlayer_TXLiteAVSDK_Player'
+  s.default_subspec = 'SuperPlayer_Professional'
 
-  s.subspec "SuperPlayer_TXLiteAVSDK_Player" do |ss|
+  s.subspec "SuperPlayer_Professional" do |ss|
     ss.dependency 'AFNetworking'
     ss.dependency 'Masonry'
-    ss.dependency 'TXLiteAVSDK_Player'
+    ss.dependency 'TXLiteAVSDK_Professional'
     ss.source_files = 'SuperPlayer/**/*.{h,m}'
     ss.private_header_files = 'SuperPlayer/Utils/TXBitrateItemHelper.h', 'SuperPlayer/Views/SuperPlayerView+Private.h'
     ss.resource = 'SuperPlayer/Resource/*'

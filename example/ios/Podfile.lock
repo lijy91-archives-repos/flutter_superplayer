@@ -17,14 +17,14 @@ PODS:
   - Flutter (1.0.0)
   - flutter_superplayer (0.0.1):
     - Flutter
-    - flutter_superplayer/SuperPlayer_TXLiteAVSDK_Player (= 0.0.1)
-  - flutter_superplayer/SuperPlayer_TXLiteAVSDK_Player (0.0.1):
+    - flutter_superplayer/SuperPlayer_Professional (= 0.0.1)
+  - flutter_superplayer/SuperPlayer_Professional (0.0.1):
     - AFNetworking
     - Flutter
     - Masonry
-    - TXLiteAVSDK_Player
+    - TXLiteAVSDK_Professional
   - Masonry (1.1.0)
-  - TXLiteAVSDK_Player (7.6.9355)
+  - TXLiteAVSDK_Professional (7.7.9458)
 
 DEPENDENCIES:
   - Flutter (from `Flutter`)
@@ -34,7 +34,7 @@ SPEC REPOS:
   trunk:
     - AFNetworking
     - Masonry
-    - TXLiteAVSDK_Player
+    - TXLiteAVSDK_Professional
 
 EXTERNAL SOURCES:
   Flutter:
@@ -45,9 +45,9 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   AFNetworking: b6f891fdfaed196b46c7a83cf209e09697b94057
   Flutter: 0e3d915762c693b495b44d77113d4970485de6ec
-  flutter_superplayer: d095419b227198e0e82fc5361bc470644a240b9a
+  flutter_superplayer: 8cd6f3ab97a141794b3570f8a0fc5f4ebe4cf092
   Masonry: 678fab65091a9290e40e2832a55e7ab731aad201
-  TXLiteAVSDK_Player: a96437245dfb7644727c17ad6cd8d86ba9465186
+  TXLiteAVSDK_Professional: 0b33d57f9b9e1fe5b7290d052348b84e9865533d
 
 PODFILE CHECKSUM: f32fb4e7c14f8b3ca19a369d7be425dd9241af27
 

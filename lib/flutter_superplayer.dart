@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 
 export './src/superplayer_const.dart';
 export './src/superplayer_controller.dart';
+export './src/superplayer_listener.dart';
 export './src/superplayer_model.dart';
 export './src/superplayer_video_id.dart';
 export './src/superplayer_video_id_v2.dart';

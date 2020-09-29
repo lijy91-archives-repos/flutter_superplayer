@@ -128,6 +128,7 @@ public class SuperPlayerView extends RelativeLayout implements ITXVodPlayListene
     private int     mCurrentPlayType;                                           // 当前播放类型
     private int     mCurrentPlayMode    = SuperPlayerConst.PLAYMODE_WINDOW;     // 当前播放模式
     private int     mCurrentPlayState   = SuperPlayerConst.PLAYSTATE_FAILED;    // 当前播放状态
+    private float   mCurrentPlayRate    = 1;                                    // 当前播放速率
     private int     mSeekPos;                                                   // 记录切换硬解时的播放时间
     private long    mReportLiveStartTime = -1;                                  // 直播开始时间，用于上报使用时长
     private long    mReportVodStartTime = -1;                                   // 点播开始时间，用于上报使用时长
@@ -568,6 +569,7 @@ public class SuperPlayerView extends RelativeLayout implements ITXVodPlayListene
             mDanmuView = null;
         }
         stopPlay();
+        mCurrentPlayState = SuperPlayerConst.PLAYSTATE_FAILED;
     }
 
     /**
@@ -950,6 +952,7 @@ public class SuperPlayerView extends RelativeLayout implements ITXVodPlayListene
         public void onSpeedChange(float speedLevel) {
             if (mVodPlayer != null) {
                 mVodPlayer.setRate(speedLevel);
+                mCurrentPlayRate = speedLevel;
             }
             //速度改变上报
             TCLogReport.getInstance().uploadLogs(TCLogReport.ELK_ACTION_CHANGE_SPEED, 0, 0);
@@ -1176,7 +1179,7 @@ public class SuperPlayerView extends RelativeLayout implements ITXVodPlayListene
                 }
                 break;
             case TXLiveConstants.PLAY_EVT_PLAY_LOADING:
-            case TXLiveConstants.PLAY_WARNING_RECONNECT:
+//            case TXLiveConstants.PLAY_WARNING_RECONNECT:          // 暂时去掉，回调该状态时，播放画面可能是正常的，loading 状态只在 TXLiveConstants.PLAY_EVT_PLAY_LOADING 处理
                 updatePlayState(SuperPlayerConst.PLAYSTATE_LOADING);
                 if (mWatcher != null) {
                     mWatcher.enterLoading();
@@ -1263,6 +1266,31 @@ public class SuperPlayerView extends RelativeLayout implements ITXVodPlayListene
      */
     public int getPlayState() {
         return mCurrentPlayState;
+    }
+
+    /**
+     * 获取当前播放速率
+     *
+     */
+
+    public float getPlayRate() {
+        return mCurrentPlayRate;
+    }
+
+    /**
+     * 设置播放速率
+     *
+     * @param playRate
+     */
+    public void setPlayRate(float playRate) {
+        if (mCurrentPlayType != SuperPlayerConst.PLAYTYPE_VOD) {
+            return;
+        }
+        mControllerCallback.onSpeedChange(playRate);
+    }
+
+    public IControllerCallback getControllerCallback() {
+        return mControllerCallback;
     }
 
     /**

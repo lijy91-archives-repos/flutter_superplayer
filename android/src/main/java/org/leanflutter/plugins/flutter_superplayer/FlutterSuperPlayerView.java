@@ -41,6 +41,8 @@ public class FlutterSuperPlayerView implements PlatformView, MethodCallHandler, 
     private FrameLayout containerView;
     private SuperPlayerView superPlayerView;
 
+    private long playProgressCurrent = 0;
+
     FlutterSuperPlayerView(
             final Context context,
             BinaryMessenger messenger,
@@ -78,9 +80,8 @@ public class FlutterSuperPlayerView implements PlatformView, MethodCallHandler, 
     @Override
     public void dispose() {
         if (superPlayerView.getPlayState() == SuperPlayerConst.PLAYSTATE_PLAYING) {
-            superPlayerView.release();
+            superPlayerView.resetPlayer();
         }
-        this.containerView.removeAllViews();
     }
 
     @Override
@@ -95,12 +96,16 @@ public class FlutterSuperPlayerView implements PlatformView, MethodCallHandler, 
 
     @Override
     public void onMethodCall(@NonNull MethodCall call, @NonNull MethodChannel.Result result) {
-        if (call.method.equals("resetPlayer")) {
-            resetPlayer(call, result);
-        } else if (call.method.equals("getPlayMode")) {
+        if (call.method.equals("getPlayMode")) {
             getPlayMode(call, result);
         } else if (call.method.equals("getPlayState")) {
             getPlayState(call, result);
+        } else if (call.method.equals("getPlayRate")) {
+            getPlayRate(call, result);
+        } else if (call.method.equals("setPlayRate")) {
+            setPlayRate(call, result);
+        } else if (call.method.equals("resetPlayer")) {
+            resetPlayer(call, result);
         } else if (call.method.equals("requestPlayMode")) {
             requestPlayMode(call, result);
         } else if (call.method.equals("playWithModel")) {
@@ -111,23 +116,35 @@ public class FlutterSuperPlayerView implements PlatformView, MethodCallHandler, 
             resume(call, result);
         } else if (call.method.equals("release")) {
             release(call, result);
+        } else if (call.method.equals("seekTo")) {
+            seekTo(call, result);
         } else {
             result.notImplemented();
         }
     }
 
-    void resetPlayer(@NonNull MethodCall call, @NonNull Result result) {
-        superPlayerView.resetPlayer();
-    }
-
     void getPlayMode(@NonNull MethodCall call, @NonNull Result result) {
-        int playMode = superPlayerView.getPlayState();
+        int playMode = superPlayerView.getPlayMode();
         result.success(playMode);
     }
 
     void getPlayState(@NonNull MethodCall call, @NonNull Result result) {
         int playState = superPlayerView.getPlayState();
         result.success(playState);
+    }
+
+    void getPlayRate(@NonNull MethodCall call, @NonNull Result result) {
+        float playRate = superPlayerView.getPlayRate();
+        result.success(playRate);
+    }
+
+    void setPlayRate(@NonNull MethodCall call, @NonNull Result result) {
+        Number playRate = (Number) call.argument("playRate");;
+        superPlayerView.setPlayRate(playRate.floatValue());
+    }
+
+    void resetPlayer(@NonNull MethodCall call, @NonNull Result result) {
+        superPlayerView.resetPlayer();
     }
 
     void requestPlayMode(@NonNull MethodCall call, @NonNull Result result) {
@@ -162,15 +179,20 @@ public class FlutterSuperPlayerView implements PlatformView, MethodCallHandler, 
     }
 
     void pause(@NonNull MethodCall call, @NonNull Result result) {
-        superPlayerView.onPause();
+        superPlayerView.getControllerCallback().onPause();
     }
 
     void resume(@NonNull MethodCall call, @NonNull Result result) {
-        superPlayerView.onResume();
+        superPlayerView.getControllerCallback().onResume();
     }
 
     void release(@NonNull MethodCall call, @NonNull Result result) {
         superPlayerView.release();
+    }
+
+    void seekTo(@NonNull MethodCall call, @NonNull Result result) {
+        int time = (int) call.argument("time");
+        superPlayerView.getControllerCallback().onSeekTo(time);
     }
 
     @Override
@@ -243,6 +265,11 @@ public class FlutterSuperPlayerView implements PlatformView, MethodCallHandler, 
 
     @Override
     public void onPlayProgressChange(long current, long duration) {
+        boolean isProgressChange = playProgressCurrent == current;
+        playProgressCurrent = current;
+
+        if (isProgressChange) return;
+
         final Map<String, Object> dataMap = new HashMap<>();
         dataMap.put("current", current);
         dataMap.put("duration", duration);

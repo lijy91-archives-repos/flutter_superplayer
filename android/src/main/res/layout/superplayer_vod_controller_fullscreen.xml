@@ -4,6 +4,25 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <LinearLayout
+        android:id="@+id/superplayer_ll_replay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerInParent="true"
+        android:background="#4D000000"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:padding="10dp"
+        android:visibility="gone">
+
+        <ImageView
+            android:id="@+id/superplayer_iv_replay"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/superplayer_ic_replay" />
+
+    </LinearLayout>
+
     <RelativeLayout
         android:id="@+id/superplayer_rl_top"
         android:layout_width="match_parent"
@@ -180,24 +199,6 @@
         android:layout_centerVertical="true"
         android:layout_marginLeft="30dp"
         android:src="@drawable/superplayer_ic_player_unlock" />
-
-    <LinearLayout
-        android:id="@+id/superplayer_ll_replay"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:gravity="center"
-        android:orientation="vertical"
-        android:padding="10dp"
-        android:visibility="gone">
-
-        <ImageView
-            android:id="@+id/superplayer_iv_replay"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/superplayer_ic_replay" />
-
-    </LinearLayout>
 
     <TextView
         android:id="@+id/superplayer_tv_back_to_live"

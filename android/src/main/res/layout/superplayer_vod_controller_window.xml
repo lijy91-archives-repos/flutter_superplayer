@@ -4,6 +4,26 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <!--重播-->
+    <LinearLayout
+        android:id="@+id/superplayer_ll_replay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerInParent="true"
+        android:background="#4D000000"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:padding="10dp"
+        android:visibility="gone">
+
+        <ImageView
+            android:id="@+id/superplayer_iv_replay"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/superplayer_ic_replay" />
+
+    </LinearLayout>
+
     <!--标题-->
     <LinearLayout
         android:id="@+id/superplayer_rl_top"
@@ -89,25 +109,6 @@
             android:layout_centerInParent="true"
             android:layout_gravity="center_vertical"
             android:src="@drawable/superplayer_ic_vod_fullscreen" />
-    </LinearLayout>
-
-    <!--重播-->
-    <LinearLayout
-        android:id="@+id/superplayer_ll_replay"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:gravity="center"
-        android:orientation="vertical"
-        android:padding="10dp"
-        android:visibility="gone">
-
-        <ImageView
-            android:id="@+id/superplayer_iv_replay"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/superplayer_ic_replay" />
-
     </LinearLayout>
 
     <TextView

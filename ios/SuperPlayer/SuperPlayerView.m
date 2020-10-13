@@ -175,6 +175,7 @@ static UISlider * _volumeSlider;
     [self _removeOldPlayer];
     [self _playWithModel:playerModel];
     self.coverImageView.alpha = 1;
+    self.maskView.hidden = YES;
     self.repeatBtn.hidden = YES;
     self.repeatBackBtn.hidden = YES;
 }
@@ -454,6 +455,7 @@ static UISlider * _volumeSlider;
                      shiftPlayback:self.isShiftPlayback
                          isPlaying:self.autoPlay];
     self.controlView.playerConfig = self.playerConfig;
+    self.maskView.hidden = YES;
     self.repeatBtn.hidden = YES;
     self.repeatBackBtn.hidden = YES;
     self.playDidEnd = NO;
@@ -766,6 +768,7 @@ static UISlider * _volumeSlider;
     [self.controlView fadeOut:0.2];
     [self fastViewUnavaliable];
     [self.netWatcher stopWatch];
+    self.maskView.hidden = NO;
     self.repeatBtn.hidden = NO;
     self.repeatBackBtn.hidden = NO;
     if ([self.delegate respondsToSelector:@selector(superPlayerDidEnd:)]) {
@@ -1770,6 +1773,18 @@ static UISlider * _volumeSlider;
             break;
     }
     [btn fadeOut:0.2];
+}
+
+- (UIView *)maskView {
+    if (!_maskView) {
+        _maskView = [[UIView alloc] initWithFrame:CGRectZero];
+        [_maskView setBackgroundColor:[[UIColor blackColor]colorWithAlphaComponent:0.3]];
+        [self addSubview:_maskView];
+        [_maskView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.edges.mas_equalTo(UIEdgeInsetsZero);
+        }];
+    }
+    return _maskView;
 }
 
 - (UIButton *)repeatBtn {

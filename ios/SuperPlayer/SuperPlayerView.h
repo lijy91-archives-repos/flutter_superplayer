@@ -70,6 +70,8 @@ typedef NS_ENUM(NSInteger, SuperPlayerLayoutStyle) {
 @property (readonly)  BOOL  isLoaded;
 /// 设置封面图片
 @property (nonatomic) UIImageView *coverImageView;
+/// 遮罩层
+@property (nonatomic, strong) UIView *maskView;
 /// 重播按钮
 @property (nonatomic, strong) UIButton *repeatBtn;
 /// 全屏退出

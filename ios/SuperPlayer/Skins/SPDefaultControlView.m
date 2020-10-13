@@ -764,6 +764,13 @@
     self.titleLabel.text = title;
 }
 
+- (void)hideDanmu {
+    [self setDisableDanmakuBtn:YES];
+}
+- (void)hideReplay {
+    [self.repeatBtn setHidden:YES];
+}
+
 #pragma clang diagnostic pop
 
 @end

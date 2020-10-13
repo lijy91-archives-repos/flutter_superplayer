@@ -69,4 +69,7 @@
 - (void)setOrientationPortraitConstraint;
 - (void)setOrientationLandscapeConstraint;
 
+- (void)hideDanmu;
+- (void)hideReplay;
+
 @end

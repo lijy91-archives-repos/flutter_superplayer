@@ -729,4 +729,8 @@ public class TCControllerWindow extends RelativeLayout implements IController, V
     private void toggleView(final View view, final boolean isVisible) {
         view.setVisibility(isVisible ? View.VISIBLE : View.GONE);
     }
+
+    public void hideReplay() {
+        mLayoutReplay.setVisibility(View.GONE);
+    }
 }

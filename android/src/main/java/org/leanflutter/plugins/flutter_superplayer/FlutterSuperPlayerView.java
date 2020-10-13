@@ -118,6 +118,12 @@ public class FlutterSuperPlayerView implements PlatformView, MethodCallHandler, 
             release(call, result);
         } else if (call.method.equals("seekTo")) {
             seekTo(call, result);
+        } else if (call.method.equals("uiHideDanmu")) {
+            uiHideDanmu(call, result);
+        } else if (call.method.equals("uiHideReplay")) {
+            uiHideReplay(call, result);
+        } else if (call.method.equals("uiHideController")) {
+            uiHideController(call, result);
         } else {
             result.notImplemented();
         }
@@ -139,7 +145,7 @@ public class FlutterSuperPlayerView implements PlatformView, MethodCallHandler, 
     }
 
     void setPlayRate(@NonNull MethodCall call, @NonNull Result result) {
-        Number playRate = (Number) call.argument("playRate");;
+        Number playRate = (Number) call.argument("playRate");
         superPlayerView.setPlayRate(playRate.floatValue());
     }
 
@@ -193,6 +199,18 @@ public class FlutterSuperPlayerView implements PlatformView, MethodCallHandler, 
     void seekTo(@NonNull MethodCall call, @NonNull Result result) {
         int time = (int) call.argument("time");
         superPlayerView.getControllerCallback().onSeekTo(time);
+    }
+
+    void uiHideDanmu(@NonNull MethodCall call, @NonNull Result result) {
+        superPlayerView.uiHideDanmu();
+    }
+
+    void uiHideReplay(@NonNull MethodCall call, @NonNull Result result) {
+        superPlayerView.uiHideReplay();
+    }
+
+    void uiHideController(@NonNull MethodCall call, @NonNull Result result) {
+        superPlayerView.uiHideController();
     }
 
     @Override

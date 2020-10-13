@@ -484,4 +484,5 @@
     
     [DataReport report:@"player_point" param:nil];
 }
+
 @end

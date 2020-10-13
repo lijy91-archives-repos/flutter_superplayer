@@ -983,4 +983,12 @@ public class TCControllerFullScreen extends RelativeLayout implements IControlle
             }
         }
     }
+
+    public void hideDanmu() {
+        mIvDanmu.setVisibility(View.GONE);
+    }
+
+    public void hideReplay() {
+        mLayoutReplay.setVisibility(View.GONE);
+    }
 }

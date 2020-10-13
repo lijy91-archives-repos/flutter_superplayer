@@ -54,4 +54,7 @@
 
 }
 
+- (void)hideDanmu {}
+- (void)hideReplay {}
+
 @end

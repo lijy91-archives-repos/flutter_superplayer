@@ -147,4 +147,16 @@ class SuperPlayerController {
       'time': time,
     });
   }
+
+  void uiHideDanmu() {
+    _channel.invokeMethod('uiHideDanmu');
+  }
+
+  void uiHideReplay() {
+    _channel.invokeMethod('uiHideReplay');
+  }
+  
+  void uiHideController() {
+    _channel.invokeMethod('uiHideController');
+  }
 }

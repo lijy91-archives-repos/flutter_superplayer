@@ -126,10 +126,15 @@ typedef NS_ENUM(NSInteger, SuperPlayerLayoutStyle) {
  */
 - (void)seekToTime:(NSInteger)dragedSeconds;
 
-
 /**
  * 设置播放速率
  */
 - (void)setPlayRate:(CGFloat)playRate;
+
+- (void)uiHideDanmu;
+
+- (void)uiHideReplay;
+
+- (void)uiHideController;
 
 @end

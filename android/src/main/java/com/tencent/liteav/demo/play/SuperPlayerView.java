@@ -843,6 +843,7 @@ public class SuperPlayerView extends RelativeLayout implements ITXVodPlayListene
                         }
                     }
                 } else {
+                    resetPlayer();
                     playVodURL(mCurrentPlayVideoURL);
                 }
             } else if (mCurrentPlayState == SuperPlayerConst.PLAYSTATE_PAUSE) { //继续播放

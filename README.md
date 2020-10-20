@@ -2,7 +2,7 @@
 
 适用于 Flutter 的腾讯云超级播放器插件
 
-[![pub version][pub-image]][pub-url]
+<!-- [![pub version][pub-image]][pub-url] -->
 
 [pub-image]: https://img.shields.io/pub/v/flutter_superplayer.svg
 [pub-url]: https://pub.dev/packages/flutter_superplayer
@@ -25,9 +25,18 @@
 
 将此添加到包的 pubspec.yaml 文件中：
 
-```yaml
+> 该插件尚在开发阶段，请使用以下方式引入你的项目。
+
+<!-- ```yaml
 dependencies:
   flutter_superplayer: ^0.0.1
+``` -->
+
+```yaml
+dependencies:
+  flutter_superplayer:
+    git:
+      url: https://github.com/leanflutter/flutter_superplayer.git
 ```
 
 您可以从命令行安装软件包：

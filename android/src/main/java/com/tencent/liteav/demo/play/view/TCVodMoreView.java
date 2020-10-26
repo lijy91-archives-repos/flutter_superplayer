@@ -1,7 +1,10 @@
 package com.tencent.liteav.demo.play.view;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.media.AudioManager;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -36,6 +39,10 @@ import org.leanflutter.plugins.flutter_superplayer.R;
  */
 
 public class TCVodMoreView extends RelativeLayout implements RadioGroup.OnCheckedChangeListener, CompoundButton.OnCheckedChangeListener {
+
+    private static final String VOLUME_CHANGED_ACTION    = "android.media.VOLUME_CHANGED_ACTION";
+    private static final String EXTRA_VOLUME_STREAM_TYPE = "android.media.EXTRA_VOLUME_STREAM_TYPE";
+
     private Context mContext;
 
     private SeekBar         mSeekBarVolume;     // 音量seekBar
@@ -51,6 +58,8 @@ public class TCVodMoreView extends RelativeLayout implements RadioGroup.OnChecke
     private RadioButton     mRbSpeed2;          // 2.0倍速按钮
     private LinearLayout    mLayoutSpeed;       // 倍速按钮所在布局
     private LinearLayout    mLayoutMirror;      // 镜像按钮所在布局
+
+    private VolumeBroadcastReceiver mVolumeBroadcastReceiver;
 
     public TCVodMoreView(Context context) {
         super(context);
@@ -115,15 +124,13 @@ public class TCVodMoreView extends RelativeLayout implements RadioGroup.OnChecke
         Window window = activity.getWindow();
 
         WindowManager.LayoutParams params = window.getAttributes();
-        if (params.screenBrightness == WindowManager.LayoutParams.BRIGHTNESS_OVERRIDE_NONE) {
-            params.screenBrightness = getActivityBrightness((Activity) mContext);
-            window.setAttributes(params);
-            if (params.screenBrightness == -1) {
-                mSeekBarLight.setProgress(100);
-                return;
-            }
-            mSeekBarLight.setProgress((int) (params.screenBrightness * 100));
+        params.screenBrightness = getActivityBrightness((Activity) mContext);
+        window.setAttributes(params);
+        if (params.screenBrightness == -1) {
+            mSeekBarLight.setProgress(100);
+            return;
         }
+        mSeekBarLight.setProgress((int) (params.screenBrightness * 100));
     }
 
     /**
@@ -140,8 +147,10 @@ public class TCVodMoreView extends RelativeLayout implements RadioGroup.OnChecke
 
     private SeekBar.OnSeekBarChangeListener mVolumeChangeListener = new SeekBar.OnSeekBarChangeListener() {
         @Override
-        public void onProgressChanged(SeekBar seekBar, int progress, boolean b) {
-            updateVolumeProgress(progress);
+        public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+            if (fromUser) {
+                updateVolumeProgress(progress);
+            }
         }
 
         @Override
@@ -170,8 +179,8 @@ public class TCVodMoreView extends RelativeLayout implements RadioGroup.OnChecke
 
     private SeekBar.OnSeekBarChangeListener mLightChangeListener = new SeekBar.OnSeekBarChangeListener() {
         @Override
-        public void onProgressChanged(SeekBar seekBar, int progress, boolean b) {
-            if (b) {
+        public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+            if (fromUser) {
                 updateBrightProgress(progress);
             }
         }
@@ -269,6 +278,27 @@ public class TCVodMoreView extends RelativeLayout implements RadioGroup.OnChecke
         }
     }
 
+    @Override
+    protected void onAttachedToWindow() {
+        super.onAttachedToWindow();
+    }
+
+    @Override
+    public void setVisibility(int visibility) {
+        super.setVisibility(visibility);
+        if (visibility == View.VISIBLE) {
+            updateCurrentVolume();
+            updateCurrentLight();
+            registerReceiver();
+        }else {
+            unregisterReceiver();
+        }
+    }
+
+    public void setBrightProgress(int progress) {
+        updateBrightProgress(progress);
+    }
+
     /**
      * 更新播放视频类型
      *
@@ -281,6 +311,39 @@ public class TCVodMoreView extends RelativeLayout implements RadioGroup.OnChecke
         } else {
             mLayoutSpeed.setVisibility(View.GONE);
             mLayoutMirror.setVisibility(View.GONE);
+        }
+    }
+
+    private class VolumeBroadcastReceiver extends BroadcastReceiver {
+
+        public void onReceive(Context context, Intent intent) {
+            //媒体音量改变才通知
+            if (VOLUME_CHANGED_ACTION.equals(intent.getAction())
+                    && (intent.getIntExtra(EXTRA_VOLUME_STREAM_TYPE, -1) == AudioManager.STREAM_MUSIC)) {
+                updateCurrentVolume();
+            }
+        }
+    }
+
+    /**
+     * 注册音量广播接收器
+     * @return
+     */
+    public void registerReceiver() {
+        mVolumeBroadcastReceiver = new VolumeBroadcastReceiver();
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(VOLUME_CHANGED_ACTION);
+        mContext.registerReceiver(mVolumeBroadcastReceiver, filter);
+    }
+
+    /**
+     * 反注册音量广播监听器，需要与 registerReceiver 成对使用
+     */
+    public void unregisterReceiver() {
+        try {
+            mContext.unregisterReceiver(mVolumeBroadcastReceiver);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

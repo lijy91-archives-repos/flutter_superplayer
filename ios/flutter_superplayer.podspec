@@ -16,12 +16,12 @@ A new flutter plugin project.
   s.source_files = 'Classes/**/*'
   s.public_header_files = 'Classes/**/*.h'
   s.dependency 'Flutter'
-  s.platform = :ios, '8.0'
+  s.platform = :ios, '9.0'
 
   s.default_subspec = 'SuperPlayer_Professional'
 
   s.subspec "SuperPlayer_Professional" do |ss|
-    ss.dependency 'AFNetworking'
+    ss.dependency 'AFNetworking', '~> 4.0'
     ss.dependency 'Masonry'
     ss.dependency 'TXLiteAVSDK_Professional'
     ss.source_files = 'SuperPlayer/**/*.{h,m}'

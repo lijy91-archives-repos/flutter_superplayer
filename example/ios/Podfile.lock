@@ -1,30 +1,30 @@
 PODS:
-  - AFNetworking (3.2.1):
-    - AFNetworking/NSURLSession (= 3.2.1)
-    - AFNetworking/Reachability (= 3.2.1)
-    - AFNetworking/Security (= 3.2.1)
-    - AFNetworking/Serialization (= 3.2.1)
-    - AFNetworking/UIKit (= 3.2.1)
-  - AFNetworking/NSURLSession (3.2.1):
+  - AFNetworking (4.0.1):
+    - AFNetworking/NSURLSession (= 4.0.1)
+    - AFNetworking/Reachability (= 4.0.1)
+    - AFNetworking/Security (= 4.0.1)
+    - AFNetworking/Serialization (= 4.0.1)
+    - AFNetworking/UIKit (= 4.0.1)
+  - AFNetworking/NSURLSession (4.0.1):
     - AFNetworking/Reachability
     - AFNetworking/Security
     - AFNetworking/Serialization
-  - AFNetworking/Reachability (3.2.1)
-  - AFNetworking/Security (3.2.1)
-  - AFNetworking/Serialization (3.2.1)
-  - AFNetworking/UIKit (3.2.1):
+  - AFNetworking/Reachability (4.0.1)
+  - AFNetworking/Security (4.0.1)
+  - AFNetworking/Serialization (4.0.1)
+  - AFNetworking/UIKit (4.0.1):
     - AFNetworking/NSURLSession
   - Flutter (1.0.0)
   - flutter_superplayer (0.0.1):
     - Flutter
     - flutter_superplayer/SuperPlayer_Professional (= 0.0.1)
   - flutter_superplayer/SuperPlayer_Professional (0.0.1):
-    - AFNetworking
+    - AFNetworking (~> 4.0)
     - Flutter
     - Masonry
     - TXLiteAVSDK_Professional
   - Masonry (1.1.0)
-  - TXLiteAVSDK_Professional (7.8.9519)
+  - TXLiteAVSDK_Professional (8.5.10022)
 
 DEPENDENCIES:
   - Flutter (from `Flutter`)
@@ -43,12 +43,12 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/flutter_superplayer/ios"
 
 SPEC CHECKSUMS:
-  AFNetworking: b6f891fdfaed196b46c7a83cf209e09697b94057
-  Flutter: 0e3d915762c693b495b44d77113d4970485de6ec
-  flutter_superplayer: 8cd6f3ab97a141794b3570f8a0fc5f4ebe4cf092
+  AFNetworking: 7864c38297c79aaca1500c33288e429c3451fdce
+  Flutter: 434fef37c0980e73bb6479ef766c45957d4b510c
+  flutter_superplayer: 50d64a438d4e917295d7c8d8124bcc239f323dad
   Masonry: 678fab65091a9290e40e2832a55e7ab731aad201
-  TXLiteAVSDK_Professional: 8bc9b7a5f37ca5e8baeaf6fd61e7e8ee34c34f82
+  TXLiteAVSDK_Professional: 165018e2f0570d2608d7ea2b785fc273558f9920
 
-PODFILE CHECKSUM: 8e679eca47255a8ca8067c4c67aab20e64cb974d
+PODFILE CHECKSUM: b1f7a399522c118a74b177b13c01eca692aa7e6d
 
-COCOAPODS: 1.9.3
+COCOAPODS: 1.10.1

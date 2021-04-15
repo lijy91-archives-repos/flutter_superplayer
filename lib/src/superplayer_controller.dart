@@ -9,10 +9,10 @@ import './superplayer_model.dart';
 import './superplayer_view.dart';
 
 class SuperPlayerController {
-  ObserverList<SuperPlayerListener> _listeners =
+  ObserverList<SuperPlayerListener>? _listeners =
       ObserverList<SuperPlayerListener>();
-  MethodChannel _channel;
-  EventChannel _eventChannel;
+  MethodChannel? _channel;
+  EventChannel? _eventChannel;
 
   void _onEvent(dynamic event) {
     String listener = '${event['listener']}';
@@ -38,17 +38,17 @@ class SuperPlayerController {
 
   bool get hasListeners {
     assert(_debugAssertNotDisposed());
-    return _listeners.isNotEmpty;
+    return _listeners!.isNotEmpty;
   }
 
   void addListener(SuperPlayerListener listener) {
     assert(_debugAssertNotDisposed());
-    _listeners.add(listener);
+    _listeners!.add(listener);
   }
 
   void removeListener(SuperPlayerListener listener) {
     assert(_debugAssertNotDisposed());
-    _listeners.remove(listener);
+    _listeners!.remove(listener);
   }
 
   void dispose() {
@@ -60,10 +60,10 @@ class SuperPlayerController {
     assert(_debugAssertNotDisposed());
     if (_listeners != null) {
       final List<SuperPlayerListener> localListeners =
-          List<SuperPlayerListener>.from(_listeners);
+          List<SuperPlayerListener>.from(_listeners!);
       for (final SuperPlayerListener listener in localListeners) {
         try {
-          if (_listeners.contains(listener)) {
+          if (_listeners!.contains(listener)) {
             switch (method) {
               case 'onFullScreenChange':
                 listener.onFullScreenChange(data['isFullScreen']);
@@ -97,66 +97,66 @@ class SuperPlayerController {
     _channel = MethodChannel('${kSuperPlayerViewChannelName}_$viewId');
     _eventChannel = EventChannel('${kSuperPlayerViewEventChannelName}_$viewId');
 
-    _eventChannel.receiveBroadcastStream().listen(_onEvent);
+    _eventChannel!.receiveBroadcastStream().listen(_onEvent);
   }
 
   Future<int> getPlayMode() async {
-    return _channel.invokeMethod('getPlayMode', {});
+    return await _channel!.invokeMethod('getPlayMode', {});
   }
 
   Future<int> getPlayState() async {
-    return _channel.invokeMethod('getPlayState', {});
+    return await _channel!.invokeMethod('getPlayState', {});
   }
 
-  Future<num> getPlayRate() {
-    return _channel.invokeMethod('getPlayRate', {});
+  Future<num> getPlayRate() async {
+    return await _channel!.invokeMethod('getPlayRate', {});
   }
 
   void setPlayRate(num playRate) {
-    _channel.invokeMethod('setPlayRate', {'playRate': playRate});
+    _channel!.invokeMethod('setPlayRate', {'playRate': playRate});
   }
 
   void resetPlayer() {
-    _channel.invokeMethod('resetPlayer');
+    _channel!.invokeMethod('resetPlayer');
   }
 
   void requestPlayMode(int playMode) {
-    _channel.invokeMethod('requestPlayMode', {
+    _channel!.invokeMethod('requestPlayMode', {
       'playMode': playMode,
     });
   }
 
   void playWithModel(final SuperPlayerModel model) {
-    _channel.invokeMethod('playWithModel', model.toJson());
+    _channel!.invokeMethod('playWithModel', model.toJson());
   }
 
   void pause() {
-    _channel.invokeMethod('pause');
+    _channel!.invokeMethod('pause');
   }
 
   void resume() {
-    _channel.invokeMethod('resume');
+    _channel!.invokeMethod('resume');
   }
 
   void release() {
-    _channel.invokeMethod('release');
+    _channel!.invokeMethod('release');
   }
 
   void seekTo(int time) {
-    _channel.invokeMethod('seekTo', {
+    _channel!.invokeMethod('seekTo', {
       'time': time,
     });
   }
 
   void uiHideDanmu() {
-    _channel.invokeMethod('uiHideDanmu');
+    _channel!.invokeMethod('uiHideDanmu');
   }
 
   void uiHideReplay() {
-    _channel.invokeMethod('uiHideReplay');
+    _channel!.invokeMethod('uiHideReplay');
   }
-  
+
   void uiHideController() {
-    _channel.invokeMethod('uiHideController');
+    _channel!.invokeMethod('uiHideController');
   }
 }

@@ -41,6 +41,8 @@
         _superPlayerView = [[FLTSuperPlayerView alloc] init];
         _superPlayerView.fatherView = _containerView;
         _superPlayerView.delegate = self;
+        
+        [self setControlViewType:args[@"controlViewType"]];
     }
     return self;
 }
@@ -51,7 +53,7 @@
 
 - (FlutterError*)onListenWithArguments:(id)arguments eventSink:(FlutterEventSink)eventSink {
     _eventSink = eventSink;
-    
+
     return nil;
 }
 
@@ -59,6 +61,15 @@
     _eventSink = nil;
     
     return nil;
+}
+
+- (void)setControlViewType:(NSString *)controlViewType
+{
+    if  ([controlViewType isEqualToString:@"without"]) {
+        _superPlayerView.controlView = [[SPWithoutControlView alloc] initWithFrame:CGRectZero];
+    } else {
+        _superPlayerView.controlView = [[SPDefaultControlView alloc] initWithFrame:CGRectZero];
+    }
 }
 
 - (void)onMethodCall:(FlutterMethodCall*)call result:(FlutterResult)result {
@@ -186,19 +197,19 @@
 }
 
 - (void) uiHideDanmu:(FlutterMethodCall*)call
-        result:(FlutterResult)result
+              result:(FlutterResult)result
 {
     [_superPlayerView uiHideDanmu];
 }
 
 - (void) uiHideReplay:(FlutterMethodCall*)call
-        result:(FlutterResult)result
+               result:(FlutterResult)result
 {
     [_superPlayerView uiHideReplay];
 }
 
 - (void) uiHideController:(FlutterMethodCall*)call
-        result:(FlutterResult)result
+                   result:(FlutterResult)result
 {
     [_superPlayerView uiHideController];
 }

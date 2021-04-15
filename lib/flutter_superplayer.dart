@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/services.dart';
 
 export './src/superplayer_const.dart';
+export './src/superplayer_control_view.dart';
 export './src/superplayer_controller.dart';
 export './src/superplayer_listener.dart';
 export './src/superplayer_model.dart';

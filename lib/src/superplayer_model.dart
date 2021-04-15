@@ -3,31 +3,31 @@ import './superplayer_video_id_v2.dart';
 
 class SuperPlayerModel {
   /// AppId 用于腾讯云点播 File ID 播放及腾讯云直播时移功能
-  int appId;
+  int? appId;
 
   /// 直接使用URL播放
   /// <p>
   /// 支持 RTMP、FLV、MP4、HLS 封装格式
   /// 使用腾讯云直播时移功能则需要填写appId
-  String url = ""; // 视频URL
+  String? url = ""; // 视频URL
 
   /// 多码率视频 URL
   /// <p>
   /// 用于拥有多个播放地址的多清晰度视频播放
-  List<SuperPlayerURL> multiURLs;
+  List<SuperPlayerURL>? multiURLs;
 
   /// 指定多码率情况下，默认播放的连接Index
-  int playDefaultIndex;
+  int? playDefaultIndex;
 
   /// 腾讯云点播 File ID 播放参数
-  SuperPlayerVideoId videoId;
+  SuperPlayerVideoId? videoId;
 
   /// 用于兼容旧版本(V2)腾讯云点播 File ID 播放参数（即将废弃，不推荐使用）
   @deprecated
-  SuperPlayerVideoIdV2 videoIdV2;
+  SuperPlayerVideoIdV2? videoIdV2;
 
   /// 视频文件名 （用于显示在UI层);使用file id播放，若未指定title，则使用FileId返回的Title；使用url播放需要指定title，否则title显示为空
-  String title = "";
+  String? title = "";
 
   SuperPlayerModel({
     this.appId,
@@ -47,9 +47,9 @@ class SuperPlayerModel {
     if (playDefaultIndex != null)
       jsonObject.putIfAbsent("playDefaultIndex", () => playDefaultIndex);
     if (videoId != null)
-      jsonObject.putIfAbsent("videoId", () => videoId.toJson());
+      jsonObject.putIfAbsent("videoId", () => videoId!.toJson());
     if (videoIdV2 != null)
-      jsonObject.putIfAbsent("videoIdV2", () => videoIdV2.toJson());
+      jsonObject.putIfAbsent("videoIdV2", () => videoIdV2!.toJson());
     if (title != null) jsonObject.putIfAbsent("title", () => title);
 
     return jsonObject;
@@ -58,10 +58,10 @@ class SuperPlayerModel {
 
 class SuperPlayerURL {
   /// 清晰度名称（用于显示在UI层）
-  String qualityName = "原画";
+  String? qualityName = "原画";
 
   /// 该清晰度对应的地址
-  String url = "";
+  String? url = "";
 
   SuperPlayerURL({this.url, this.qualityName});
 

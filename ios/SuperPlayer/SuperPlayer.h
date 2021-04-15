@@ -5,4 +5,5 @@
 #import "SuperPlayerWindow.h"
 #import "SPDefaultControlView.h"
 #import "SPWeiboControlView.h"
+#import "SPWithoutControlView.h"
 #import "SuperPlayerHelpers.h"

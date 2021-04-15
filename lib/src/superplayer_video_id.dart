@@ -1,7 +1,7 @@
 /// 使用腾讯云fileId播放
 class SuperPlayerVideoId {
-  String fileId; // 腾讯云视频fileId
-  String pSign; // v4 开启防盗链必填
+  String? fileId; // 腾讯云视频fileId
+  String? pSign; // v4 开启防盗链必填
 
   SuperPlayerVideoId({this.fileId, this.pSign});
 

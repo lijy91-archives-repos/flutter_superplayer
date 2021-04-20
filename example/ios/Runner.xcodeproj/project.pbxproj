@@ -377,7 +377,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Flutter",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = dev.learnflutter.plugins.flutterSuperplayerExample;
+				PRODUCT_BUNDLE_IDENTIFIER = org.leanflutter.plugins.flutter_superplayer_example;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
@@ -505,7 +505,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Flutter",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = dev.learnflutter.plugins.flutterSuperplayerExample;
+				PRODUCT_BUNDLE_IDENTIFIER = org.leanflutter.plugins.flutter_superplayer_example;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
@@ -528,7 +528,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Flutter",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = dev.learnflutter.plugins.flutterSuperplayerExample;
+				PRODUCT_BUNDLE_IDENTIFIER = org.leanflutter.plugins.flutter_superplayer_example;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				VERSIONING_SYSTEM = "apple-generic";
 			};

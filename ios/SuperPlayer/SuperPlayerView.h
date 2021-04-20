@@ -137,6 +137,4 @@ typedef NS_ENUM(NSInteger, SuperPlayerLayoutStyle) {
 
 - (void)uiHideReplay;
 
-- (void)uiHideController;
-
 @end

@@ -1886,8 +1886,4 @@ static UISlider * _volumeSlider;
     [_controlView hideReplay];
 }
 
-- (void)uiHideController {
-    [_controlView setHidden:YES];
-}
-
 @end

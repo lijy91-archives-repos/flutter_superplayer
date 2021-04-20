@@ -6,7 +6,7 @@ import './constants.dart';
 import './superplayer_const.dart';
 import './superplayer_listener.dart';
 import './superplayer_model.dart';
-import './superplayer_view.dart';
+// import './superplayer_view.dart';
 
 class SuperPlayerController {
   ObserverList<SuperPlayerListener>? _listeners =
@@ -160,9 +160,5 @@ class SuperPlayerController {
 
   void uiHideReplay() {
     _channel!.invokeMethod('uiHideReplay');
-  }
-
-  void uiHideController() {
-    _channel!.invokeMethod('uiHideController');
   }
 }

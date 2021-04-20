@@ -99,8 +99,6 @@
         [self uiHideDanmu:call result: result];
     } else if ([[call method] isEqualToString:@"uiHideReplay"]) {
         [self uiHideReplay:call result: result];
-    } else if ([[call method] isEqualToString:@"uiHideController"]) {
-        [self uiHideController:call result: result];
     } else {
         result(FlutterMethodNotImplemented);
     }
@@ -206,12 +204,6 @@
                result:(FlutterResult)result
 {
     [_superPlayerView uiHideReplay];
-}
-
-- (void) uiHideController:(FlutterMethodCall*)call
-                   result:(FlutterResult)result
-{
-    [_superPlayerView uiHideController];
 }
 
 /// 返回事件

@@ -2,6 +2,8 @@ package org.leanflutter.plugins.flutter_superplayer;
 
 import androidx.annotation.NonNull;
 
+import com.tencent.rtmp.TXLiveBase;
+
 import io.flutter.embedding.engine.plugins.FlutterPlugin;
 import io.flutter.embedding.engine.plugins.activity.ActivityAware;
 import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding;
@@ -68,7 +70,7 @@ public class FlutterSuperplayerPlugin implements FlutterPlugin, ActivityAware, M
     @Override
     public void onMethodCall(@NonNull MethodCall call, @NonNull Result result) {
         if (call.method.equals("getSDKVersion")) {
-            result.success("Android " + android.os.Build.VERSION.RELEASE);
+            result.success(TXLiveBase.getSDKVersionStr());
         } else {
             result.notImplemented();
         }

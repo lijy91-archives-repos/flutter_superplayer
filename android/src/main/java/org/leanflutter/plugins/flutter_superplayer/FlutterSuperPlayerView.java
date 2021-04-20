@@ -9,11 +9,11 @@ import android.widget.FrameLayout;
 
 import androidx.annotation.NonNull;
 
-import com.tencent.liteav.demo.play.SuperPlayerConst;
-import com.tencent.liteav.demo.play.SuperPlayerGlobalConfig;
-import com.tencent.liteav.demo.play.SuperPlayerModel;
-import com.tencent.liteav.demo.play.SuperPlayerVideoId;
-import com.tencent.liteav.demo.play.SuperPlayerView;
+import com.tencent.liteav.demo.superplayer.SuperPlayerDef;
+import com.tencent.liteav.demo.superplayer.SuperPlayerGlobalConfig;
+import com.tencent.liteav.demo.superplayer.SuperPlayerModel;
+import com.tencent.liteav.demo.superplayer.SuperPlayerVideoId;
+import com.tencent.liteav.demo.superplayer.SuperPlayerView;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -70,6 +70,9 @@ public class FlutterSuperPlayerView implements PlatformView, MethodCallHandler, 
         superPlayerView = new SuperPlayerView(context);
         superPlayerView.setPlayerViewCallback(this);
         containerView.addView(superPlayerView);
+
+        String controlViewType = (String) params.get("controlViewType");
+        setControlViewType(controlViewType);
     }
 
     @Override
@@ -79,7 +82,7 @@ public class FlutterSuperPlayerView implements PlatformView, MethodCallHandler, 
 
     @Override
     public void dispose() {
-        if (superPlayerView.getPlayState() == SuperPlayerConst.PLAYSTATE_PLAYING) {
+        if (superPlayerView.getPlayerState() == SuperPlayerDef.PlayerState.PLAYING) {
             superPlayerView.resetPlayer();
         }
     }
@@ -96,7 +99,9 @@ public class FlutterSuperPlayerView implements PlatformView, MethodCallHandler, 
 
     @Override
     public void onMethodCall(@NonNull MethodCall call, @NonNull MethodChannel.Result result) {
-        if (call.method.equals("getPlayMode")) {
+        if (call.method.equals("setControlViewType")) {
+            setControlViewType(call, result);
+        } else if (call.method.equals("getPlayMode")) {
             getPlayMode(call, result);
         } else if (call.method.equals("getPlayState")) {
             getPlayState(call, result);
@@ -118,35 +123,39 @@ public class FlutterSuperPlayerView implements PlatformView, MethodCallHandler, 
             release(call, result);
         } else if (call.method.equals("seekTo")) {
             seekTo(call, result);
-        } else if (call.method.equals("uiHideDanmu")) {
-            uiHideDanmu(call, result);
-        } else if (call.method.equals("uiHideReplay")) {
-            uiHideReplay(call, result);
-        } else if (call.method.equals("uiHideController")) {
-            uiHideController(call, result);
         } else {
             result.notImplemented();
         }
     }
 
+    void setControlViewType(String controlViewType) {
+        superPlayerView.setControlViewType(controlViewType);
+    }
+
+    void setControlViewType(@NonNull MethodCall call, @NonNull Result result) {
+        String controlViewType = (String) call.argument("controlViewType");
+        superPlayerView.setControlViewType(controlViewType);
+    }
+
+
     void getPlayMode(@NonNull MethodCall call, @NonNull Result result) {
-        int playMode = superPlayerView.getPlayMode();
+        int playMode = superPlayerView.getPlayerMode().ordinal();
         result.success(playMode);
     }
 
     void getPlayState(@NonNull MethodCall call, @NonNull Result result) {
-        int playState = superPlayerView.getPlayState();
-        result.success(playState);
+        SuperPlayerDef.PlayerState playerState = superPlayerView.getPlayerState();
+        result.success(playerState.intValue());
     }
 
     void getPlayRate(@NonNull MethodCall call, @NonNull Result result) {
-        float playRate = superPlayerView.getPlayRate();
+        float playRate = superPlayerView.getPlayerRate();
         result.success(playRate);
     }
 
     void setPlayRate(@NonNull MethodCall call, @NonNull Result result) {
         Number playRate = (Number) call.argument("playRate");
-        superPlayerView.setPlayRate(playRate.floatValue());
+        superPlayerView.getControllerCallback().onSpeedChange(playRate.floatValue());
     }
 
     void resetPlayer(@NonNull MethodCall call, @NonNull Result result) {
@@ -155,7 +164,7 @@ public class FlutterSuperPlayerView implements PlatformView, MethodCallHandler, 
 
     void requestPlayMode(@NonNull MethodCall call, @NonNull Result result) {
         int playMode = (int) call.argument("playMode");
-        superPlayerView.requestPlayMode(playMode);
+        superPlayerView.switchPlayMode(SuperPlayerDef.PlayerMode.values()[playMode]);
     }
 
     private void playWithModel(@NonNull MethodCall call, @NonNull Result result) {
@@ -199,18 +208,6 @@ public class FlutterSuperPlayerView implements PlatformView, MethodCallHandler, 
     void seekTo(@NonNull MethodCall call, @NonNull Result result) {
         int time = (int) call.argument("time");
         superPlayerView.getControllerCallback().onSeekTo(time);
-    }
-
-    void uiHideDanmu(@NonNull MethodCall call, @NonNull Result result) {
-        superPlayerView.uiHideDanmu();
-    }
-
-    void uiHideReplay(@NonNull MethodCall call, @NonNull Result result) {
-        superPlayerView.uiHideReplay();
-    }
-
-    void uiHideController(@NonNull MethodCall call, @NonNull Result result) {
-        superPlayerView.uiHideController();
     }
 
     @Override
@@ -269,9 +266,9 @@ public class FlutterSuperPlayerView implements PlatformView, MethodCallHandler, 
     }
 
     @Override
-    public void onPlayStateChange(int playState) {
+    public void onPlayStateChange(SuperPlayerDef.PlayerState playState) {
         final Map<String, Object> dataMap = new HashMap<>();
-        dataMap.put("playState", playState);
+        dataMap.put("playState", playState.intValue());
 
         final Map<String, Object> eventData = new HashMap<>();
         eventData.put("listener", "SuperPlayerListener");

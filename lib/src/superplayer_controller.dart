@@ -112,6 +112,12 @@ class SuperPlayerController {
     return await _channel!.invokeMethod('getPlayRate', {});
   }
 
+  void setControlViewType(String controlViewType) {
+    _channel!.invokeMethod('setControlViewType', {
+      'controlViewType': controlViewType,
+    });
+  }
+
   void setPlayRate(num playRate) {
     _channel!.invokeMethod('setPlayRate', {'playRate': playRate});
   }

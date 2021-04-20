@@ -38,6 +38,14 @@ class _SuperPlayerViewState extends State<SuperPlayerView> {
   }
 
   @override
+  void didUpdateWidget(covariant SuperPlayerView oldWidget) {
+    if (oldWidget.controlViewType != widget.controlViewType) {
+      widget.controller!.setControlViewType(widget.controlViewType);
+    }
+    super.didUpdateWidget(oldWidget);
+  }
+
+  @override
   Widget build(BuildContext context) {
     Map<String, dynamic> creationParams = {
       'controlViewType': widget.controlViewType,

@@ -637,4 +637,8 @@ public class WindowPlayer extends AbsPlayer implements View.OnClickListener,
         }
         postDelayed(mHideViewRunnable, 7000);
     }
+
+    public void hideReplay() {
+        mLayoutReplay.setVisibility(View.GONE);
+    }
 }

@@ -615,6 +615,15 @@ public class SuperPlayerView extends RelativeLayout {
         }
     }
 
+    public void uiHideDanmu() {
+        mFullScreenPlayer.hideDanmu();
+    }
+
+    public void uiHideReplay() {
+        mWindowPlayer.hideReplay();
+        mFullScreenPlayer.hideReplay();
+    }
+
     public Player.Callback getControllerCallback() {
         return mControllerCallback;
     }

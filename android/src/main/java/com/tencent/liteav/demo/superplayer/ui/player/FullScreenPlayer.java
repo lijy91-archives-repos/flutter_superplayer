@@ -919,4 +919,12 @@ public class FullScreenPlayer extends AbsPlayer implements View.OnClickListener,
             }
         }
     }
+
+    public void hideDanmu() {
+        mIvDanmu.setVisibility(View.GONE);
+    }
+
+    public void hideReplay() {
+        mLayoutReplay.setVisibility(View.GONE);
+    }
 }

@@ -2,14 +2,13 @@
 
 适用于 Flutter 的腾讯云超级播放器插件
 
-<!-- [![pub version][pub-image]][pub-url] -->
+[![pub version][pub-image]][pub-url]
 
 [pub-image]: https://img.shields.io/pub/v/flutter_superplayer.svg
 [pub-url]: https://pub.dev/packages/flutter_superplayer
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
-
 
 - [快速开始](#%E5%BF%AB%E9%80%9F%E5%BC%80%E5%A7%8B)
   - [安装](#%E5%AE%89%E8%A3%85)
@@ -25,12 +24,12 @@
 
 将此添加到包的 pubspec.yaml 文件中：
 
-> 该插件尚在开发阶段，请使用以下方式引入你的项目。
-
-<!-- ```yaml
+```yaml
 dependencies:
   flutter_superplayer: ^0.0.1
-``` -->
+```
+
+或
 
 ```yaml
 dependencies:
@@ -69,7 +68,7 @@ SuperPlayerView(
 ```
 MIT License
 
-Copyright (c) 2020 LiJianying <lijy91@foxmail.com>
+Copyright (c) 2021 LiJianying <lijy91@foxmail.com>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

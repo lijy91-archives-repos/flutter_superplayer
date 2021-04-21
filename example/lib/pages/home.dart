@@ -9,10 +9,10 @@ import 'package:flutter_superplayer/flutter_superplayer.dart';
 const _kControlViewTypes = [kControlViewTypeDefault, kControlViewTypeWithout];
 
 class _ListSection extends StatelessWidget {
-  final Widget? title;
+  final Widget title;
 
   const _ListSection({
-    Key? key,
+    Key key,
     this.title,
   }) : super(key: key);
 
@@ -36,7 +36,7 @@ class _ListSection extends StatelessWidget {
                   fontSize: 13,
                   fontWeight: FontWeight.bold,
                 ),
-                child: title!,
+                child: title,
               ),
             ],
           ),
@@ -47,13 +47,13 @@ class _ListSection extends StatelessWidget {
 }
 
 class _ListItem extends StatelessWidget {
-  final Widget? title;
-  final Widget? subtitle;
-  final Widget? trailing;
-  final VoidCallback? onTap;
+  final Widget title;
+  final Widget subtitle;
+  final Widget trailing;
+  final VoidCallback onTap;
 
   const _ListItem({
-    Key? key,
+    Key key,
     this.title,
     this.subtitle,
     this.trailing,
@@ -82,7 +82,7 @@ class _ListItem extends StatelessWidget {
                     color: Colors.black,
                     fontSize: 15,
                   ),
-                  child: title!,
+                  child: title,
                 ),
                 Expanded(child: Container()),
                 if (trailing != null) SizedBox(height: 34, child: trailing),

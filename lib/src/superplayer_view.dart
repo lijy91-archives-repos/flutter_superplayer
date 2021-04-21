@@ -9,12 +9,12 @@ import './superplayer_control_view.dart';
 import './superplayer_controller.dart';
 
 class SuperPlayerView extends StatefulWidget {
-  Function(SuperPlayerController? controller)? onSuperPlayerViewCreated;
-  SuperPlayerController? controller;
+  Function(SuperPlayerController controller) onSuperPlayerViewCreated;
+  SuperPlayerController controller;
   String controlViewType;
 
   SuperPlayerView({
-    Key? key,
+    Key key,
     this.onSuperPlayerViewCreated,
     this.controller,
     this.controlViewType = kControlViewTypeDefault,
@@ -30,17 +30,17 @@ class _SuperPlayerViewState extends State<SuperPlayerView> {
       widget.controller = SuperPlayerController();
     }
     if (widget.controller != null) {
-      widget.controller!.initWithViewId(viewId);
+      widget.controller.initWithViewId(viewId);
     }
     if (widget.onSuperPlayerViewCreated != null) {
-      widget.onSuperPlayerViewCreated!(widget.controller);
+      widget.onSuperPlayerViewCreated(widget.controller);
     }
   }
 
   @override
   void didUpdateWidget(covariant SuperPlayerView oldWidget) {
     if (oldWidget.controlViewType != widget.controlViewType) {
-      widget.controller!.setControlViewType(widget.controlViewType);
+      widget.controller.setControlViewType(widget.controlViewType);
     }
     super.didUpdateWidget(oldWidget);
   }

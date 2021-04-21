@@ -48,7 +48,15 @@ $ flutter packages get
 ### 用法
 
 ```dart
+import 'package:flutter_superplayer/flutter_superplayer.dart';
 
+SuperPlayerController _playerController = SuperPlayerController();
+String _controlViewType = kControlViewTypeDefault;
+
+SuperPlayerView(
+  controller: _playerController,
+  controlViewType: _controlViewType,
+)
 ```
 
 ## 相关链接

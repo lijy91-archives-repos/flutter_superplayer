@@ -123,6 +123,8 @@ public class FlutterSuperPlayerView implements PlatformView, MethodCallHandler, 
             release(call, result);
         } else if (call.method.equals("seekTo")) {
             seekTo(call, result);
+        } else if (call.method.equals("setLoop")) {
+            setLoop(call, result);
         } else if (call.method.equals("uiHideDanmu")) {
             uiHideDanmu(call, result);
         } else if (call.method.equals("uiHideReplay")) {
@@ -212,6 +214,11 @@ public class FlutterSuperPlayerView implements PlatformView, MethodCallHandler, 
     void seekTo(@NonNull MethodCall call, @NonNull Result result) {
         int time = (int) call.argument("time");
         superPlayerView.getControllerCallback().onSeekTo(time);
+    }
+
+    void setLoop(@NonNull MethodCall call, @NonNull Result result) {
+        boolean isLoop = (boolean) call.argument("isLoop");
+        superPlayerView.getSuperPlayer().setLoop(isLoop);
     }
 
     void uiHideDanmu(@NonNull MethodCall call, @NonNull Result result) {

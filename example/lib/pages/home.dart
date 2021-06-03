@@ -207,6 +207,7 @@ class _HomePageState extends State<HomePage> with SuperPlayerListener {
                           case 0:
                             _playerController
                                 .playWithModel(testSuperPlayerModel);
+                            _playerController.setLoop(true);
                             break;
                           case 1:
                             _playerController.pause();

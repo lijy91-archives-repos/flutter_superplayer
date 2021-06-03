@@ -154,6 +154,12 @@ class SuperPlayerController {
     });
   }
 
+  void setLoop(bool isLoop) {
+    _channel!.invokeMethod('setLoop', {
+      'isLoop': isLoop,
+    });
+  }
+
   void uiHideDanmu() {
     _channel!.invokeMethod('uiHideDanmu');
   }

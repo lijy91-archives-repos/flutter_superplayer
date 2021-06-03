@@ -624,6 +624,11 @@ public class SuperPlayerView extends RelativeLayout {
         mFullScreenPlayer.hideReplay();
     }
 
+
+    public SuperPlayer getSuperPlayer() {
+        return mSuperPlayer;
+    }
+
     public Player.Callback getControllerCallback() {
         return mControllerCallback;
     }

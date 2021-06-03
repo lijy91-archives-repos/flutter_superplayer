@@ -95,6 +95,8 @@
         [self release:call result: result];
     } else if ([[call method] isEqualToString:@"seekTo"]) {
         [self seekTo:call result: result];
+    } else if ([[call method] isEqualToString:@"setLoop"]) {
+        [self setLoop:call result: result];
     } else if ([[call method] isEqualToString:@"uiHideDanmu"]) {
         [self uiHideDanmu:call result: result];
     } else if ([[call method] isEqualToString:@"uiHideReplay"]) {
@@ -192,6 +194,13 @@
 {
     NSNumber *time = call.arguments[@"time"];
     [_superPlayerView seekToTime:time.intValue];
+}
+
+- (void)setLoop:(FlutterMethodCall*)call
+        result:(FlutterResult)result
+{
+    NSNumber *isLoop = call.arguments[@"isLoop"];
+    [_superPlayerView setLoop:isLoop.boolValue];
 }
 
 - (void) uiHideDanmu:(FlutterMethodCall*)call

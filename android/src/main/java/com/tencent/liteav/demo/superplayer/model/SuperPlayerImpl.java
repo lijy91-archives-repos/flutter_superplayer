@@ -877,6 +877,13 @@ public class SuperPlayerImpl implements SuperPlayer, ITXVodPlayListener, ITXLive
     }
 
     @Override
+    public void setLoop(boolean isLoop) {
+        if (mCurrentPlayType == SuperPlayerDef.PlayerType.VOD) {
+            mVodPlayer.setLoop(isLoop);
+        }
+    }
+
+    @Override
     public String getPlayURL() {
         return mCurrentPlayVideoURL;
     }

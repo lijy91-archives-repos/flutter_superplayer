@@ -100,6 +100,8 @@ public interface SuperPlayer {
 
     void switchStream(VideoQuality quality);
 
+    void setLoop(boolean isLoop);
+
     String getPlayURL();
 
     /**

@@ -43,7 +43,9 @@
         _superPlayerView.delegate = self;
         
         [self setControlViewType:args[@"controlViewType"]];
-        [self setCoverImage:args[@"coverImageUrl"]];
+        if (args[@"coverImageUrl"] != nil) {
+            [self setCoverImage:args[@"coverImageUrl"]];
+        }
     }
     return self;
 }

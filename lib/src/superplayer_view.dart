@@ -55,7 +55,7 @@ class _SuperPlayerViewState extends State<SuperPlayerView> {
     Map<String, dynamic> creationParams = {
       'controlViewType': widget.controlViewType,
       'coverImageUrl': widget.coverImageUrl,
-    };
+    }..removeWhere((String k, dynamic v) => v == null);
 
     if (Platform.isAndroid) {
       return AndroidView(

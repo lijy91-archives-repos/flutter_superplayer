@@ -475,11 +475,7 @@ public class WindowPlayer extends AbsPlayer implements View.OnClickListener,
      */
     private void setBitmap(ImageView view, Bitmap bitmap) {
         if (view == null || bitmap == null) return;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-            view.setBackground(new BitmapDrawable(getContext().getResources(), bitmap));
-        } else {
-            view.setBackgroundDrawable(new BitmapDrawable(getContext().getResources(), bitmap));
-        }
+        view.setImageBitmap(bitmap);
     }
 
     /**

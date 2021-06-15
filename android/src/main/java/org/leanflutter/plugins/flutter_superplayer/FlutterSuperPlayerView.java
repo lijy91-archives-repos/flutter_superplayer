@@ -73,8 +73,10 @@ public class FlutterSuperPlayerView implements PlatformView, MethodCallHandler, 
 
         String controlViewType = (String) params.get("controlViewType");
         setControlViewType(controlViewType);
-        String coverImageUrl = (String) params.get("coverImageUrl");
-        setCoverImage(coverImageUrl);
+        if (params.containsKey("coverImageUrl")) {
+            String coverImageUrl = (String) params.get("coverImageUrl");
+            setCoverImage(coverImageUrl);
+        }
     }
 
     @Override
@@ -283,7 +285,6 @@ public class FlutterSuperPlayerView implements PlatformView, MethodCallHandler, 
         eventData.put("method", "onClickSmallReturnBtn");
 
         eventSink.success(eventData);
-
     }
 
     @Override
@@ -293,7 +294,6 @@ public class FlutterSuperPlayerView implements PlatformView, MethodCallHandler, 
         eventData.put("method", "onStartFloatWindowPlay");
 
         eventSink.success(eventData);
-
     }
 
     @Override

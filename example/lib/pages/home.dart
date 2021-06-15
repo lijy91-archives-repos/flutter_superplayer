@@ -252,6 +252,7 @@ class _HomePageState extends State<HomePage> with SuperPlayerListener {
                     child: SuperPlayerView(
                       controller: _playerController,
                       controlViewType: _controlViewType,
+                      coverImageUrl: 'http://xiaozhibo-10055601.file.myqcloud.com/coverImg.jpg',
                     ),
                   ),
                   SizedBox(height: 20),

@@ -3,7 +3,7 @@
 //
 //  Created by Lijy91 on 2020/9/4.
 //
-
+#import <SDWebImage/SDWebImage.h>
 #import "FLTSuperPlayerView.h"
 
 // FLTSuperPlayerViewController
@@ -43,6 +43,7 @@
         _superPlayerView.delegate = self;
         
         [self setControlViewType:args[@"controlViewType"]];
+        [self setCoverImage:args[@"coverImageUrl"]];
     }
     return self;
 }
@@ -63,17 +64,12 @@
     return nil;
 }
 
-- (void)setControlViewType:(NSString *)controlViewType
-{
-    if  ([controlViewType isEqualToString:@"without"]) {
-        _superPlayerView.controlView = [[SPWithoutControlView alloc] initWithFrame:CGRectZero];
-    } else {
-        _superPlayerView.controlView = [[SPDefaultControlView alloc] initWithFrame:CGRectZero];
-    }
-}
-
 - (void)onMethodCall:(FlutterMethodCall*)call result:(FlutterResult)result {
-    if ([[call method] isEqualToString:@"getPlayMode"]) {
+    if ([[call method] isEqualToString:@"setControlViewType"]) {
+        [self setControlViewType:call result: result];
+    } else if ([[call method] isEqualToString:@"setCoverImage"]) {
+        [self setCoverImage:call result: result];
+    } else if ([[call method] isEqualToString:@"getPlayMode"]) {
         [self getPlayMode:call result: result];
     } else if ([[call method] isEqualToString:@"getPlayState"]) {
         [self getPlayState:call result: result];
@@ -104,6 +100,35 @@
     } else {
         result(FlutterMethodNotImplemented);
     }
+}
+
+- (void)setControlViewType:(NSString *)controlViewType
+{
+    if  ([controlViewType isEqualToString:@"without"]) {
+        _superPlayerView.controlView = [[SPWithoutControlView alloc] initWithFrame:CGRectZero];
+    } else {
+        _superPlayerView.controlView = [[SPDefaultControlView alloc] initWithFrame:CGRectZero];
+    }
+}
+
+- (void)setControlViewType:(FlutterMethodCall*)call
+                    result:(FlutterResult)result
+{
+    NSString *controlViewType = call.arguments[@"controlViewType"];
+    [self setControlViewType:controlViewType];
+}
+
+- (void)setCoverImage:(NSString *)coverImageUrl
+{
+    [_superPlayerView.coverImageView sd_setImageWithURL:[NSURL URLWithString:coverImageUrl]];
+    _superPlayerView.coverImageView.alpha = 1;
+}
+
+- (void)setCoverImage:(FlutterMethodCall*)call
+               result:(FlutterResult)result
+{
+    NSString *coverImageUrl = call.arguments[@"coverImageUrl"];
+    [self setCoverImage:coverImageUrl];
 }
 
 - (void)getPlayMode:(FlutterMethodCall*)call
@@ -143,7 +168,6 @@
 {
     // skip
 }
-
 
 - (void)playWithModel:(FlutterMethodCall*)call
                result:(FlutterResult)result

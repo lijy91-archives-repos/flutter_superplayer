@@ -12,12 +12,14 @@ class SuperPlayerView extends StatefulWidget {
   Function(SuperPlayerController? controller)? onSuperPlayerViewCreated;
   SuperPlayerController? controller;
   String controlViewType;
+  String? coverImageUrl;
 
   SuperPlayerView({
     Key? key,
     this.onSuperPlayerViewCreated,
     this.controller,
     this.controlViewType = kControlViewTypeDefault,
+    this.coverImageUrl,
   }) : super(key: key);
 
   @override
@@ -42,6 +44,9 @@ class _SuperPlayerViewState extends State<SuperPlayerView> {
     if (oldWidget.controlViewType != widget.controlViewType) {
       widget.controller!.setControlViewType(widget.controlViewType);
     }
+    if (oldWidget.coverImageUrl != widget.coverImageUrl) {
+      widget.controller!.setCoverImage(widget.coverImageUrl!);
+    }
     super.didUpdateWidget(oldWidget);
   }
 
@@ -49,6 +54,7 @@ class _SuperPlayerViewState extends State<SuperPlayerView> {
   Widget build(BuildContext context) {
     Map<String, dynamic> creationParams = {
       'controlViewType': widget.controlViewType,
+      'coverImageUrl': widget.coverImageUrl,
     };
 
     if (Platform.isAndroid) {

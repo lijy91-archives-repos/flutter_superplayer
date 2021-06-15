@@ -18,12 +18,17 @@ PODS:
   - flutter_superplayer (0.0.1):
     - Flutter
     - flutter_superplayer/SuperPlayer_Professional (= 0.0.1)
+    - SDWebImage (~> 5.0)
   - flutter_superplayer/SuperPlayer_Professional (0.0.1):
     - AFNetworking (~> 4.0)
     - Flutter
     - Masonry
+    - SDWebImage (~> 5.0)
     - TXLiteAVSDK_Professional
   - Masonry (1.1.0)
+  - SDWebImage (5.11.1):
+    - SDWebImage/Core (= 5.11.1)
+  - SDWebImage/Core (5.11.1)
   - TXLiteAVSDK_Professional (8.5.10022)
 
 DEPENDENCIES:
@@ -34,6 +39,7 @@ SPEC REPOS:
   trunk:
     - AFNetworking
     - Masonry
+    - SDWebImage
     - TXLiteAVSDK_Professional
 
 EXTERNAL SOURCES:
@@ -45,8 +51,9 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   AFNetworking: 7864c38297c79aaca1500c33288e429c3451fdce
   Flutter: 434fef37c0980e73bb6479ef766c45957d4b510c
-  flutter_superplayer: 50d64a438d4e917295d7c8d8124bcc239f323dad
+  flutter_superplayer: d776c28859e3e6c17821ab7973c1fd374f4f546f
   Masonry: 678fab65091a9290e40e2832a55e7ab731aad201
+  SDWebImage: a7f831e1a65eb5e285e3fb046a23fcfbf08e696d
   TXLiteAVSDK_Professional: 165018e2f0570d2608d7ea2b785fc273558f9920
 
 PODFILE CHECKSUM: b1f7a399522c118a74b177b13c01eca692aa7e6d

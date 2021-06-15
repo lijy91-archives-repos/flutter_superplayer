@@ -118,6 +118,13 @@ class SuperPlayerController {
     });
   }
 
+  void setCoverImage(String coverImageUrl) {
+    _channel!.invokeMethod(
+      'setCoverImage',
+      {'coverImageUrl': coverImageUrl},
+    );
+  }
+
   void setPlayRate(num playRate) {
     _channel!.invokeMethod('setPlayRate', {'playRate': playRate});
   }

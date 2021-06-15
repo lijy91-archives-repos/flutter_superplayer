@@ -615,6 +615,11 @@ public class SuperPlayerView extends RelativeLayout {
         }
     }
 
+    public void setCoverImage(String coverImageUrl) {
+        this.mWindowPlayer.setBackground(coverImageUrl);
+        this.mWindowPlayer.showBackground();
+    }
+
     public void uiHideDanmu() {
         mFullScreenPlayer.hideDanmu();
     }

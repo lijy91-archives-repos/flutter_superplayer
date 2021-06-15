@@ -73,6 +73,8 @@ public class FlutterSuperPlayerView implements PlatformView, MethodCallHandler, 
 
         String controlViewType = (String) params.get("controlViewType");
         setControlViewType(controlViewType);
+        String coverImageUrl = (String) params.get("coverImageUrl");
+        setCoverImage(coverImageUrl);
     }
 
     @Override
@@ -101,6 +103,8 @@ public class FlutterSuperPlayerView implements PlatformView, MethodCallHandler, 
     public void onMethodCall(@NonNull MethodCall call, @NonNull MethodChannel.Result result) {
         if (call.method.equals("setControlViewType")) {
             setControlViewType(call, result);
+        } else if (call.method.equals("setCoverImage")) {
+            setCoverImage(call, result);
         } else if (call.method.equals("getPlayMode")) {
             getPlayMode(call, result);
         } else if (call.method.equals("getPlayState")) {
@@ -143,6 +147,14 @@ public class FlutterSuperPlayerView implements PlatformView, MethodCallHandler, 
         superPlayerView.setControlViewType(controlViewType);
     }
 
+    void setCoverImage(String coverImageUrl) {
+        superPlayerView.setCoverImage(coverImageUrl);
+    }
+
+    void setCoverImage(@NonNull MethodCall call, @NonNull Result result) {
+        String controlViewType = (String) call.argument("coverImageUrl");
+        superPlayerView.setCoverImage(controlViewType);
+    }
 
     void getPlayMode(@NonNull MethodCall call, @NonNull Result result) {
         int playMode = superPlayerView.getPlayerMode().ordinal();

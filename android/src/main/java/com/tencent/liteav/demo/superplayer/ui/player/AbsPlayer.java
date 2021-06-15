@@ -94,6 +94,11 @@ public abstract class AbsPlayer extends RelativeLayout implements Player {
     public void setBackground(Bitmap bitmap) {
 
     }
+    
+    @Override
+    public void setBackground(String imageUrl) {
+
+    }
 
     @Override
     public void showBackground() {

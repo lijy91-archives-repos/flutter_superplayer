@@ -3,7 +3,9 @@ package com.tencent.liteav.demo.superplayer.ui.player;
 import android.animation.ValueAnimator;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.util.AttributeSet;
 import android.view.GestureDetector;
@@ -22,6 +24,9 @@ import com.tencent.liteav.demo.superplayer.ui.view.VideoProgressLayout;
 import com.tencent.liteav.demo.superplayer.ui.view.VolumeBrightnessProgressLayout;
 
 import org.leanflutter.plugins.flutter_superplayer.R;
+
+import java.io.IOException;
+import java.net.URL;
 
 /**
  * 窗口模式播放控件
@@ -439,6 +444,28 @@ public class WindowPlayer extends AbsPlayer implements View.OnClickListener,
                 } else {
                     setBitmap(mBackground, mBackgroundBmp);
                 }
+            }
+        });
+    }
+
+    @Override
+    public void setBackground(String imageUrl) {
+        AsyncTask.execute(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    URL url = new URL(imageUrl);
+                    Bitmap bitmap = BitmapFactory.decodeStream(url.openConnection().getInputStream());
+                    mBackgroundBmp = bitmap;
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                post(new Runnable() {
+                    @Override
+                    public void run() {
+                        setBitmap(mBackground, mBackgroundBmp);
+                    }
+                });
             }
         });
     }

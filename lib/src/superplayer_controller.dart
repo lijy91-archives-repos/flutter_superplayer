@@ -119,13 +119,13 @@ class SuperPlayerController {
   }
 
   void setTitle(String title) {
-    _channel!.invokeMethod('setTitle', {
+    _channel.invokeMethod('setTitle', {
       'title': title,
     });
   }
 
   void setCoverImage(String coverImageUrl) {
-    _channel!.invokeMethod(
+    _channel.invokeMethod(
       'setCoverImage',
       {'coverImageUrl': coverImageUrl},
     );
@@ -168,7 +168,7 @@ class SuperPlayerController {
   }
 
   void setLoop(bool isLoop) {
-    _channel!.invokeMethod('setLoop', {
+    _channel.invokeMethod('setLoop', {
       'isLoop': isLoop,
     });
   }

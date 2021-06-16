@@ -12,7 +12,7 @@ class SuperPlayerView extends StatefulWidget {
   Function(SuperPlayerController controller) onSuperPlayerViewCreated;
   SuperPlayerController controller;
   String controlViewType;
-  String? coverImageUrl;
+  String coverImageUrl;
 
   SuperPlayerView({
     Key key,
@@ -45,7 +45,7 @@ class _SuperPlayerViewState extends State<SuperPlayerView> {
       widget.controller.setControlViewType(widget.controlViewType);
     }
     if (oldWidget.coverImageUrl != widget.coverImageUrl) {
-      widget.controller!.setCoverImage(widget.coverImageUrl!);
+      widget.controller.setCoverImage(widget.coverImageUrl);
     }
     super.didUpdateWidget(oldWidget);
   }

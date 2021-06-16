@@ -118,6 +118,12 @@ class SuperPlayerController {
     });
   }
 
+  void setTitle(String title) {
+    _channel!.invokeMethod('setTitle', {
+      'title': title,
+    });
+  }
+
   void setCoverImage(String coverImageUrl) {
     _channel!.invokeMethod(
       'setCoverImage',

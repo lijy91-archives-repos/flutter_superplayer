@@ -615,6 +615,10 @@ public class SuperPlayerView extends RelativeLayout {
         }
     }
 
+    public void setTitle(String title) {
+        this.updateTitle(title);
+    }
+
     public void setCoverImage(String coverImageUrl) {
         this.mWindowPlayer.setBackground(coverImageUrl);
         this.mWindowPlayer.showBackground();
@@ -734,7 +738,6 @@ public class SuperPlayerView extends RelativeLayout {
             mPlayerViewCallback.onPlayStateChange(SuperPlayerDef.PlayerState.PLAYING);
             mWindowPlayer.updatePlayState(SuperPlayerDef.PlayerState.PLAYING);
             mFullScreenPlayer.updatePlayState(SuperPlayerDef.PlayerState.PLAYING);
-            updateTitle(name);
             mWindowPlayer.hideBackground();
             if (mDanmuView != null && mDanmuView.isPrepared() && mDanmuView.isPaused()) {
                 mDanmuView.resume();

@@ -69,6 +69,8 @@
 - (void)onMethodCall:(FlutterMethodCall*)call result:(FlutterResult)result {
     if ([[call method] isEqualToString:@"setControlViewType"]) {
         [self setControlViewType:call result: result];
+    } else if ([[call method] isEqualToString:@"setTitle"]) {
+        [self setTitle:call result: result];
     } else if ([[call method] isEqualToString:@"setCoverImage"]) {
         [self setCoverImage:call result: result];
     } else if ([[call method] isEqualToString:@"getPlayMode"]) {
@@ -118,6 +120,13 @@
 {
     NSString *controlViewType = call.arguments[@"controlViewType"];
     [self setControlViewType:controlViewType];
+}
+
+- (void)setTitle:(FlutterMethodCall*)call
+          result:(FlutterResult)result
+{
+    NSString *title = call.arguments[@"title"];
+    [_superPlayerView.controlView setTitle:title];
 }
 
 - (void)setCoverImage:(NSString *)coverImageUrl

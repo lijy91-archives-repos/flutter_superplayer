@@ -73,6 +73,10 @@ public class FlutterSuperPlayerView implements PlatformView, MethodCallHandler, 
 
         String controlViewType = (String) params.get("controlViewType");
         setControlViewType(controlViewType);
+        if (params.containsKey("coverImageUrl")) {
+            String coverImageUrl = (String) params.get("coverImageUrl");
+            setCoverImage(coverImageUrl);
+        }
     }
 
     @Override
@@ -101,6 +105,10 @@ public class FlutterSuperPlayerView implements PlatformView, MethodCallHandler, 
     public void onMethodCall(@NonNull MethodCall call, @NonNull MethodChannel.Result result) {
         if (call.method.equals("setControlViewType")) {
             setControlViewType(call, result);
+        } else if (call.method.equals("setTitle")) {
+            setTitle(call, result);
+        } else if (call.method.equals("setCoverImage")) {
+            setCoverImage(call, result);
         } else if (call.method.equals("getPlayMode")) {
             getPlayMode(call, result);
         } else if (call.method.equals("getPlayState")) {
@@ -123,6 +131,8 @@ public class FlutterSuperPlayerView implements PlatformView, MethodCallHandler, 
             release(call, result);
         } else if (call.method.equals("seekTo")) {
             seekTo(call, result);
+        } else if (call.method.equals("setLoop")) {
+            setLoop(call, result);
         } else if (call.method.equals("uiHideDanmu")) {
             uiHideDanmu(call, result);
         } else if (call.method.equals("uiHideReplay")) {
@@ -141,6 +151,19 @@ public class FlutterSuperPlayerView implements PlatformView, MethodCallHandler, 
         superPlayerView.setControlViewType(controlViewType);
     }
 
+    void setTitle(@NonNull MethodCall call, @NonNull Result result) {
+        String title = (String) call.argument("title");
+        superPlayerView.setTitle(title);
+    }
+
+    void setCoverImage(String coverImageUrl) {
+        superPlayerView.setCoverImage(coverImageUrl);
+    }
+
+    void setCoverImage(@NonNull MethodCall call, @NonNull Result result) {
+        String controlViewType = (String) call.argument("coverImageUrl");
+        superPlayerView.setCoverImage(controlViewType);
+    }
 
     void getPlayMode(@NonNull MethodCall call, @NonNull Result result) {
         int playMode = superPlayerView.getPlayerMode().ordinal();
@@ -214,6 +237,11 @@ public class FlutterSuperPlayerView implements PlatformView, MethodCallHandler, 
         superPlayerView.getControllerCallback().onSeekTo(time);
     }
 
+    void setLoop(@NonNull MethodCall call, @NonNull Result result) {
+        boolean isLoop = (boolean) call.argument("isLoop");
+        superPlayerView.getSuperPlayer().setLoop(isLoop);
+    }
+
     void uiHideDanmu(@NonNull MethodCall call, @NonNull Result result) {
         superPlayerView.uiHideDanmu();
     }
@@ -264,7 +292,6 @@ public class FlutterSuperPlayerView implements PlatformView, MethodCallHandler, 
         eventData.put("method", "onClickSmallReturnBtn");
 
         eventSink.success(eventData);
-
     }
 
     @Override
@@ -274,7 +301,6 @@ public class FlutterSuperPlayerView implements PlatformView, MethodCallHandler, 
         eventData.put("method", "onStartFloatWindowPlay");
 
         eventSink.success(eventData);
-
     }
 
     @Override

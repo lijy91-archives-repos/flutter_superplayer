@@ -94,6 +94,8 @@ public interface Player {
      */
     void setBackground(final Bitmap bitmap);
 
+    void setBackground(final String imageUrl);
+
     /**
      * 显示背景
      */

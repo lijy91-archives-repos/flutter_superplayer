@@ -26,7 +26,7 @@
 
 ```yaml
 dependencies:
-  flutter_superplayer: ^0.0.1
+  flutter_superplayer: ^0.0.3
 ```
 
 或

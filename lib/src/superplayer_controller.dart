@@ -118,6 +118,19 @@ class SuperPlayerController {
     });
   }
 
+  void setTitle(String title) {
+    _channel!.invokeMethod('setTitle', {
+      'title': title,
+    });
+  }
+
+  void setCoverImage(String coverImageUrl) {
+    _channel!.invokeMethod(
+      'setCoverImage',
+      {'coverImageUrl': coverImageUrl},
+    );
+  }
+
   void setPlayRate(num playRate) {
     _channel.invokeMethod('setPlayRate', {'playRate': playRate});
   }
@@ -151,6 +164,12 @@ class SuperPlayerController {
   void seekTo(int time) {
     _channel.invokeMethod('seekTo', {
       'time': time,
+    });
+  }
+
+  void setLoop(bool isLoop) {
+    _channel!.invokeMethod('setLoop', {
+      'isLoop': isLoop,
     });
   }
 

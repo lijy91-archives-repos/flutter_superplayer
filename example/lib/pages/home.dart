@@ -207,6 +207,8 @@ class _HomePageState extends State<HomePage> with SuperPlayerListener {
                           case 0:
                             _playerController
                                 .playWithModel(testSuperPlayerModel);
+                            _playerController.setLoop(true);
+                            _playerController.setTitle('SUPERPLAYER');
                             break;
                           case 1:
                             _playerController.pause();
@@ -251,6 +253,7 @@ class _HomePageState extends State<HomePage> with SuperPlayerListener {
                     child: SuperPlayerView(
                       controller: _playerController,
                       controlViewType: _controlViewType,
+                      coverImageUrl: 'http://xiaozhibo-10055601.file.myqcloud.com/coverImg.jpg',
                     ),
                   ),
                   SizedBox(height: 20),

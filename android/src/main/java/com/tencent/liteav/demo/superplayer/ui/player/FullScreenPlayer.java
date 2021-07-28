@@ -38,7 +38,7 @@ import java.util.List;
  * 全屏模式播放控件
  *
  * 除{@link WindowPlayer}基本功能外，还包括进度条关键帧打点信息显示与跳转、快进快退时缩略图的显示、切换画质
- * 镜像播放、硬件加速、倍速播放、弹幕、截图等功能
+ * 镜像播放、硬件加速、倍速播放、截图等功能
  *
  * 1、点击事件监听{@link #onClick(View)}
  *
@@ -78,7 +78,6 @@ public class FullScreenPlayer extends AbsPlayer implements View.OnClickListener,
 
     private TextView                            mTvQuality;                             // 当前画质文本
     private ImageView                           mIvBack;                                // 顶部标题栏中的返回按钮
-    private ImageView                           mIvDanmu;                               // 弹幕按钮
     private ImageView                           mIvSnapshot;                            // 截屏按钮
     private ImageView                           mIvLock;                                // 锁屏按钮
     private ImageView                           mIvMore;                                // 更多设置弹窗按钮
@@ -103,7 +102,6 @@ public class FullScreenPlayer extends AbsPlayer implements View.OnClickListener,
     private float                               mWaterMarkBmpX;                         // 水印x坐标
     private float                               mWaterMarkBmpY;                         // 水印y坐标
 
-    private boolean                             mBarrageOn;                             // 弹幕是否开启
     private boolean                             mLockScreen;                            // 是否锁屏
     private TXImageSprite                       mTXImageSprite;                         // 雪碧图信息
     private List<PlayKeyFrameDescInfo>          mTXPlayKeyFrameDescInfoList;            // 关键帧信息
@@ -248,7 +246,6 @@ public class FullScreenPlayer extends AbsPlayer implements View.OnClickListener,
         mIvLock = (ImageView) findViewById(R.id.superplayer_iv_lock);
         mTvTitle = (TextView) findViewById(R.id.superplayer_tv_title);
         mIvPause = (ImageView) findViewById(R.id.superplayer_iv_pause);
-        mIvDanmu = (ImageView) findViewById(R.id.superplayer_iv_danmuku);
         mIvMore = (ImageView) findViewById(R.id.superplayer_iv_more);
         mIvSnapshot = (ImageView) findViewById(R.id.superplayer_iv_snapshot);
         mTvCurrent = (TextView) findViewById(R.id.superplayer_tv_current);
@@ -272,7 +269,6 @@ public class FullScreenPlayer extends AbsPlayer implements View.OnClickListener,
         mIvLock.setOnClickListener(this);
         mIvBack.setOnClickListener(this);
         mIvPause.setOnClickListener(this);
-        mIvDanmu.setOnClickListener(this);
         mIvSnapshot.setOnClickListener(this);
         mIvMore.setOnClickListener(this);
         mTvQuality.setOnClickListener(this);
@@ -624,8 +620,6 @@ public class FullScreenPlayer extends AbsPlayer implements View.OnClickListener,
             }
         } else if (i == R.id.superplayer_iv_pause) {            //暂停\播放按钮
             togglePlayState();
-        } else if (i == R.id.superplayer_iv_danmuku) {          //弹幕按钮
-            toggleBarrage();
         } else if (i == R.id.superplayer_iv_snapshot) {         //截屏按钮
             if (mControllerCallback != null) {
                 mControllerCallback.onSnapshot();
@@ -644,21 +638,6 @@ public class FullScreenPlayer extends AbsPlayer implements View.OnClickListener,
             }
         } else if (i == R.id.superplayer_large_tv_vtt_text) {   //关键帧打点信息按钮
             seekToKeyFramePos();
-        }
-    }
-
-    /**
-     * 开关弹幕
-     */
-    private void toggleBarrage() {
-        mBarrageOn = !mBarrageOn;
-        if (mBarrageOn) {
-            mIvDanmu.setImageResource(R.drawable.superplayer_ic_danmuku_on);
-        } else {
-            mIvDanmu.setImageResource(R.drawable.superplayer_ic_danmuku_off);
-        }
-        if (mControllerCallback != null) {
-            mControllerCallback.onDanmuToggle(mBarrageOn);
         }
     }
 
@@ -918,10 +897,6 @@ public class FullScreenPlayer extends AbsPlayer implements View.OnClickListener,
                 mWefControllerFullScreen.get().mIvLock.setVisibility(GONE);
             }
         }
-    }
-
-    public void hideDanmu() {
-        mIvDanmu.setVisibility(View.GONE);
     }
 
     public void hideReplay() {

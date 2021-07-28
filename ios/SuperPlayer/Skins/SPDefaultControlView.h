@@ -31,10 +31,6 @@
 @property (nonatomic, strong) UIImageView             *bottomImageView;
 /** topView */
 @property (nonatomic, strong) UIImageView             *topImageView;
-/** 弹幕按钮 */
-@property (nonatomic, strong) UIButton                *danmakuBtn;
-/// 是否禁用弹幕
-@property (nonatomic) BOOL                            disableDanmakuBtn;
 /** 截图按钮 */
 @property (nonatomic, strong) UIButton                *captureBtn;
 /// 是否禁用截图

@@ -17,6 +17,7 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.tencent.liteav.demo.superplayer.SuperPlayerDef;
 import com.tencent.liteav.demo.superplayer.model.utils.VideoGestureDetector;
 import com.tencent.liteav.demo.superplayer.ui.view.PointSeekBar;
@@ -450,22 +451,10 @@ public class WindowPlayer extends AbsPlayer implements View.OnClickListener,
 
     @Override
     public void setBackground(String imageUrl) {
-        AsyncTask.execute(new Runnable() {
+        post(new Runnable() {
             @Override
             public void run() {
-                try {
-                    URL url = new URL(imageUrl);
-                    Bitmap bitmap = BitmapFactory.decodeStream(url.openConnection().getInputStream());
-                    mBackgroundBmp = bitmap;
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                post(new Runnable() {
-                    @Override
-                    public void run() {
-                        setBitmap(mBackground, mBackgroundBmp);
-                    }
-                });
+                Glide.with(WindowPlayer.this.getContext()).load(imageUrl).into(mBackground);
             }
         });
     }

@@ -37,7 +37,6 @@
         [self.bottomImageView addSubview:self.totalTimeLabel];
         
         [self.topImageView addSubview:self.captureBtn];
-        [self.topImageView addSubview:self.danmakuBtn];
         [self.topImageView addSubview:self.moreBtn];
         [self addSubview:self.lockBtn];
         [self.topImageView addSubview:self.backBtn];
@@ -53,7 +52,6 @@
         [self makeSubViewsConstraints];
         
         self.captureBtn.hidden = YES;
-        self.danmakuBtn.hidden = YES;
         self.moreBtn.hidden     = YES;
         self.resolutionBtn.hidden   = YES;
         self.moreContentView.hidden = YES;
@@ -92,13 +90,6 @@
         make.width.mas_equalTo(40);
         make.height.mas_equalTo(49);
         make.trailing.equalTo(self.moreBtn.mas_leading).offset(-10);
-        make.centerY.equalTo(self.backBtn.mas_centerY);
-    }];
-    
-    [self.danmakuBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.width.mas_equalTo(40);
-        make.height.mas_equalTo(49);
-        make.trailing.equalTo(self.captureBtn.mas_leading).offset(-10);
         make.centerY.equalTo(self.backBtn.mas_centerY);
     }];
     
@@ -237,11 +228,6 @@
     [self fadeOut:3];
 }
 
-- (void)danmakuBtnClick:(UIButton *)sender {
-    sender.selected = !sender.selected;
-    [self fadeOut:3];
-}
-
 - (void)moreBtnClick:(UIButton *)sender {
     self.topImageView.hidden = YES;
     self.bottomImageView.hidden = YES;
@@ -335,12 +321,6 @@
     }
 }
 
-- (void)setDisableDanmakuBtn:(BOOL)disableDanmakuBtn {
-    _disableDanmakuBtn = disableDanmakuBtn;
-    if (self.fullScreen) {
-        self.danmakuBtn.hidden = disableDanmakuBtn;
-    }
-}
 /**
  *  屏幕方向发生变化会调用这里
  */
@@ -352,7 +332,6 @@
     self.resolutionBtn.hidden   = self.resolutionArray.count == 0;
     self.moreBtn.hidden         = self.disableMoreBtn;
     self.captureBtn.hidden      = self.disableCaptureBtn;
-    self.danmakuBtn.hidden      = self.disableDanmakuBtn;
     
     [self.backBtn setImage:SuperPlayerImage(@"back_full") forState:UIControlStateNormal];
     [self.totalTimeLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
@@ -383,7 +362,6 @@
     self.resolutionBtn.hidden   = YES;
     self.moreBtn.hidden         = YES;
     self.captureBtn.hidden      = YES;
-    self.danmakuBtn.hidden      = YES;
     self.moreContentView.hidden = YES;
     self.resolutionView.hidden  = YES;
     
@@ -518,16 +496,6 @@
     return _captureBtn;
 }
 
-- (UIButton *)danmakuBtn {
-    if (!_danmakuBtn) {
-        _danmakuBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-        [_danmakuBtn setImage:SuperPlayerImage(@"danmu") forState:UIControlStateNormal];
-        [_danmakuBtn setImage:SuperPlayerImage(@"danmu_pressed") forState:UIControlStateSelected];
-        [_danmakuBtn addTarget:self action:@selector(danmakuBtnClick:) forControlEvents:UIControlEventTouchUpInside];
-    }
-    return _danmakuBtn;
-}
-
 - (UIButton *)moreBtn {
     if (!_moreBtn) {
         _moreBtn = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -633,7 +601,6 @@
     self.moreBtn.enabled             = !self.disableMoreBtn;
     self.lockBtn.hidden              = !self.isFullScreen;
     
-    self.danmakuBtn.enabled = YES;
     self.captureBtn.enabled = YES;
     self.backLiveBtn.hidden              = YES;
 }
@@ -762,9 +729,6 @@
     self.titleLabel.text = title;
 }
 
-- (void)hideDanmu {
-    [self setDisableDanmakuBtn:YES];
-}
 - (void)hideReplay {
     [self.repeatBtn setHidden:YES];
 }

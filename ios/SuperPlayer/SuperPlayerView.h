@@ -133,8 +133,6 @@ typedef NS_ENUM(NSInteger, SuperPlayerLayoutStyle) {
  */
 - (void)setPlayRate:(CGFloat)playRate;
 
-- (void)uiHideDanmu;
-
 - (void)uiHideReplay;
 
 @end

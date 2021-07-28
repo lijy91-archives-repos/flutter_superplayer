@@ -1878,10 +1878,6 @@ static UISlider * _volumeSlider;
     return _coverImageView;
 }
 
-- (void)uiHideDanmu {
-    [_controlView hideDanmu];
-}
-
 - (void)uiHideReplay {
     [_controlView hideReplay];
 }

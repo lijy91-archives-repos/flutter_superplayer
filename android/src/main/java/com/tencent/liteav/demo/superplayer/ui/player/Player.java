@@ -183,13 +183,6 @@ public interface Player {
         void onResumeLive();
 
         /**
-         * 弹幕开关回调
-         *
-         * @param isOpen 开启：true 关闭：false
-         */
-        void onDanmuToggle(boolean isOpen);
-
-        /**
          * 屏幕截图回调
          */
         void onSnapshot();

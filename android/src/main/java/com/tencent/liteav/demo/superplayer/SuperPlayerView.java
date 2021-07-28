@@ -40,7 +40,6 @@ import com.tencent.liteav.demo.superplayer.ui.player.FloatPlayer;
 import com.tencent.liteav.demo.superplayer.ui.player.FullScreenPlayer;
 import com.tencent.liteav.demo.superplayer.ui.player.Player;
 import com.tencent.liteav.demo.superplayer.ui.player.WindowPlayer;
-import com.tencent.liteav.demo.superplayer.ui.view.DanmuView;
 import com.tencent.rtmp.TXLivePlayer;
 import com.tencent.rtmp.ui.TXCloudVideoView;
 
@@ -77,7 +76,6 @@ public class SuperPlayerView extends RelativeLayout {
     private FullScreenPlayer mFullScreenPlayer;                         // 全屏模式控制view
     private WindowPlayer mWindowPlayer;                             // 窗口模式控制view
     private FloatPlayer mFloatPlayer;                              // 悬浮窗模式控制view
-    private DanmuView mDanmuView;                                // 弹幕
 
     private ViewGroup.LayoutParams mLayoutParamWindowMode;          // 窗口播放时SuperPlayerView的布局参数
     private ViewGroup.LayoutParams mLayoutParamFullScreenMode;      // 全屏播放时SuperPlayerView的布局参数
@@ -120,7 +118,6 @@ public class SuperPlayerView extends RelativeLayout {
         mFullScreenPlayer = (FullScreenPlayer) mRootView.findViewById(R.id.superplayer_controller_large);
         mWindowPlayer = (WindowPlayer) mRootView.findViewById(R.id.superplayer_controller_small);
         mFloatPlayer = (FloatPlayer) mRootView.findViewById(R.id.superplayer_controller_float);
-        mDanmuView = (DanmuView) mRootView.findViewById(R.id.superplayer_danmuku_view);
 
         mVodControllerWindowParams = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
         mVodControllerFullScreenParams = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
@@ -130,14 +127,12 @@ public class SuperPlayerView extends RelativeLayout {
         mFloatPlayer.setCallback(mControllerCallback);
 
         removeAllViews();
-        mRootView.removeView(mDanmuView);
         mRootView.removeView(mTXCloudVideoView);
         mRootView.removeView(mWindowPlayer);
         mRootView.removeView(mFullScreenPlayer);
         mRootView.removeView(mFloatPlayer);
 
         addView(mTXCloudVideoView);
-        addView(mDanmuView);
     }
 
     private void initPlayer() {
@@ -247,9 +242,6 @@ public class SuperPlayerView extends RelativeLayout {
      * resume生命周期回调
      */
     public void onResume() {
-        if (mDanmuView != null && mDanmuView.isPrepared() && mDanmuView.isPaused()) {
-            mDanmuView.resume();
-        }
         mSuperPlayer.resume();
     }
 
@@ -257,9 +249,6 @@ public class SuperPlayerView extends RelativeLayout {
      * pause生命周期回调
      */
     public void onPause() {
-        if (mDanmuView != null && mDanmuView.isPrepared()) {
-            mDanmuView.pause();
-        }
         mSuperPlayer.pauseVod();
     }
 
@@ -267,10 +256,6 @@ public class SuperPlayerView extends RelativeLayout {
      * 重置播放器
      */
     public void resetPlayer() {
-        if (mDanmuView != null) {
-            mDanmuView.release();
-            mDanmuView = null;
-        }
         stopPlay();
     }
 
@@ -498,13 +483,6 @@ public class SuperPlayerView extends RelativeLayout {
         }
 
         @Override
-        public void onDanmuToggle(boolean isOpen) {
-            if (mDanmuView != null) {
-                mDanmuView.toggle(isOpen);
-            }
-        }
-
-        @Override
         public void onSnapshot() {
             mSuperPlayer.snapshot(new TXLivePlayer.ITXSnapshotListener() {
                 @Override
@@ -624,10 +602,6 @@ public class SuperPlayerView extends RelativeLayout {
         this.mWindowPlayer.showBackground();
     }
 
-    public void uiHideDanmu() {
-        mFullScreenPlayer.hideDanmu();
-    }
-
     public void uiHideReplay() {
         mWindowPlayer.hideReplay();
         mFullScreenPlayer.hideReplay();
@@ -739,9 +713,6 @@ public class SuperPlayerView extends RelativeLayout {
             mWindowPlayer.updatePlayState(SuperPlayerDef.PlayerState.PLAYING);
             mFullScreenPlayer.updatePlayState(SuperPlayerDef.PlayerState.PLAYING);
             mWindowPlayer.hideBackground();
-            if (mDanmuView != null && mDanmuView.isPrepared() && mDanmuView.isPaused()) {
-                mDanmuView.resume();
-            }
             if (mWatcher != null) {
                 mWatcher.exitLoading();
             }

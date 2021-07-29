@@ -104,6 +104,8 @@ public interface SuperPlayer {
 
     String getPlayURL();
 
+    SuperPlayerModel getPlayerModel();
+
     /**
      * 获取当前播放器模式
      *

@@ -14,8 +14,11 @@ import com.tencent.liteav.demo.superplayer.SuperPlayerGlobalConfig;
 import com.tencent.liteav.demo.superplayer.SuperPlayerModel;
 import com.tencent.liteav.demo.superplayer.SuperPlayerVideoId;
 import com.tencent.liteav.demo.superplayer.SuperPlayerView;
+import com.tencent.liteav.demo.superplayer.model.entity.VideoQuality;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import io.flutter.plugin.common.BinaryMessenger;
@@ -103,7 +106,9 @@ public class FlutterSuperPlayerView implements PlatformView, MethodCallHandler, 
 
     @Override
     public void onMethodCall(@NonNull MethodCall call, @NonNull MethodChannel.Result result) {
-        if (call.method.equals("setControlViewType")) {
+        if (call.method.equals("getModel")) {
+            getModel(call, result);
+        } else if (call.method.equals("setControlViewType")) {
             setControlViewType(call, result);
         } else if (call.method.equals("setTitle")) {
             setTitle(call, result);
@@ -117,10 +122,10 @@ public class FlutterSuperPlayerView implements PlatformView, MethodCallHandler, 
             getPlayRate(call, result);
         } else if (call.method.equals("setPlayRate")) {
             setPlayRate(call, result);
+        } else if (call.method.endsWith("setVideoQuality")) {
+            setVideoQuality(call, result);
         } else if (call.method.equals("resetPlayer")) {
             resetPlayer(call, result);
-        } else if (call.method.equals("requestPlayMode")) {
-            requestPlayMode(call, result);
         } else if (call.method.equals("playWithModel")) {
             playWithModel(call, result);
         } else if (call.method.equals("pause")) {
@@ -133,11 +138,28 @@ public class FlutterSuperPlayerView implements PlatformView, MethodCallHandler, 
             seekTo(call, result);
         } else if (call.method.equals("setLoop")) {
             setLoop(call, result);
-        } else if (call.method.equals("uiHideReplay")) {
-            uiHideReplay(call, result);
         } else {
             result.notImplemented();
         }
+    }
+
+    void getModel(@NonNull MethodCall call, @NonNull Result result) {
+        SuperPlayerModel model = superPlayerView.getSuperPlayer().getPlayerModel();
+
+        final List<Map<String, Object>> multiURLs = new ArrayList<>();
+        if (model.multiURLs != null) {
+            for (SuperPlayerModel.SuperPlayerURL superPlayerUrl : model.multiURLs) {
+                final Map<String, Object> itemData = new HashMap<>();
+                itemData.put("qualityName", superPlayerUrl.qualityName);
+                itemData.put("url", superPlayerUrl.url);
+                multiURLs.add(itemData);
+            }
+        }
+
+        Map<String, List<Map<String, Object>>> resultData = new HashMap<>();
+        resultData.put("multiURLs", multiURLs);
+
+        result.success(resultData);
     }
 
     void setControlViewType(String controlViewType) {
@@ -183,13 +205,25 @@ public class FlutterSuperPlayerView implements PlatformView, MethodCallHandler, 
         superPlayerView.getControllerCallback().onSpeedChange(playRate.floatValue());
     }
 
-    void resetPlayer(@NonNull MethodCall call, @NonNull Result result) {
-        superPlayerView.resetPlayer();
+    void setVideoQuality(@NonNull MethodCall call, @NonNull Result result) {
+        String qualityName = (String) call.argument("qualityName");
+        String url = (String) call.argument("url");
+
+        VideoQuality videoQuality = null;
+
+        SuperPlayerModel model = superPlayerView.getSuperPlayer().getPlayerModel();
+        for (int i = 0; i < model.multiURLs.size(); i++) {
+            SuperPlayerModel.SuperPlayerURL superPlayerURL = model.multiURLs.get(i);
+            if (superPlayerURL.qualityName.equals(qualityName) && superPlayerURL.url.equals(url)) {
+                videoQuality =  new VideoQuality(i, superPlayerURL.qualityName, superPlayerURL.url);
+                break;
+            }
+        }
+        superPlayerView.getControllerCallback().onQualityChange(videoQuality);
     }
 
-    void requestPlayMode(@NonNull MethodCall call, @NonNull Result result) {
-        int playMode = (int) call.argument("playMode");
-        superPlayerView.switchPlayMode(SuperPlayerDef.PlayerMode.values()[playMode]);
+    void resetPlayer(@NonNull MethodCall call, @NonNull Result result) {
+        superPlayerView.resetPlayer();
     }
 
     private void playWithModel(@NonNull MethodCall call, @NonNull Result result) {
@@ -240,10 +274,6 @@ public class FlutterSuperPlayerView implements PlatformView, MethodCallHandler, 
         superPlayerView.getSuperPlayer().setLoop(isLoop);
     }
 
-    void uiHideReplay(@NonNull MethodCall call, @NonNull Result result) {
-        superPlayerView.uiHideReplay();
-    }
-
     @Override
     public void onStartFullScreenPlay() {
         final Map<String, Object> dataMap = new HashMap<>();
@@ -290,11 +320,6 @@ public class FlutterSuperPlayerView implements PlatformView, MethodCallHandler, 
 
     @Override
     public void onStartFloatWindowPlay() {
-        final Map<String, Object> eventData = new HashMap<>();
-        eventData.put("listener", "SuperPlayerListener");
-        eventData.put("method", "onStartFloatWindowPlay");
-
-        eventSink.success(eventData);
     }
 
     @Override

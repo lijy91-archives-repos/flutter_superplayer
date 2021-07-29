@@ -69,6 +69,4 @@
 - (void)setOrientationPortraitConstraint;
 - (void)setOrientationLandscapeConstraint;
 
-- (void)hideReplay;
-
 @end

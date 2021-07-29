@@ -1,8 +1,8 @@
 name: flutter_superplayer
 description: 适用于 Flutter 的腾讯云超级播放器插件
 version: 0.0.3
-author: LiJianying <lijy91@foxmail.com>
 homepage: https://github.com/leanflutter/flutter_superplayer
+publish_to: none
 
 environment:
   sdk: ">=2.12.0 <3.0.0"
@@ -11,6 +11,12 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+
+  flutter_xlider:
+    git:
+      url: https://github.com/Ali-Azmoud/flutter_xlider
+      ref: master
+  step_progress_indicator: ^1.0.1
 
 dev_dependencies:
   flutter_test:
@@ -34,10 +40,9 @@ flutter:
         pluginClass: FlutterSuperplayerPlugin
 
   # To add assets to your plugin package, add an assets section, like this:
-  # assets:
-  #   - images/a_dot_burr.jpeg
-  #   - images/a_dot_ham.jpeg
-  #
+  assets:
+    - images/
+  
   # For details regarding assets in packages, see
   # https://flutter.dev/assets-and-images/#from-packages
   #

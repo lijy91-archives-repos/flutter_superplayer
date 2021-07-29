@@ -584,6 +584,10 @@ public class SuperPlayerView extends RelativeLayout {
         return true;
     }
 
+    public SuperPlayerModel getPlayerModel(){
+        return mSuperPlayer.getPlayerModel();
+    }
+
     public void setControlViewType(String controlViewType) {
         if (controlViewType.equals("without")) {
             removeView(this.mFullScreenPlayer);
@@ -601,12 +605,6 @@ public class SuperPlayerView extends RelativeLayout {
         this.mWindowPlayer.setBackground(coverImageUrl);
         this.mWindowPlayer.showBackground();
     }
-
-    public void uiHideReplay() {
-        mWindowPlayer.hideReplay();
-        mFullScreenPlayer.hideReplay();
-    }
-
 
     public SuperPlayer getSuperPlayer() {
         return mSuperPlayer;

@@ -6,13 +6,21 @@ import './constants.dart';
 import './superplayer_const.dart';
 import './superplayer_listener.dart';
 import './superplayer_model.dart';
-// import './superplayer_view.dart';
+
+const kMethodOnFullScreenChange = 'onFullScreenChange';
+const kMethodOnClickFloatCloseBtn = 'onClickFloatCloseBtn';
+const kMethodOnClickSmallReturnBtn = 'onClickSmallReturnBtn';
+const kMethodOnPlayStateChange = 'onPlayStateChange';
+const kMethodOnPlayProgressChange = 'onPlayProgressChange';
 
 class SuperPlayerController {
   ObserverList<SuperPlayerListener>? _listeners =
       ObserverList<SuperPlayerListener>();
   MethodChannel? _channel;
   EventChannel? _eventChannel;
+
+  SuperPlayerModel? _model;
+  bool _isFullScreen = false;
 
   void _onEvent(dynamic event) {
     String listener = '${event['listener']}';
@@ -65,22 +73,19 @@ class SuperPlayerController {
         try {
           if (_listeners!.contains(listener)) {
             switch (method) {
-              case 'onFullScreenChange':
+              case kMethodOnFullScreenChange:
                 listener.onFullScreenChange(data['isFullScreen']);
                 break;
-              case 'onClickFloatCloseBtn':
+              case kMethodOnClickFloatCloseBtn:
                 listener.onClickFloatCloseBtn();
                 break;
-              case 'onClickSmallReturnBtn':
+              case kMethodOnClickSmallReturnBtn:
                 listener.onClickSmallReturnBtn();
                 break;
-              case 'onStartFloatWindowPlay':
-                listener.onStartFloatWindowPlay();
-                break;
-              case 'onPlayStateChange':
+              case kMethodOnPlayStateChange:
                 listener.onPlayStateChange(data['playState']);
                 break;
-              case 'onPlayProgressChange':
+              case kMethodOnPlayProgressChange:
                 listener.onPlayProgressChange(
                   data['current'],
                   data['duration'],
@@ -100,6 +105,43 @@ class SuperPlayerController {
     _eventChannel!.receiveBroadcastStream().listen(_onEvent);
   }
 
+  Future<SuperPlayerModel> getModel() async {
+    final Map<dynamic, dynamic> resultData =
+        await _channel!.invokeMethod('getModel', {});
+
+    _model!.multiURLs = (resultData['multiURLs'] as List)
+        .map((e) => SuperPlayerURL(
+              qualityName: e['qualityName'],
+              url: e['url'],
+            ))
+        .toList();
+
+print(resultData);
+    print(_model!.toJson());
+    return _model!;
+  }
+
+  void setModel(SuperPlayerModel model) {
+    _model = model;
+  }
+
+  Future<bool> isFullScreen() async {
+    return _isFullScreen;
+  }
+
+  Future<void> setFullScreen(bool isFullScreen) async {
+    _isFullScreen = isFullScreen;
+    notifyListeners(kMethodOnFullScreenChange, {'isFullScreen': _isFullScreen});
+
+    if (_isFullScreen) {
+      SystemChrome.setEnabledSystemUIOverlays([]);
+      SystemChrome.setPreferredOrientations([DeviceOrientation.landscapeLeft]);
+    } else {
+      SystemChrome.setEnabledSystemUIOverlays(SystemUiOverlay.values);
+      SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+    }
+  }
+
   Future<int> getPlayMode() async {
     return await _channel!.invokeMethod('getPlayMode', {});
   }
@@ -113,40 +155,50 @@ class SuperPlayerController {
   }
 
   void setControlViewType(String controlViewType) {
-    _channel!.invokeMethod('setControlViewType', {
+    final Map<String, dynamic> arguments = {
       'controlViewType': controlViewType,
-    });
+    };
+    _channel!.invokeMethod('setControlViewType', arguments);
   }
 
   void setTitle(String title) {
-    _channel!.invokeMethod('setTitle', {
+    final Map<String, dynamic> arguments = {
       'title': title,
-    });
+    };
+    _channel!.invokeMethod('setTitle', arguments);
   }
 
   void setCoverImage(String coverImageUrl) {
-    _channel!.invokeMethod(
-      'setCoverImage',
-      {'coverImageUrl': coverImageUrl},
-    );
+    final Map<String, dynamic> arguments = {
+      'coverImageUrl': coverImageUrl,
+    };
+    _channel!.invokeMethod('setCoverImage', arguments);
   }
 
   void setPlayRate(num playRate) {
-    _channel!.invokeMethod('setPlayRate', {'playRate': playRate});
+    final Map<String, dynamic> arguments = {
+      'playRate': playRate,
+    };
+    _channel!.invokeMethod('setPlayRate', arguments);
+  }
+
+  void setVideoQuality(SuperPlayerURL superPlayerURL) {
+    _channel!.invokeMethod('setVideoQuality', superPlayerURL.toJson());
   }
 
   void resetPlayer() {
     _channel!.invokeMethod('resetPlayer');
   }
 
-  void requestPlayMode(int playMode) {
-    _channel!.invokeMethod('requestPlayMode', {
-      'playMode': playMode,
-    });
+  void playWithModel(final SuperPlayerModel model) {
+    this.setModel(model);
+    this.play();
   }
 
-  void playWithModel(final SuperPlayerModel model) {
-    _channel!.invokeMethod('playWithModel', model.toJson());
+  void play() {
+    if (_model != null) {
+      _channel!.invokeMethod('playWithModel', _model!.toJson());
+    }
   }
 
   void pause() {
@@ -162,22 +214,16 @@ class SuperPlayerController {
   }
 
   void seekTo(int time) {
-    _channel!.invokeMethod('seekTo', {
+    final Map<String, dynamic> arguments = {
       'time': time,
-    });
+    };
+    _channel!.invokeMethod('seekTo', arguments);
   }
 
   void setLoop(bool isLoop) {
-    _channel!.invokeMethod('setLoop', {
+    final Map<String, dynamic> arguments = {
       'isLoop': isLoop,
-    });
-  }
-
-  void uiHideDanmu() {
-    _channel!.invokeMethod('uiHideDanmu');
-  }
-
-  void uiHideReplay() {
-    _channel!.invokeMethod('uiHideReplay');
+    };
+    _channel!.invokeMethod('setLoop', arguments);
   }
 }

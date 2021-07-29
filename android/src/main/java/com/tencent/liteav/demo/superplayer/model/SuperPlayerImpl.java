@@ -602,6 +602,14 @@ public class SuperPlayerImpl implements SuperPlayer, ITXVodPlayListener, ITXLive
         if (mObserver != null) {
             mObserver.onVideoQualityListChange(videoQualities, defaultVideoQuality);
         }
+        List<SuperPlayerModel.SuperPlayerURL> multiURLs = new ArrayList<>();
+        for (int i = 0; i < videoQualities.size(); i++) {
+            SuperPlayerModel.SuperPlayerURL superPlayerURL = new SuperPlayerModel.SuperPlayerURL();
+            superPlayerURL.qualityName = videoQualities.get(i).title;
+            superPlayerURL.url = videoQualities.get(i).url;
+            multiURLs.add(superPlayerURL);
+        }
+        mCurrentModel.multiURLs = multiURLs;
     }
 
     private void updateVideoImageSpriteAndKeyFrame(PlayImageSpriteInfo info, List<PlayKeyFrameDescInfo> list) {
@@ -886,6 +894,11 @@ public class SuperPlayerImpl implements SuperPlayer, ITXVodPlayListener, ITXLive
     @Override
     public String getPlayURL() {
         return mCurrentPlayVideoURL;
+    }
+
+    @Override
+    public SuperPlayerModel getPlayerModel() {
+        return mCurrentModel;
     }
 
     @Override

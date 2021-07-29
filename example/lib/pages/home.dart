@@ -3,99 +3,10 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'dart:async';
 
-import 'package:flutter/services.dart';
 import 'package:flutter_superplayer/flutter_superplayer.dart';
+import 'package:preference_list/preference_list.dart';
 
 const _kControlViewTypes = [kControlViewTypeDefault, kControlViewTypeWithout];
-
-class _ListSection extends StatelessWidget {
-  final Widget? title;
-
-  const _ListSection({
-    Key? key,
-    this.title,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      color: Colors.grey.withOpacity(0.1),
-      padding: EdgeInsets.only(
-        left: 16,
-        right: 16,
-        top: 10,
-        bottom: 10,
-      ),
-      child: Column(
-        children: [
-          Row(
-            children: [
-              DefaultTextStyle(
-                style: TextStyle(
-                  color: Colors.black,
-                  fontSize: 13,
-                  fontWeight: FontWeight.bold,
-                ),
-                child: title!,
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _ListItem extends StatelessWidget {
-  final Widget? title;
-  final Widget? subtitle;
-  final Widget? trailing;
-  final VoidCallback? onTap;
-
-  const _ListItem({
-    Key? key,
-    this.title,
-    this.subtitle,
-    this.trailing,
-    this.onTap,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      behavior: HitTestBehavior.opaque,
-      child: Container(
-        constraints: BoxConstraints(minHeight: 48),
-        padding: EdgeInsets.only(
-          left: 16,
-          right: 16,
-          top: 8,
-          bottom: 8,
-        ),
-        alignment: Alignment.centerLeft,
-        child: Column(
-          children: [
-            Row(
-              children: [
-                DefaultTextStyle(
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 15,
-                  ),
-                  child: title!,
-                ),
-                Expanded(child: Container()),
-                if (trailing != null) SizedBox(height: 34, child: trailing),
-              ],
-            ),
-            if (subtitle != null) Container(child: subtitle),
-          ],
-        ),
-      ),
-      onTap: this.onTap,
-    );
-  }
-}
 
 class HomePage extends StatefulWidget {
   @override
@@ -109,12 +20,13 @@ class _HomePageState extends State<HomePage> with SuperPlayerListener {
   List<String> _logs = [];
 
   String _controlViewType = _kControlViewTypes.first;
+  bool _isFullScreen = false;
 
   @override
   void initState() {
     _playerController.addListener(this);
     super.initState();
-    initPlatformState();
+    _init();
   }
 
   SuperPlayerModel get testSuperPlayerModel {
@@ -128,24 +40,14 @@ class _HomePageState extends State<HomePage> with SuperPlayerListener {
     return superPlayerModel;
   }
 
-  // Platform messages are asynchronous, so we initialize in an async method.
-  Future<void> initPlatformState() async {
-    String sdkVersion;
-    // Platform messages may fail, so we use a try/catch PlatformException.
-    try {
-      sdkVersion = await FlutterSuperPlayer.sdkVersion;
-    } on PlatformException {
-      sdkVersion = 'Failed to get platform version.';
-    }
+  Future<void> _init() async {
+    _sdkVersion = await FlutterSuperPlayer.instance.sdkVersion;
 
-    // If the widget was removed from the tree while the asynchronous platform
-    // message was in flight, we want to discard the reply rather than calling
-    // setState to update our non-existent appearance.
+    _playerController.setModel(this.testSuperPlayerModel);
+
     if (!mounted) return;
 
-    setState(() {
-      _sdkVersion = sdkVersion;
-    });
+    setState(() {});
   }
 
   void _addLog(String method, dynamic data) {
@@ -154,125 +56,141 @@ class _HomePageState extends State<HomePage> with SuperPlayerListener {
       _logs.add(data is Map ? json.encode(data) : data);
     }
     _logs.add(' ');
-
     setState(() {});
+  }
+
+  Widget _buildSuperPlayerView(BuildContext context) {
+    double viewWidth = MediaQuery.of(context).size.width;
+    double viewHeight = 212;
+    if (_isFullScreen) {
+      viewHeight = MediaQuery.of(context).size.height;
+    }
+    return Column(
+      children: <Widget>[
+        Stack(
+          children: <Widget>[
+            Container(
+              width: viewWidth,
+              height: viewHeight,
+              child: SuperPlayerView(
+                controller: _playerController,
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Plugin example app'),
-      ),
+      backgroundColor: _isFullScreen ? Colors.black : null,
+      appBar: !_isFullScreen
+          ? AppBar(
+              title: const Text('Plugin example app'),
+            )
+          : null,
       body: Container(
         child: Column(
           mainAxisSize: MainAxisSize.max,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Container(
-              alignment: Alignment.center,
-              child: Column(
-                children: <Widget>[
-                  _ListItem(
-                    title: Text('SDKVersion: $_sdkVersion'),
-                    trailing: GestureDetector(
-                      child: Container(
-                        color: Theme.of(context).primaryColor,
-                        padding: EdgeInsets.all(10),
-                        child: Text(
-                          'Reset',
-                          style: TextStyle(
-                            color: Colors.white,
+              child: _buildSuperPlayerView(context),
+            ),
+            if (!_isFullScreen)
+              Expanded(
+                child: Column(
+                  children: [
+                    PreferenceListSection(
+                      children: [
+                        PreferenceListItem(
+                          title: Text('SDKVersion: $_sdkVersion'),
+                          accessoryView: GestureDetector(
+                            child: Container(
+                              color: Theme.of(context).primaryColor,
+                              padding: EdgeInsets.all(10),
+                              child: Text(
+                                'RESET',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
+                            onTap: () {
+                              _playerController.resetPlayer();
+                              _logs = [];
+                              setState(() {});
+                            },
                           ),
                         ),
-                      ),
-                      onTap: () {
-                        _playerController.resetPlayer();
-                        _logs = [];
-                        setState(() {});
-                      },
-                    ),
-                  ),
-                  Divider(height: 0, indent: 16, endIndent: 16),
-                  _ListItem(
-                    title: Text('action'),
-                    trailing: ToggleButtons(
-                      children: <Widget>[
-                        Text('play'),
-                        Text('pause'),
-                        Text('resume'),
+                        PreferenceListItem(
+                          title: Text('action'),
+                          accessoryView: ToggleButtons(
+                            children: <Widget>[
+                              Text('play'),
+                              Text('pause'),
+                              Text('resume'),
+                            ],
+                            onPressed: (int index) {
+                              switch (index) {
+                                case 0:
+                                  _playerController.play();
+                                  break;
+                                case 1:
+                                  _playerController.pause();
+                                  break;
+                                case 2:
+                                  _playerController.resume();
+                                  break;
+                              }
+                            },
+                            isSelected: [false, false, false],
+                          ),
+                        ),
                       ],
-                      onPressed: (int index) {
-                        switch (index) {
-                          case 0:
-                            _playerController
-                                .playWithModel(testSuperPlayerModel);
-                            _playerController.setLoop(true);
-                            _playerController.setTitle('SUPERPLAYER');
-                            break;
-                          case 1:
-                            _playerController.pause();
-                            break;
-                          case 2:
-                            _playerController.resume();
-                            break;
-                        }
-                      },
-                      isSelected: [false, false, false],
                     ),
-                  ),
-                  _ListSection(
-                    title: Text('Option'),
-                  ),
-                  _ListItem(
-                    title: Text('controlViewType'),
-                    trailing: ToggleButtons(
-                      children: <Widget>[
-                        for (var controlViewType in _kControlViewTypes)
-                          Text(controlViewType),
-                      ],
-                      onPressed: (int index) {
-                        _controlViewType = _kControlViewTypes[index];
+                    PreferenceListSection(
+                      title: Text('Option'),
+                      children: [
+                        PreferenceListItem(
+                          title: Text('controlViewType'),
+                          accessoryView: ToggleButtons(
+                            children: <Widget>[
+                              for (var controlViewType in _kControlViewTypes)
+                                Text(controlViewType),
+                            ],
+                            onPressed: (int index) {
+                              _controlViewType = _kControlViewTypes[index];
 
-                        setState(() {});
-                      },
-                      isSelected: _kControlViewTypes
-                          .map((e) => e == _controlViewType)
-                          .toList(),
+                              setState(() {});
+                            },
+                            isSelected: _kControlViewTypes
+                                .map((e) => e == _controlViewType)
+                                .toList(),
+                          ),
+                        ),
+                      ],
                     ),
-                  ),
-                  Divider(height: 0, indent: 16, endIndent: 16),
-                  SizedBox(height: 10),
-                  Container(
-                    width: double.infinity,
-                    height: MediaQuery.of(context).size.width * (9 / 16),
-                    margin: EdgeInsets.all(10),
-                    decoration: BoxDecoration(
-                      border: Border.all(width: 1, color: Colors.red),
+                    Container(
+                      height: 100,
+                      child: SingleChildScrollView(
+                        padding:
+                            EdgeInsets.only(left: 16, right: 16, bottom: 20),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.max,
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            for (var log in _logs) Text(log),
+                          ],
+                        ),
+                      ),
                     ),
-                    child: SuperPlayerView(
-                      controller: _playerController,
-                      controlViewType: _controlViewType,
-                      coverImageUrl: 'http://xiaozhibo-10055601.file.myqcloud.com/coverImg.jpg',
-                    ),
-                  ),
-                  SizedBox(height: 20),
-                ],
-              ),
-            ),
-            Expanded(
-              child: SingleChildScrollView(
-                padding: EdgeInsets.only(left: 16, right: 16, bottom: 20),
-                child: Column(
-                  mainAxisSize: MainAxisSize.max,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    for (var log in _logs) Text(log),
                   ],
                 ),
-              ),
-            ),
+              )
           ],
         ),
       ),
@@ -292,6 +210,10 @@ class _HomePageState extends State<HomePage> with SuperPlayerListener {
   @override
   void onFullScreenChange(bool isFullScreen) {
     _addLog('onFullScreenChange', {'isFullScreen': isFullScreen});
+
+    setState(() {
+      _isFullScreen = isFullScreen;
+    });
   }
 
   @override
@@ -302,10 +224,5 @@ class _HomePageState extends State<HomePage> with SuperPlayerListener {
   @override
   void onPlayStateChange(int playState) {
     _addLog('onPlayStateChange', {'playState': playState});
-  }
-
-  @override
-  void onStartFloatWindowPlay() {
-    _addLog('onStartFloatWindowPlay', {});
   }
 }

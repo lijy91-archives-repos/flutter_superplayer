@@ -729,10 +729,6 @@
     self.titleLabel.text = title;
 }
 
-- (void)hideReplay {
-    [self.repeatBtn setHidden:YES];
-}
-
 #pragma clang diagnostic pop
 
 @end

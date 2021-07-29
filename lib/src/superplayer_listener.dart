@@ -8,9 +8,6 @@ abstract class SuperPlayerListener {
   /// 点击小播放模式的返回按钮
   void onClickSmallReturnBtn();
 
-  /// 开始悬浮窗播放
-  void onStartFloatWindowPlay();
-
   /// 播放状态发生变化
   void onPlayStateChange(int playState);
 

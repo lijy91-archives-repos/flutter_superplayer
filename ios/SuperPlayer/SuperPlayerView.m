@@ -122,7 +122,7 @@ static UISlider * _volumeSlider;
     LOG_ME;
     // 移除通知
     [[NSNotificationCenter defaultCenter] removeObserver:self];
-    [[UIDevice currentDevice] endGeneratingDeviceOrientationNotifications];
+    // [[UIDevice currentDevice] endGeneratingDeviceOrientationNotifications];
     
     [self reportPlay];
     [self.netWatcher stopWatch];
@@ -140,17 +140,17 @@ static UISlider * _volumeSlider;
     // app进入前台
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appDidEnterPlayground:) name:UIApplicationDidBecomeActiveNotification object:nil];
     
-    // 监测设备方向
-    [[UIDevice currentDevice] beginGeneratingDeviceOrientationNotifications];
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(onDeviceOrientationChange)
-                                                 name:UIDeviceOrientationDidChangeNotification
-                                               object:nil];
+    // // 监测设备方向
+    // [[UIDevice currentDevice] beginGeneratingDeviceOrientationNotifications];
+    // [[NSNotificationCenter defaultCenter] addObserver:self
+    //                                          selector:@selector(onDeviceOrientationChange)
+    //                                              name:UIDeviceOrientationDidChangeNotification
+    //                                            object:nil];
     
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(onStatusBarOrientationChange)
-                                                 name:UIApplicationDidChangeStatusBarOrientationNotification
-                                               object:nil];
+    // [[NSNotificationCenter defaultCenter] addObserver:self
+    //                                          selector:@selector(onStatusBarOrientationChange)
+    //                                              name:UIApplicationDidChangeStatusBarOrientationNotification
+    //                                            object:nil];
 }
 
 #pragma mark - layoutSubviews
@@ -547,52 +547,52 @@ static UISlider * _volumeSlider;
 
 - (UIDeviceOrientation)_orientationForFullScreen:(BOOL)fullScreen {
     UIDeviceOrientation targetOrientation = [UIDevice currentDevice].orientation;
-    if (fullScreen) {
-        if (!UIDeviceOrientationIsLandscape(targetOrientation)) {
-            targetOrientation = UIDeviceOrientationLandscapeLeft;
-        }
-    } else {
-        if (!UIDeviceOrientationIsPortrait(targetOrientation)) {
-            targetOrientation = UIDeviceOrientationPortrait;
-        }
-    //    targetOrientation = (UIDeviceOrientation)[UIApplication sharedApplication].statusBarOrientation;
-    }
+    // if (fullScreen) {
+    //     if (!UIDeviceOrientationIsLandscape(targetOrientation)) {
+    //         targetOrientation = UIDeviceOrientationLandscapeLeft;
+    //     }
+    // } else {
+    //     if (!UIDeviceOrientationIsPortrait(targetOrientation)) {
+    //         targetOrientation = UIDeviceOrientationPortrait;
+    //     }
+    // //    targetOrientation = (UIDeviceOrientation)[UIApplication sharedApplication].statusBarOrientation;
+    // }
     return targetOrientation;
 }
 
 - (void)_switchToFullScreen:(BOOL)fullScreen {
-    if (_isFullScreen == fullScreen) {
-        return;
-    }
-    _isFullScreen = fullScreen;
-    [self.fatherView.viewController setNeedsStatusBarAppearanceUpdate];
+    // if (_isFullScreen == fullScreen) {
+    //     return;
+    // }
+    // _isFullScreen = fullScreen;
+    // [self.fatherView.viewController setNeedsStatusBarAppearanceUpdate];
 
-    UIDeviceOrientation targetOrientation = [self _orientationForFullScreen:fullScreen];// [UIDevice currentDevice].orientation;
+    // UIDeviceOrientation targetOrientation = [self _orientationForFullScreen:fullScreen];// [UIDevice currentDevice].orientation;
 
-    if (fullScreen) {
-        [self removeFromSuperview];
-        [[UIApplication sharedApplication].keyWindow addSubview:_fullScreenBlackView];
-        [_fullScreenBlackView mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.width.equalTo(@(ScreenHeight));
-            make.height.equalTo(@(ScreenWidth));
-            make.center.equalTo([UIApplication sharedApplication].keyWindow);
-        }];
+    // if (fullScreen) {
+    //     [self removeFromSuperview];
+    //     [[UIApplication sharedApplication].keyWindow addSubview:_fullScreenBlackView];
+    //     [_fullScreenBlackView mas_makeConstraints:^(MASConstraintMaker *make) {
+    //         make.width.equalTo(@(ScreenHeight));
+    //         make.height.equalTo(@(ScreenWidth));
+    //         make.center.equalTo([UIApplication sharedApplication].keyWindow);
+    //     }];
 
-        [[UIApplication sharedApplication].keyWindow addSubview:self];
-        [self mas_remakeConstraints:^(MASConstraintMaker *make) {
-            if (IsIPhoneX) {
-                make.width.equalTo(@(ScreenHeight - self.mm_safeAreaTopGap * 2));
-            } else {
-                make.width.equalTo(@(ScreenHeight));
-            }
-            make.height.equalTo(@(ScreenWidth));
-            make.center.equalTo([UIApplication sharedApplication].keyWindow);
-        }];
-        [self.superview setNeedsLayout];
-    } else {
-        [_fullScreenBlackView removeFromSuperview];
-        [self addPlayerToFatherView:self.fatherView];
-    }
+    //     [[UIApplication sharedApplication].keyWindow addSubview:self];
+    //     [self mas_remakeConstraints:^(MASConstraintMaker *make) {
+    //         if (IsIPhoneX) {
+    //             make.width.equalTo(@(ScreenHeight - self.mm_safeAreaTopGap * 2));
+    //         } else {
+    //             make.width.equalTo(@(ScreenHeight));
+    //         }
+    //         make.height.equalTo(@(ScreenWidth));
+    //         make.center.equalTo([UIApplication sharedApplication].keyWindow);
+    //     }];
+    //     [self.superview setNeedsLayout];
+    // } else {
+    //     [_fullScreenBlackView removeFromSuperview];
+    //     [self addPlayerToFatherView:self.fatherView];
+    // }
 }
 
 - (void)_switchToLayoutStyle:(SuperPlayerLayoutStyle)style {
@@ -603,34 +603,34 @@ static UISlider * _volumeSlider;
 //    if (currentOrientation == orientation) { return; }
     
     // 根据要旋转的方向,使用Masonry重新修改限制
-    if (style == SuperPlayerLayoutStyleFullScreen) {//
-        // 这个地方加判断是为了从全屏的一侧,直接到全屏的另一侧不用修改限制,否则会出错;
-        if (_layoutStyle != SuperPlayerLayoutStyleFullScreen)  { //UIInterfaceOrientationIsPortrait(currentOrientation)) {
-            [self removeFromSuperview];
-            [[UIApplication sharedApplication].keyWindow addSubview:_fullScreenBlackView];
-            [_fullScreenBlackView mas_remakeConstraints:^(MASConstraintMaker *make) {
-                make.width.equalTo(@(ScreenHeight));
-                make.height.equalTo(@(ScreenWidth));
-                make.center.equalTo([UIApplication sharedApplication].keyWindow);
-            }];
+    // if (style == SuperPlayerLayoutStyleFullScreen) {//
+    //     // 这个地方加判断是为了从全屏的一侧,直接到全屏的另一侧不用修改限制,否则会出错;
+    //     if (_layoutStyle != SuperPlayerLayoutStyleFullScreen)  { //UIInterfaceOrientationIsPortrait(currentOrientation)) {
+    //         [self removeFromSuperview];
+    //         [[UIApplication sharedApplication].keyWindow addSubview:_fullScreenBlackView];
+    //         [_fullScreenBlackView mas_remakeConstraints:^(MASConstraintMaker *make) {
+    //             make.width.equalTo(@(ScreenHeight));
+    //             make.height.equalTo(@(ScreenWidth));
+    //             make.center.equalTo([UIApplication sharedApplication].keyWindow);
+    //         }];
 
-            [[UIApplication sharedApplication].keyWindow addSubview:self];
-            [self mas_remakeConstraints:^(MASConstraintMaker *make) {
-                if (IsIPhoneX) {
-                    make.width.equalTo(@(ScreenHeight - self.mm_safeAreaTopGap * 2));
-                } else {
-                    make.width.equalTo(@(ScreenHeight));
-                }
-                make.height.equalTo(@(ScreenWidth));
-                make.center.equalTo([UIApplication sharedApplication].keyWindow);
-            }];
-        }
-    } else {
-        [_fullScreenBlackView removeFromSuperview];
-    }
-    self.controlView.compact = style == SuperPlayerLayoutStyleCompact;
+    //         [[UIApplication sharedApplication].keyWindow addSubview:self];
+    //         [self mas_remakeConstraints:^(MASConstraintMaker *make) {
+    //             if (IsIPhoneX) {
+    //                 make.width.equalTo(@(ScreenHeight - self.mm_safeAreaTopGap * 2));
+    //             } else {
+    //                 make.width.equalTo(@(ScreenHeight));
+    //             }
+    //             make.height.equalTo(@(ScreenWidth));
+    //             make.center.equalTo([UIApplication sharedApplication].keyWindow);
+    //         }];
+    //     }
+    // } else {
+    //     [_fullScreenBlackView removeFromSuperview];
+    // }
+    // self.controlView.compact = style == SuperPlayerLayoutStyleCompact;
 
-    [[UIApplication sharedApplication].keyWindow  layoutIfNeeded];
+    // [[UIApplication sharedApplication].keyWindow  layoutIfNeeded];
 
 
     // iOS6.0之后,设置状态条的方法能使用的前提是shouldAutorotate为NO,也就是说这个视图控制器内,旋转要关掉;
@@ -755,12 +755,12 @@ static UISlider * _volumeSlider;
 /** 全屏 */
 - (void)setFullScreen:(BOOL)fullScreen {
 
-    if (_isFullScreen != fullScreen) {
-        [self _adjustTransform:[self _orientationForFullScreen:fullScreen]];
-        [self _switchToFullScreen:fullScreen];
-        [self _switchToLayoutStyle:fullScreen ? SuperPlayerLayoutStyleFullScreen : SuperPlayerLayoutStyleCompact];
-    }
-    _isFullScreen = fullScreen;
+    // if (_isFullScreen != fullScreen) {
+    //     [self _adjustTransform:[self _orientationForFullScreen:fullScreen]];
+    //     [self _switchToFullScreen:fullScreen];
+    //     [self _switchToLayoutStyle:fullScreen ? SuperPlayerLayoutStyleFullScreen : SuperPlayerLayoutStyleCompact];
+    // }
+    // _isFullScreen = fullScreen;
     /*
     self.controlView.compact = !_isFullScreen;
     if (fullScreen) {
@@ -832,35 +832,35 @@ static UISlider * _volumeSlider;
     }
 }
 
-// 状态条变化通知（在前台播放才去处理）
-- (void)onStatusBarOrientationChange {
-    [self onDeviceOrientationChange];
-    return;
-    if (!self.didEnterBackground) {
-        UIInterfaceOrientation orientation = (UIInterfaceOrientation)[UIDevice currentDevice].orientation;
-        SuperPlayerLayoutStyle style = [self defaultStyleForDeviceOrientation:orientation];
-//        [[UIApplication sharedApplication] setStatusBarOrientation:orientation animated:NO];
-        if ([UIApplication sharedApplication].statusBarOrientation != orientation) {
-            [self _adjustTransform:(UIInterfaceOrientation)[UIDevice currentDevice].orientation];
-        }
-        [self _switchToFullScreen:style == SuperPlayerLayoutStyleFullScreen];
-        [self _switchToLayoutStyle:style];
- /*       // 获取到当前状态条的方向
-        UIInterfaceOrientation currentOrientation = [UIApplication sharedApplication].statusBarOrientation;
-        if (currentOrientation == UIInterfaceOrientationPortrait) {
-            [self setOrientationPortraitConstraint];
-        } else {
-            [self _switchToLayoutStyle:style];
-
-            if (currentOrientation == UIInterfaceOrientationLandscapeRight) {
-                [self _switchToLayoutStyle:style];
-            } else if (currentOrientation == UIDeviceOrientationLandscapeLeft){
-                [self _switchToLayoutStyle:UIInterfaceOrientationLandscapeLeft];
-            }
-        }
-   */
-    }
-}
+//// 状态条变化通知（在前台播放才去处理）
+//- (void)onStatusBarOrientationChange {
+//    [self onDeviceOrientationChange];
+//    return;
+//    if (!self.didEnterBackground) {
+//        UIInterfaceOrientation orientation = (UIInterfaceOrientation)[UIDevice currentDevice].orientation;
+//        SuperPlayerLayoutStyle style = [self defaultStyleForDeviceOrientation:orientation];
+////        [[UIApplication sharedApplication] setStatusBarOrientation:orientation animated:NO];
+//        if ([UIApplication sharedApplication].statusBarOrientation != orientation) {
+//            [self _adjustTransform:(UIInterfaceOrientation)[UIDevice currentDevice].orientation];
+//        }
+//        [self _switchToFullScreen:style == SuperPlayerLayoutStyleFullScreen];
+//        [self _switchToLayoutStyle:style];
+// /*       // 获取到当前状态条的方向
+//        UIInterfaceOrientation currentOrientation = [UIApplication sharedApplication].statusBarOrientation;
+//        if (currentOrientation == UIInterfaceOrientationPortrait) {
+//            [self setOrientationPortraitConstraint];
+//        } else {
+//            [self _switchToLayoutStyle:style];
+//
+//            if (currentOrientation == UIInterfaceOrientationLandscapeRight) {
+//                [self _switchToLayoutStyle:style];
+//            } else if (currentOrientation == UIDeviceOrientationLandscapeLeft){
+//                [self _switchToLayoutStyle:UIInterfaceOrientationLandscapeLeft];
+//            }
+//        }
+//   */
+//    }
+//}
 
 /**
  *  屏幕方向发生变化会调用这里
@@ -918,6 +918,10 @@ static UISlider * _volumeSlider;
     }
     self.playerConfig.playRate = playRate;
     [self.vodPlayer setRate:playRate];
+}
+
+- (void)setVideoQuality:(SuperPlayerUrl *)superPlayerUrl {
+    [self controlViewSwitch:self.controlView withDefinition:superPlayerUrl.title];
 }
 
 #pragma mark - UIPanGestureRecognizer手势方法
@@ -1220,7 +1224,6 @@ static UISlider * _volumeSlider;
     if (_controlView == controlView) {
         return;
     }
-    [_controlView removeFromSuperview];
 
     _controlView = controlView;
     controlView.delegate = self;
@@ -1233,6 +1236,8 @@ static UISlider * _volumeSlider;
                          isPlaying:self.autoPlay];
     [controlView setTitle:_controlView.title];
     [controlView setPointArray:_controlView.pointArray];
+
+    [_controlView removeFromSuperview];
 }
 
 - (SuperPlayerControlView *)controlView
@@ -1876,10 +1881,6 @@ static UISlider * _volumeSlider;
         }];
     }
     return _coverImageView;
-}
-
-- (void)uiHideReplay {
-    [_controlView hideReplay];
 }
 
 @end

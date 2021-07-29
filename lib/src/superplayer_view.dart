@@ -5,56 +5,25 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 
 import './constants.dart';
-import './superplayer_control_view.dart';
+import './control_views/default/default.dart';
 import './superplayer_controller.dart';
 
-class SuperPlayerView extends StatefulWidget {
-  Function(SuperPlayerController? controller)? onSuperPlayerViewCreated;
-  SuperPlayerController? controller;
-  String controlViewType;
-  String? coverImageUrl;
+class _SuperPlayerNativeView extends StatelessWidget {
+  final SuperPlayerController controller;
 
-  SuperPlayerView({
+  _SuperPlayerNativeView({
     Key? key,
-    this.onSuperPlayerViewCreated,
-    this.controller,
-    this.controlViewType = kControlViewTypeDefault,
-    this.coverImageUrl,
+    required this.controller,
   }) : super(key: key);
 
-  @override
-  _SuperPlayerViewState createState() => _SuperPlayerViewState();
-}
-
-class _SuperPlayerViewState extends State<SuperPlayerView> {
   void _onPlatformViewCreated(int viewId) {
-    if (widget.controller == null) {
-      widget.controller = SuperPlayerController();
-    }
-    if (widget.controller != null) {
-      widget.controller!.initWithViewId(viewId);
-    }
-    if (widget.onSuperPlayerViewCreated != null) {
-      widget.onSuperPlayerViewCreated!(widget.controller);
-    }
-  }
-
-  @override
-  void didUpdateWidget(covariant SuperPlayerView oldWidget) {
-    if (oldWidget.controlViewType != widget.controlViewType) {
-      widget.controller!.setControlViewType(widget.controlViewType);
-    }
-    if (oldWidget.coverImageUrl != widget.coverImageUrl) {
-      widget.controller!.setCoverImage(widget.coverImageUrl!);
-    }
-    super.didUpdateWidget(oldWidget);
+    controller.initWithViewId(viewId);
   }
 
   @override
   Widget build(BuildContext context) {
     Map<String, dynamic> creationParams = {
-      'controlViewType': widget.controlViewType,
-      'coverImageUrl': widget.coverImageUrl,
+      'controlViewType': kControlViewTypeWithout,
     }..removeWhere((String k, dynamic v) => v == null);
 
     if (Platform.isAndroid) {
@@ -73,5 +42,31 @@ class _SuperPlayerViewState extends State<SuperPlayerView> {
       );
     }
     return Container();
+  }
+}
+
+class SuperPlayerView extends StatelessWidget {
+  final SuperPlayerController controller;
+
+  SuperPlayerView({
+    Key? key,
+    required this.controller,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      color: Colors.black,
+      child: Stack(
+        children: [
+          _SuperPlayerNativeView(
+            controller: controller,
+          ),
+          SuperPlayerDefaultControlView(
+            controller: controller,
+          ),
+        ],
+      ),
+    );
   }
 }

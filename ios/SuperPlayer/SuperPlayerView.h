@@ -133,6 +133,9 @@ typedef NS_ENUM(NSInteger, SuperPlayerLayoutStyle) {
  */
 - (void)setPlayRate:(CGFloat)playRate;
 
-- (void)uiHideReplay;
+/**
+ * 设置清晰度
+ */
+- (void)setVideoQuality:(SuperPlayerUrl*) superPlayerUrl;
 
 @end

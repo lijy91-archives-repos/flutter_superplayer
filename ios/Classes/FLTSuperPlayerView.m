@@ -56,7 +56,7 @@
 
 - (FlutterError*)onListenWithArguments:(id)arguments eventSink:(FlutterEventSink)eventSink {
     _eventSink = eventSink;
-
+    
     return nil;
 }
 
@@ -67,7 +67,9 @@
 }
 
 - (void)onMethodCall:(FlutterMethodCall*)call result:(FlutterResult)result {
-    if ([[call method] isEqualToString:@"setControlViewType"]) {
+    if ([[call method] isEqualToString:@"getModel"]) {
+        [self getModel:call result: result];
+    } else if ([[call method] isEqualToString:@"setControlViewType"]) {
         [self setControlViewType:call result: result];
     } else if ([[call method] isEqualToString:@"setTitle"]) {
         [self setTitle:call result: result];
@@ -81,10 +83,10 @@
         [self getPlayRate:call result: result];
     } else if ([[call method] isEqualToString:@"setPlayRate"]) {
         [self setPlayRate:call result: result];
+    } else if ([[call method] isEqualToString:@"setVideoQuality"]) {
+        [self setVideoQuality:call result: result];
     } else if ([[call method] isEqualToString:@"resetPlayer"]) {
         [self resetPlayer:call result: result];
-    } else if ([[call method] isEqualToString:@"requestPlayMode"]) {
-        [self requestPlayMode:call result: result];
     } else if ([[call method] isEqualToString:@"playWithModel"]) {
         [self playWithModel:call result: result];
     } else if ([[call method] isEqualToString:@"pause"]) {
@@ -97,11 +99,26 @@
         [self seekTo:call result: result];
     } else if ([[call method] isEqualToString:@"setLoop"]) {
         [self setLoop:call result: result];
-    } else if ([[call method] isEqualToString:@"uiHideReplay"]) {
-        [self uiHideReplay:call result: result];
     } else {
         result(FlutterMethodNotImplemented);
     }
+}
+
+- (void)getModel:(FlutterMethodCall*)call
+                     result:(FlutterResult)result
+{
+    NSMutableArray *multiURLs = [[NSMutableArray alloc] init];
+    for (SuperPlayerUrl *superPlayerUrl in _superPlayerView.playerModel.multiVideoURLs) {
+        NSDictionary<NSString *, id> *itemData = @{
+            @"qualityName": superPlayerUrl.title,
+            @"url": superPlayerUrl.url,
+        };
+        [multiURLs addObject:itemData];
+    }
+    NSDictionary<NSString *, id> *resultData = @{
+        @"multiURLs": multiURLs,
+    };
+    result(resultData);
 }
 
 - (void)setControlViewType:(NSString *)controlViewType
@@ -166,16 +183,23 @@
     [_superPlayerView setPlayRate:playRate.floatValue];
 }
 
+- (void)setVideoQuality:(FlutterMethodCall*)call
+             result:(FlutterResult)result
+{
+    NSString *qualityName = call.arguments[@"qualityName"];
+    NSString *url = call.arguments[@"url"];
+    
+    SuperPlayerUrl *superPlayerUrl = [[SuperPlayerUrl alloc] init];
+    superPlayerUrl.title = qualityName;
+    superPlayerUrl.url = url;
+    
+    [_superPlayerView setVideoQuality:superPlayerUrl];
+}
+
 - (void)resetPlayer:(FlutterMethodCall*)call
              result:(FlutterResult)result
 {
     [_superPlayerView resetPlayer];
-}
-
-- (void)requestPlayMode:(FlutterMethodCall*)call
-                 result:(FlutterResult)result
-{
-    // skip
 }
 
 - (void)playWithModel:(FlutterMethodCall*)call
@@ -230,16 +254,10 @@
 }
 
 - (void)setLoop:(FlutterMethodCall*)call
-        result:(FlutterResult)result
+         result:(FlutterResult)result
 {
     NSNumber *isLoop = call.arguments[@"isLoop"];
     [_superPlayerView setLoop:isLoop.boolValue];
-}
-
-- (void) uiHideReplay:(FlutterMethodCall*)call
-               result:(FlutterResult)result
-{
-    [_superPlayerView uiHideReplay];
 }
 
 /// 返回事件
@@ -253,14 +271,14 @@
 
 /// 全屏改变通知
 - (void)superPlayerFullScreenChanged:(SuperPlayerView *)player {
-    NSDictionary<NSString *, id> *eventData = @{
-        @"listener": @"SuperPlayerListener",
-        @"method": @"onFullScreenChange",
-        @"data": @{
-                @"isFullScreen": [NSNumber numberWithBool:[player isFullScreen]],
-        },
-    };
-    self->_eventSink(eventData);
+    //    NSDictionary<NSString *, id> *eventData = @{
+    //        @"listener": @"SuperPlayerListener",
+    //        @"method": @"onFullScreenChange",
+    //        @"data": @{
+    //                @"isFullScreen": [NSNumber numberWithBool:[player isFullScreen]],
+    //        },
+    //    };
+    //    self->_eventSink(eventData);
 }
 
 /// 播放开始通知

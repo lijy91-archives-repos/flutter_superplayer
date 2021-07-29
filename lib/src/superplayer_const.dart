@@ -6,6 +6,7 @@ class SuperPlayerConst {
   static final int PLAYMODE_FLOAT = 3; // 悬浮窗
 
   // 播放状态
+  static final int PLAYSTATE_NONE = -1;
   static final int PLAYSTATE_PLAYING = 1;
   static final int PLAYSTATE_PAUSE = 2;
   static final int PLAYSTATE_LOADING = 3;

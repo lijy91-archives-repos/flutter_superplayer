@@ -899,7 +899,4 @@ public class FullScreenPlayer extends AbsPlayer implements View.OnClickListener,
         }
     }
 
-    public void hideReplay() {
-        mLayoutReplay.setVisibility(View.GONE);
-    }
 }

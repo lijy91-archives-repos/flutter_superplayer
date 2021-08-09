@@ -122,6 +122,8 @@ public class FlutterSuperPlayerView implements PlatformView, MethodCallHandler, 
             getPlayRate(call, result);
         } else if (call.method.equals("setPlayRate")) {
             setPlayRate(call, result);
+        } else if (call.method.endsWith("getVideoQuality")) {
+            getVideoQuality(call, result);
         } else if (call.method.endsWith("setVideoQuality")) {
             setVideoQuality(call, result);
         } else if (call.method.equals("resetPlayer")) {
@@ -147,7 +149,7 @@ public class FlutterSuperPlayerView implements PlatformView, MethodCallHandler, 
         SuperPlayerModel model = superPlayerView.getSuperPlayer().getPlayerModel();
 
         final List<Map<String, Object>> multiURLs = new ArrayList<>();
-        if (model.multiURLs != null) {
+        if (model != null && model.multiURLs != null) {
             for (SuperPlayerModel.SuperPlayerURL superPlayerUrl : model.multiURLs) {
                 final Map<String, Object> itemData = new HashMap<>();
                 itemData.put("qualityName", superPlayerUrl.qualityName);
@@ -203,6 +205,22 @@ public class FlutterSuperPlayerView implements PlatformView, MethodCallHandler, 
     void setPlayRate(@NonNull MethodCall call, @NonNull Result result) {
         Number playRate = (Number) call.argument("playRate");
         superPlayerView.getControllerCallback().onSpeedChange(playRate.floatValue());
+    }
+
+    void getVideoQuality(@NonNull MethodCall call, @NonNull Result result) {
+        SuperPlayerModel model = superPlayerView.getSuperPlayer().getPlayerModel();
+
+        try {
+            SuperPlayerModel.SuperPlayerURL superPlayerURL = model.multiURLs.get(model.playDefaultIndex);
+
+            final Map<String, Object> resultData = new HashMap<>();
+            resultData.put("qualityName", superPlayerURL.qualityName);
+            resultData.put("url", superPlayerURL.url);
+
+            result.success(resultData);
+        } catch (Exception e) {
+            result.success(null);
+        }
     }
 
     void setVideoQuality(@NonNull MethodCall call, @NonNull Result result) {

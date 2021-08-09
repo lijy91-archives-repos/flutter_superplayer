@@ -61,7 +61,7 @@ public class SuperPlayerImpl implements SuperPlayer, ITXVodPlayListener, ITXLive
 
     private SuperPlayerDef.PlayerType mCurrentPlayType   = SuperPlayerDef.PlayerType.VOD;       // 当前播放类型
     private SuperPlayerDef.PlayerMode mCurrentPlayMode   = SuperPlayerDef.PlayerMode.WINDOW;    // 当前播放模式
-    private SuperPlayerDef.PlayerState mCurrentPlayState = SuperPlayerDef.PlayerState.PLAYING;  // 当前播放状态
+    private SuperPlayerDef.PlayerState mCurrentPlayState = SuperPlayerDef.PlayerState.NONE;  // 当前播放状态
     private float  mCurrentPlayRate = 1;    // 当前播放速率
 
     private String mCurrentPlayVideoURL;    // 当前播放的URL
@@ -603,13 +603,15 @@ public class SuperPlayerImpl implements SuperPlayer, ITXVodPlayListener, ITXLive
             mObserver.onVideoQualityListChange(videoQualities, defaultVideoQuality);
         }
         List<SuperPlayerModel.SuperPlayerURL> multiURLs = new ArrayList<>();
-        for (int i = 0; i < videoQualities.size(); i++) {
-            SuperPlayerModel.SuperPlayerURL superPlayerURL = new SuperPlayerModel.SuperPlayerURL();
-            superPlayerURL.qualityName = videoQualities.get(i).title;
-            superPlayerURL.url = videoQualities.get(i).url;
-            multiURLs.add(superPlayerURL);
+        if (videoQualities != null) {
+            for (int i = 0; i < videoQualities.size(); i++) {
+                SuperPlayerModel.SuperPlayerURL superPlayerURL = new SuperPlayerModel.SuperPlayerURL();
+                superPlayerURL.qualityName = videoQualities.get(i).title;
+                superPlayerURL.url = videoQualities.get(i).url;
+                multiURLs.add(superPlayerURL);
+            }
+            mCurrentModel.multiURLs = multiURLs;
         }
-        mCurrentModel.multiURLs = multiURLs;
     }
 
     private void updateVideoImageSpriteAndKeyFrame(PlayImageSpriteInfo info, List<PlayKeyFrameDescInfo> list) {
@@ -752,7 +754,11 @@ public class SuperPlayerImpl implements SuperPlayer, ITXVodPlayListener, ITXLive
             mLivePlayer.stopPlay(false);
             mVideoView.removeVideoView();
         }
-        updatePlayerState(SuperPlayerDef.PlayerState.END);
+        if (mCurrentPlayState == SuperPlayerDef.PlayerState.END) {
+            updatePlayerState(SuperPlayerDef.PlayerState.NONE);
+        } else if (mCurrentPlayState == SuperPlayerDef.PlayerState.PLAYING) {
+            updatePlayerState(SuperPlayerDef.PlayerState.END);
+        }
         reportPlayTime();
     }
 

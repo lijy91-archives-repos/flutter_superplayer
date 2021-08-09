@@ -590,10 +590,8 @@ public class SuperPlayerView extends RelativeLayout {
 
     public void setControlViewType(String controlViewType) {
         if (controlViewType.equals("without")) {
-            removeView(this.mFullScreenPlayer);
-            removeView(this.mWindowPlayer);
-        } else {
-            mControllerCallback.onSwitchPlayMode(mSuperPlayer.getPlayerMode());
+//            removeView(this.mFullScreenPlayer);
+//            removeView(this.mWindowPlayer);
         }
     }
 

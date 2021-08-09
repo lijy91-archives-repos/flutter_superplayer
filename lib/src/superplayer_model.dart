@@ -43,7 +43,11 @@ class SuperPlayerModel {
     Map<String, dynamic> jsonObject = Map<String, dynamic>();
     if (appId != null) jsonObject.putIfAbsent("appId", () => appId);
     if (url != null) jsonObject.putIfAbsent("url", () => url);
-    if (multiURLs != null) jsonObject.putIfAbsent("multiURLs", () => multiURLs);
+    if (multiURLs != null)
+      jsonObject.putIfAbsent(
+        "multiURLs",
+        () => multiURLs!.map((e) => e.toJson()).toList(),
+      );
     if (playDefaultIndex != null)
       jsonObject.putIfAbsent("playDefaultIndex", () => playDefaultIndex);
     if (videoId != null)

@@ -26,16 +26,17 @@ class _HomePageState extends State<HomePage> with SuperPlayerListener {
   void initState() {
     _playerController.addListener(this);
     super.initState();
-    _init();
+    Future.delayed(Duration(milliseconds: 300)).then((value) => _init());
   }
 
   SuperPlayerModel get testSuperPlayerModel {
     int appId = 1252463788;
     String fileId = "5285890781763144364";
+    String pSign= '';
 
     SuperPlayerModel superPlayerModel = SuperPlayerModel(
       appId: appId,
-      videoId: SuperPlayerVideoId(fileId: fileId),
+      videoId: SuperPlayerVideoId(fileId: fileId, pSign: pSign),
     );
     return superPlayerModel;
   }
@@ -44,6 +45,8 @@ class _HomePageState extends State<HomePage> with SuperPlayerListener {
     _sdkVersion = await FlutterSuperPlayer.instance.sdkVersion;
 
     _playerController.setModel(this.testSuperPlayerModel);
+    // _playerController.setCoverImage(
+    //     'http://xiaozhibo-10055601.file.myqcloud.com/coverImg.jpg');
 
     if (!mounted) return;
 
@@ -119,7 +122,9 @@ class _HomePageState extends State<HomePage> with SuperPlayerListener {
                               ),
                             ),
                             onTap: () {
-                              _playerController.resetPlayer();
+                              _playerController.setCoverImage(
+                                  'http://xiaozhibo-10055601.file.myqcloud.com/coverImg.jpg');
+                              // _playerController.resetPlayer();
                               _logs = [];
                               setState(() {});
                             },
@@ -224,5 +229,10 @@ class _HomePageState extends State<HomePage> with SuperPlayerListener {
   @override
   void onPlayStateChange(int playState) {
     _addLog('onPlayStateChange', {'playState': playState});
+  }
+
+  @override
+  void onControlViewIsVisibleChange(bool isVisible) {
+    _addLog('onControlViewIsVisibleChange', {'isVisible': isVisible});
   }
 }

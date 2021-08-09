@@ -2,6 +2,8 @@
 
 适用于 Flutter 的腾讯云超级播放器插件
 
+> # **该插件API尚未稳定，请谨慎使用**
+
 [![pub version][pub-image]][pub-url]
 
 [pub-image]: https://img.shields.io/pub/v/flutter_superplayer.svg
@@ -36,6 +38,7 @@ dependencies:
   flutter_superplayer:
     git:
       url: https://github.com/leanflutter/flutter_superplayer.git
+      ref: main
 ```
 
 您可以从命令行安装软件包：
@@ -50,13 +53,13 @@ $ flutter packages get
 import 'package:flutter_superplayer/flutter_superplayer.dart';
 
 SuperPlayerController _playerController = SuperPlayerController();
-String _controlViewType = kControlViewTypeDefault;
 
 SuperPlayerView(
   controller: _playerController,
-  controlViewType: _controlViewType,
 )
 ```
+
+> 请查看这个插件的示例应用，以了解完整的用法。
 
 ## 相关链接
 

@@ -13,4 +13,7 @@ abstract class SuperPlayerListener {
 
   /// 播放进度发生变化
   void onPlayProgressChange(int current, int duration);
+
+  /// 控制界面显示变化
+  void onControlViewIsVisibleChange(bool isVisible);
 }

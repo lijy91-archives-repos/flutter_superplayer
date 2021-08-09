@@ -29,13 +29,13 @@ class EndDrawerVideoQuality extends StatelessWidget {
               child: CupertinoButton(
                 padding: EdgeInsets.zero,
                 child: Builder(builder: (_) {
-                  bool isSelected = videoQuality?.url == item.url;
+                  bool isSelected = videoQuality?.qualityName == item.qualityName;
                   return Text(
                     '${item.qualityName}',
                     style: TextStyle(
                       color: isSelected
                           ? Colors.white
-                          : Colors.white.withOpacity(0.6),
+                          : Colors.white.withOpacity(0.4),
                       fontSize: 15,
                       fontWeight:
                           isSelected ? FontWeight.w600 : FontWeight.w500,

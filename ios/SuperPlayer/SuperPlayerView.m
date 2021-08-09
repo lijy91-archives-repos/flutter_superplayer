@@ -291,7 +291,7 @@ static UISlider * _volumeSlider;
     
     [self reportPlay];
     
-    self.state = StateStopped;
+    self.state = StateNone;
 }
 
 /**
@@ -792,9 +792,9 @@ static UISlider * _volumeSlider;
     [self.controlView fadeOut:0.2];
     [self fastViewUnavaliable];
     [self.netWatcher stopWatch];
-    self.maskView.hidden = NO;
-    self.repeatBtn.hidden = NO;
-    self.repeatBackBtn.hidden = NO;
+//    self.maskView.hidden = NO;
+//    self.repeatBtn.hidden = NO;
+//    self.repeatBackBtn.hidden = NO;
     if ([self.delegate respondsToSelector:@selector(superPlayerDidEnd:)]) {
         [self.delegate superPlayerDidEnd:self];
     }
@@ -918,6 +918,15 @@ static UISlider * _volumeSlider;
     }
     self.playerConfig.playRate = playRate;
     [self.vodPlayer setRate:playRate];
+}
+
+- (SuperPlayerUrl*)getVideoQuality {
+    if (self.playerModel.playingDefinition == nil) return nil;
+
+    SuperPlayerUrl* superPlayerUrl = [[SuperPlayerUrl alloc] init];
+    superPlayerUrl.title = self.playerModel.playingDefinition;
+    superPlayerUrl.url = self.playerModel.playingDefinitionUrl;
+    return superPlayerUrl;
 }
 
 - (void)setVideoQuality:(SuperPlayerUrl *)superPlayerUrl {

@@ -9,6 +9,7 @@ public class SuperPlayerDef {
     }
 
     public enum PlayerState {
+        NONE(-1),       // 初始状态
         PLAYING(1),    // 播放中
         PAUSE(2),      // 暂停中
         LOADING(3),    // 缓冲中

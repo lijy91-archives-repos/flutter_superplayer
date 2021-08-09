@@ -28,6 +28,7 @@
 
 /// 播放器的状态
 typedef NS_ENUM(NSInteger, SuperPlayerState) {
+    StateNone = -1,       // 初始状态
     StateFailed = 5,     // 播放失败
     StateBuffering = 3,  // 缓冲中
     StatePlaying = 1,    // 播放中
@@ -132,6 +133,11 @@ typedef NS_ENUM(NSInteger, SuperPlayerLayoutStyle) {
  * 设置播放速率
  */
 - (void)setPlayRate:(CGFloat)playRate;
+
+/**
+ * 设置清晰度
+ */
+- (SuperPlayerUrl*) getVideoQuality;
 
 /**
  * 设置清晰度

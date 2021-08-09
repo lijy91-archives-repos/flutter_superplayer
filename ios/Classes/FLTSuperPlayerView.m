@@ -83,6 +83,8 @@
         [self getPlayRate:call result: result];
     } else if ([[call method] isEqualToString:@"setPlayRate"]) {
         [self setPlayRate:call result: result];
+    } else if ([[call method] isEqualToString:@"getVideoQuality"]) {
+        [self getVideoQuality:call result: result];
     } else if ([[call method] isEqualToString:@"setVideoQuality"]) {
         [self setVideoQuality:call result: result];
     } else if ([[call method] isEqualToString:@"resetPlayer"]) {
@@ -111,10 +113,11 @@
     for (SuperPlayerUrl *superPlayerUrl in _superPlayerView.playerModel.multiVideoURLs) {
         NSDictionary<NSString *, id> *itemData = @{
             @"qualityName": superPlayerUrl.title,
-            @"url": superPlayerUrl.url,
+            @"url": superPlayerUrl.url == nil ?@"": superPlayerUrl.url,
         };
         [multiURLs addObject:itemData];
     }
+    
     NSDictionary<NSString *, id> *resultData = @{
         @"multiURLs": multiURLs,
     };
@@ -183,6 +186,25 @@
     [_superPlayerView setPlayRate:playRate.floatValue];
 }
 
+
+- (void)getVideoQuality:(FlutterMethodCall*)call
+             result:(FlutterResult)result
+{
+    SuperPlayerUrl *superPlayerUrl;
+    
+    superPlayerUrl = [_superPlayerView getVideoQuality];
+    
+    if (superPlayerUrl != nil) {
+        NSDictionary<NSString *, id> *resultData = @{
+            @"qualityName": superPlayerUrl.title,
+            @"url": superPlayerUrl.url == nil ?@"": superPlayerUrl.url,
+        };
+        result(resultData);
+    } else {
+        result(nil);
+    }
+}
+
 - (void)setVideoQuality:(FlutterMethodCall*)call
              result:(FlutterResult)result
 {
@@ -217,10 +239,13 @@
     NSDictionary *videoIdJson = call.arguments[@"videoId"];
     if (videoIdJson) {
         NSString *fileId = videoIdJson[@"fileId"];
+        NSString *pSign = videoIdJson[@"pSign"];
         
         SuperPlayerVideoId *videoId = [[SuperPlayerVideoId alloc] init];
         if (fileId)
             [videoId setFileId:fileId];
+        if (pSign)
+            [videoId setPsign:pSign];
         
         [model setVideoId:videoId];
     }

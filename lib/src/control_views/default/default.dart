@@ -35,11 +35,12 @@ class _TextButton extends StatelessWidget {
       height: height,
       child: CupertinoButton(
         padding: EdgeInsets.all(4),
-        color: color ?? Colors.black.withOpacity(0.6),
+        color: color,
         child: Text(
           text,
           style: TextStyle(
             fontSize: 13,
+            color: Colors.white,
           ),
         ),
         onPressed: onPressed,
@@ -70,8 +71,8 @@ class _ImageButton extends StatelessWidget {
       width: size,
       height: size,
       child: CupertinoButton(
-        padding: padding ?? EdgeInsets.all(4),
-        color: color ?? Colors.black.withOpacity(0.6),
+        padding: padding ?? EdgeInsets.all(2),
+        color: color,
         child: Image.asset(
           'images/$name',
           package: 'flutter_superplayer',
@@ -207,10 +208,14 @@ class _SuperPlayerDefaultControlViewState
       isVisible: _controlViewIsVisible,
       onVisibleChanged: (newValue) {
         _controlViewIsVisible = newValue;
+        widget.controller.notifyListeners(kMethodOnControlViewIsVisibleChange, {
+          'isVisible': newValue,
+        });
         setState(() {});
       },
       child: Container(
         child: Stack(
+          alignment: Alignment.center,
           children: [
             AnimatedOpacity(
               opacity: (!_isLocked && _controlViewIsVisible) ? 1 : 0,
@@ -287,6 +292,10 @@ class _SuperPlayerDefaultControlViewState
                   ),
                 ),
               ),
+            _PlayerControlVideoRepeatButton(
+              controller: widget.controller,
+              playState: _playState,
+            ),
           ],
         ),
       ),
@@ -388,12 +397,27 @@ class _SuperPlayerDefaultControlViewState
   }
 
   @override
-  void onPlayStateChange(int playState) {
+  void onPlayStateChange(int playState) async {
     if (playState != _playState) {
+      SuperPlayerURL? superPlayerURL;
+      if (playState == SuperPlayerConst.PLAYSTATE_PLAYING) {
+        superPlayerURL = await widget.controller.getVideoQuality();
+      }
       setState(() {
         _playState = playState;
+        _videoQuality = superPlayerURL;
+
+        if (_playState == SuperPlayerConst.PLAYSTATE_END) {
+          _playProgressCurrent = 0;
+          _playProgressDuration = 0;
+        }
       });
     }
+  }
+
+  @override
+  void onControlViewIsVisibleChange(bool isVisible) {
+    // skip
   }
 }
 
@@ -409,6 +433,7 @@ class _PlayerControlHeaderBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       height: _kPlayerControlHeaderBarHeight,
+      padding: EdgeInsets.only(left: 10, right: 10),
       decoration: BoxDecoration(
         // color: Colors.green.withOpacity(0.1),
         gradient: LinearGradient(
@@ -422,7 +447,23 @@ class _PlayerControlHeaderBar extends StatelessWidget {
         ),
       ),
       child: Row(
-        children: [],
+        children: [
+          _ImageButton(
+            'superplayer_ic_menu_back.png',
+            size: 38,
+            onPressed: () async {
+              bool isFullScreen = await controller.isFullScreen();
+              if (isFullScreen) {
+                controller.setFullScreen(false);
+              } else {
+                controller.notifyListeners(kMethodOnClickSmallReturnBtn);
+              }
+            },
+          ),
+          Expanded(
+            child: Container(),
+          ),
+        ],
       ),
     );
   }
@@ -510,6 +551,7 @@ class __PlayerControlFooterBarState extends State<_PlayerControlFooterBar> {
       child: Row(
         children: [
           Container(
+            width: 78,
             child: Row(
               children: [
                 Text(
@@ -532,7 +574,7 @@ class __PlayerControlFooterBarState extends State<_PlayerControlFooterBar> {
           ),
           Expanded(
             child: Container(
-              margin: EdgeInsets.only(left: 2, right: 6),
+              margin: EdgeInsets.only(left: 0, right: 6),
               child: FlutterSlider(
                 values: [widget.playProgressCurrent.toDouble()],
                 max: widget.playProgressDuration.toDouble() > 0
@@ -595,28 +637,11 @@ class __PlayerControlFooterBarState extends State<_PlayerControlFooterBar> {
                   custom: (value) {
                     if (!_seekBarDragging) return Container();
                     return Container(
-                      width: 70 * 2.6,
-                      height: 20 * 2.6,
-                      margin: EdgeInsets.only(bottom: 10),
-                      decoration: BoxDecoration(
-                        color: Theme.of(context).primaryColor,
-                        borderRadius: BorderRadius.circular(
-                          20 * 2.6,
-                        ),
-                        boxShadow: <BoxShadow>[
-                          BoxShadow(
-                            color:
-                                Theme.of(context).primaryColor.withOpacity(0.4),
-                            offset: Offset(0.0, 4.0),
-                            blurRadius: 6.0,
-                          ),
-                        ],
-                      ),
+                      margin: EdgeInsets.only(bottom: 10, left: 10, right: 10),
                       child: Center(
                         child: Text(
                           '$_formattedSeekBarValue/$_formattedDuration',
                           style: TextStyle(
-                            fontSize: 50,
                             color: Colors.white,
                           ),
                         ),
@@ -710,22 +735,52 @@ class _PlayerControlVideoOperationButton extends StatelessWidget {
               controller.pause();
             },
           ),
-        // 重播
-        if (playState == SuperPlayerConst.PLAYSTATE_END)
-          _ImageButton(
-            'superplayer_btn_repeat.png',
-            size: 86,
-            padding: EdgeInsets.all(10),
-            onPressed: () {
-              controller.play();
-            },
-          ),
         // 缓冲中
         if (playState == SuperPlayerConst.PLAYSTATE_LOADING)
           Container(
-            child: CupertinoActivityIndicator(),
+            child: CupertinoTheme(
+              data: CupertinoTheme.of(context)
+                  .copyWith(brightness: Brightness.dark),
+              child: CupertinoActivityIndicator(
+                radius: 16,
+              ),
+            ),
           ),
       ],
+    );
+  }
+}
+
+class _PlayerControlVideoRepeatButton extends StatelessWidget {
+  final SuperPlayerController controller;
+  final int playState;
+
+  const _PlayerControlVideoRepeatButton({
+    Key? key,
+    required this.controller,
+    required this.playState,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          // 重播
+          if (playState == SuperPlayerConst.PLAYSTATE_END)
+            _ImageButton(
+              'superplayer_btn_repeat.png',
+              size: 86,
+              color: Colors.black.withOpacity(0.6),
+              padding: EdgeInsets.all(10),
+              onPressed: () {
+                controller.resetPlayer();
+                controller.play();
+              },
+            ),
+        ],
+      ),
     );
   }
 }

@@ -43,7 +43,7 @@ class EndDrawerPlayRate extends StatelessWidget {
                     style: TextStyle(
                       color: isSelected
                           ? Colors.white
-                          : Colors.white.withOpacity(0.6),
+                          : Colors.white.withOpacity(0.4),
                       fontSize: 15,
                       fontWeight:
                           isSelected ? FontWeight.w600 : FontWeight.w500,

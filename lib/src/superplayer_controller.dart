@@ -12,6 +12,7 @@ const kMethodOnClickFloatCloseBtn = 'onClickFloatCloseBtn';
 const kMethodOnClickSmallReturnBtn = 'onClickSmallReturnBtn';
 const kMethodOnPlayStateChange = 'onPlayStateChange';
 const kMethodOnPlayProgressChange = 'onPlayProgressChange';
+const kMethodOnControlViewIsVisibleChange = 'onControlViewIsVisibleChange';
 
 class SuperPlayerController {
   ObserverList<SuperPlayerListener>? _listeners =
@@ -64,7 +65,7 @@ class SuperPlayerController {
     _listeners = null;
   }
 
-  void notifyListeners(String method, dynamic data) {
+  void notifyListeners(String? method, [dynamic data]) {
     assert(_debugAssertNotDisposed());
     if (_listeners != null) {
       final List<SuperPlayerListener> localListeners =
@@ -91,6 +92,9 @@ class SuperPlayerController {
                   data['duration'],
                 );
                 break;
+              case kMethodOnControlViewIsVisibleChange:
+                listener.onControlViewIsVisibleChange(data['isVisible']);
+                break;
             }
           }
         } catch (exception) {}
@@ -116,7 +120,7 @@ class SuperPlayerController {
             ))
         .toList();
 
-print(resultData);
+    print(resultData);
     print(_model!.toJson());
     return _model!;
   }
@@ -180,6 +184,21 @@ print(resultData);
       'playRate': playRate,
     };
     _channel!.invokeMethod('setPlayRate', arguments);
+  }
+
+  Future<SuperPlayerURL?> getVideoQuality() async {
+    final Map<dynamic, dynamic>? resultData =
+        await _channel!.invokeMethod('getVideoQuality', {});
+
+    if (resultData != null) {
+      SuperPlayerURL superPlayerURL = SuperPlayerURL(
+        qualityName: resultData['qualityName'],
+        url: resultData['url'],
+      );
+
+      return superPlayerURL;
+    }
+    return null;
   }
 
   void setVideoQuality(SuperPlayerURL superPlayerURL) {

@@ -139,7 +139,10 @@ class SuperPlayerController {
 
     if (_isFullScreen) {
       SystemChrome.setEnabledSystemUIOverlays([]);
-      SystemChrome.setPreferredOrientations([DeviceOrientation.landscapeLeft]);
+      SystemChrome.setPreferredOrientations([
+        DeviceOrientation.landscapeLeft,
+        DeviceOrientation.landscapeRight,
+      ]);
     } else {
       SystemChrome.setEnabledSystemUIOverlays(SystemUiOverlay.values);
       SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);

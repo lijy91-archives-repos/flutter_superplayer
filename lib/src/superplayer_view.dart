@@ -47,10 +47,12 @@ class _SuperPlayerNativeView extends StatelessWidget {
 
 class SuperPlayerView extends StatelessWidget {
   final SuperPlayerController controller;
+  final Widget? controlView;
 
   SuperPlayerView({
     Key? key,
     required this.controller,
+    this.controlView,
   }) : super(key: key);
 
   @override
@@ -62,9 +64,10 @@ class SuperPlayerView extends StatelessWidget {
           _SuperPlayerNativeView(
             controller: controller,
           ),
-          SuperPlayerDefaultControlView(
-            controller: controller,
-          ),
+          controlView ??
+              SuperPlayerDefaultControlView(
+                controller: controller,
+              ),
         ],
       ),
     );

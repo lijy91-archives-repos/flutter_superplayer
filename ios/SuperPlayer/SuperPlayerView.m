@@ -1194,11 +1194,11 @@ static UISlider * _volumeSlider;
 
     _state = state;
     // 控制菊花显示、隐藏
-    if (state == StateBuffering) {
-        [self.spinner startAnimating];
-    } else {
-        [self.spinner stopAnimating];
-    }
+//    if (state == StateBuffering) {
+//        [self.spinner startAnimating];
+//    } else {
+//        [self.spinner stopAnimating];
+//    }
     if (state == StatePlaying) {
         
         [[NSNotificationCenter defaultCenter] removeObserver:self

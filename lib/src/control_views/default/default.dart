@@ -9,8 +9,8 @@ import '../../../flutter_superplayer.dart';
 import './end_drawer_play_rate.dart';
 import './end_drawer_video_quality.dart';
 
-const _kPlayerControlHeaderBarHeight = 46.0;
-const _kPlayerControlFooterBarHeight = 46.0;
+const _kPlayerControlHeaderBarHeight = 60.0;
+const _kPlayerControlFooterBarHeight = 60.0;
 
 const _kEndDrawerTypePlayRate = 'playRate';
 const _kEndDrawerTypeVideoQuality = 'videoQuality';
@@ -67,11 +67,12 @@ class _ImageButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
+    return Container(
+      // color: Colors.red.withOpacity(0.1),
       width: size,
       height: size,
       child: CupertinoButton(
-        padding: padding ?? EdgeInsets.all(2),
+        padding: padding ?? EdgeInsets.all(0),
         color: color,
         child: Image.asset(
           'images/$name',
@@ -229,16 +230,25 @@ class _SuperPlayerDefaultControlViewState
                     child: Center(
                       child: Stack(
                         children: [
-                          _PlayerControlVideoOperationButton(
-                            controller: widget.controller,
-                            playState: _playState,
-                          )
+                          if (_playState == SuperPlayerConst.PLAYSTATE_LOADING)
+                            Container(
+                              width: 44,
+                              height: 44,
+                              child: CupertinoTheme(
+                                data: CupertinoTheme.of(context)
+                                    .copyWith(brightness: Brightness.dark),
+                                child: CupertinoActivityIndicator(
+                                  radius: 16,
+                                ),
+                              ),
+                            ),
                         ],
                       ),
                     ),
                   ),
                   _PlayerControlFooterBar(
                     controller: widget.controller,
+                    playState: _playState,
                     isFullScreen: _isFullScreen,
                     playProgressCurrent: _playProgressCurrent,
                     playProgressDuration: _playProgressDuration,
@@ -433,24 +443,25 @@ class _PlayerControlHeaderBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       height: _kPlayerControlHeaderBarHeight,
-      padding: EdgeInsets.only(left: 10, right: 10),
+      padding: EdgeInsets.only(left: 0, right: 0),
       decoration: BoxDecoration(
         // color: Colors.green.withOpacity(0.1),
         gradient: LinearGradient(
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
           colors: [
-            Color(0xff000000).withOpacity(0.40),
-            Color(0xff000000).withOpacity(0.20),
-            Color(0xff2d2d2d).withOpacity(0),
+            Color(0xff000000).withOpacity(0.60),
+            Color(0xff000000).withOpacity(0.06),
+            Color(0xff000000).withOpacity(0),
           ],
         ),
       ),
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _ImageButton(
             'superplayer_ic_menu_back.png',
-            size: 38,
+            size: 44,
             onPressed: () async {
               bool isFullScreen = await controller.isFullScreen();
               if (isFullScreen) {
@@ -471,6 +482,7 @@ class _PlayerControlHeaderBar extends StatelessWidget {
 
 class _PlayerControlFooterBar extends StatefulWidget {
   final SuperPlayerController controller;
+  final int playState;
   final bool isFullScreen;
   final int playProgressCurrent;
   final int playProgressDuration;
@@ -483,6 +495,7 @@ class _PlayerControlFooterBar extends StatefulWidget {
   _PlayerControlFooterBar({
     Key? key,
     required this.controller,
+    required this.playState,
     required this.isFullScreen,
     required this.playProgressCurrent,
     required this.onPlayProgressCurrentChanged,
@@ -535,46 +548,46 @@ class __PlayerControlFooterBarState extends State<_PlayerControlFooterBar> {
   Widget build(BuildContext context) {
     return Container(
       height: _kPlayerControlFooterBarHeight,
-      padding: EdgeInsets.only(left: 10, right: 10),
+      padding: EdgeInsets.only(left: 0, right: 0),
       decoration: BoxDecoration(
         // color: Colors.green.withOpacity(0.1),
         gradient: LinearGradient(
           begin: Alignment.bottomCenter,
           end: Alignment.topCenter,
           colors: [
-            Color(0xff000000).withOpacity(0.40),
-            Color(0xff000000).withOpacity(0.20),
-            Color(0xff2d2d2d).withOpacity(0),
+            Color(0xff000000).withOpacity(0.60),
+            Color(0xff000000).withOpacity(0.06),
+            Color(0xff000000).withOpacity(0),
           ],
         ),
       ),
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.end,
         children: [
+          _PlayerControlVideoOperationButton(
+            controller: widget.controller,
+            playState: widget.playState,
+          ),
           Container(
-            width: 78,
-            child: Row(
-              children: [
-                Text(
-                  '$_formattedCurrent',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 12,
-                    fontWeight: FontWeight.w500,
-                  ),
+            width: 52,
+            height: 44,
+            padding: EdgeInsets.only(left: 14),
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                '$_formattedCurrent',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 12,
+                  fontWeight: FontWeight.w400,
                 ),
-                Text(
-                  '/$_formattedDuration',
-                  style: TextStyle(
-                    color: Colors.grey.withOpacity(0.9),
-                    fontSize: 12,
-                  ),
-                ),
-              ],
+              ),
             ),
           ),
           Expanded(
             child: Container(
-              margin: EdgeInsets.only(left: 0, right: 6),
+              height: 44,
+              margin: EdgeInsets.only(left: 0, right: 0),
               child: FlutterSlider(
                 values: [widget.playProgressCurrent.toDouble()],
                 max: widget.playProgressDuration.toDouble() > 0
@@ -583,23 +596,24 @@ class __PlayerControlFooterBarState extends State<_PlayerControlFooterBar> {
                 min: 0,
                 disabled: widget.playProgressDuration.toDouble() == 0,
                 trackBar: FlutterSliderTrackBar(
-                  inactiveTrackBarHeight: 3,
+                  inactiveTrackBarHeight: 2,
                   inactiveTrackBar: BoxDecoration(
-                    color: Colors.grey.withOpacity(0.3),
+                    color: Colors.white.withOpacity(0.3),
                   ),
-                  activeTrackBarHeight: 3,
+                  activeTrackBarHeight: 2,
                   activeTrackBar: BoxDecoration(
                     color: Theme.of(context).primaryColor,
                   ),
                 ),
-                handlerWidth: 20,
-                handlerHeight: 20,
+                handlerWidth: 16,
+                handlerHeight: 16,
                 handler: FlutterSliderHandler(
+                  decoration: BoxDecoration(color: Colors.transparent),
                   child: Container(
                     width: double.infinity,
                     height: double.infinity,
                     decoration: BoxDecoration(
-                      color: Colors.white,
+                      color: Theme.of(context).primaryColor.withOpacity(0.4),
                       borderRadius: BorderRadius.circular(10),
                       boxShadow: <BoxShadow>[
                         BoxShadow(
@@ -616,7 +630,7 @@ class __PlayerControlFooterBarState extends State<_PlayerControlFooterBar> {
                           width: 10,
                           height: 10,
                           decoration: BoxDecoration(
-                            color: Theme.of(context).primaryColor,
+                            color: Colors.white,
                             borderRadius: BorderRadius.circular(5),
                             boxShadow: <BoxShadow>[
                               BoxShadow(
@@ -673,6 +687,21 @@ class __PlayerControlFooterBarState extends State<_PlayerControlFooterBar> {
               ),
             ),
           ),
+          Container(
+            width: 52,
+            height: 44,
+            padding: EdgeInsets.only(right: 14),
+            child: Align(
+              alignment: Alignment.centerRight,
+              child: Text(
+                '$_formattedDuration',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 12,
+                ),
+              ),
+            ),
+          ),
           if (widget.isFullScreen)
             Padding(
               padding: EdgeInsets.only(right: 6),
@@ -714,10 +743,12 @@ class _PlayerControlVideoOperationButton extends StatelessWidget {
       children: [
         // 播放 (未初始化/暂停中)
         if (playState == SuperPlayerConst.PLAYSTATE_NONE ||
-            playState == SuperPlayerConst.PLAYSTATE_PAUSE)
+            playState == SuperPlayerConst.PLAYSTATE_PAUSE ||
+            playState == SuperPlayerConst.PLAYSTATE_END ||
+            playState == SuperPlayerConst.PLAYSTATE_FAILED)
           _ImageButton(
             'superplayer_btn_play.png',
-            size: 50,
+            size: 44,
             onPressed: () {
               if (playState == SuperPlayerConst.PLAYSTATE_PAUSE) {
                 controller.resume();
@@ -725,26 +756,15 @@ class _PlayerControlVideoOperationButton extends StatelessWidget {
                 controller.play();
               }
             },
-          ),
-        // 暂停
-        if (playState == SuperPlayerConst.PLAYSTATE_PLAYING)
+          )
+        else if (playState == SuperPlayerConst.PLAYSTATE_PLAYING ||
+            playState == SuperPlayerConst.PLAYSTATE_LOADING)
           _ImageButton(
             'superplayer_btn_pause.png',
-            size: 50,
+            size: 44,
             onPressed: () {
               controller.pause();
             },
-          ),
-        // 缓冲中
-        if (playState == SuperPlayerConst.PLAYSTATE_LOADING)
-          Container(
-            child: CupertinoTheme(
-              data: CupertinoTheme.of(context)
-                  .copyWith(brightness: Brightness.dark),
-              child: CupertinoActivityIndicator(
-                radius: 16,
-              ),
-            ),
           ),
       ],
     );
@@ -858,6 +878,7 @@ class _PlayerControlActionEnterFullScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return _ImageButton(
       'superplayer_btn_fullscreen_enter.png',
+      size: 44,
       onPressed: () async {
         bool isFullScreen = await controller.isFullScreen();
         controller.setFullScreen(!isFullScreen);

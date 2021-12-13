@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -176,6 +178,8 @@ class SuperPlayerController {
   }
 
   void setCoverImage(String coverImageUrl) {
+    if (Platform.isAndroid) return;
+
     final Map<String, dynamic> arguments = {
       'coverImageUrl': coverImageUrl,
     };
@@ -210,6 +214,13 @@ class SuperPlayerController {
 
   void resetPlayer() {
     _channel!.invokeMethod('resetPlayer');
+  }
+
+  void setStartTime(int startTime) {
+    _channel!.invokeMethod(
+      'setStartTime',
+      {'startTime': startTime},
+    );
   }
 
   void playWithModel(final SuperPlayerModel model) {

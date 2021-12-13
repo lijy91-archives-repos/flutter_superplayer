@@ -11,17 +11,16 @@ import android.widget.TextView;
 
 import org.leanflutter.plugins.flutter_superplayer.R;
 
-
 /**
  * 滑动手势控制播放进度时显示的进度提示view
  */
 
 public class VideoProgressLayout extends RelativeLayout {
-    private ImageView       mIvThumbnail;       // 视频缩略图
-    private TextView        mTvTime;            // 视频进度文本
-    private ProgressBar     mProgressBar;       // 进度条
-    private HideRunnable    mHideRunnable;      // 隐藏自身的线程
-    private int             duration = 1000;    // 自身消失的延迟事件ms
+    private ImageView    mIvThumbnail;       // 视频缩略图
+    private TextView     mTvTime;            // 视频进度文本
+    private ProgressBar  mProgressBar;       // 进度条
+    private HideRunnable mHideRunnable;      // 隐藏自身的线程
+    private int          duration = 1000;    // 自身消失的延迟事件ms
 
     public VideoProgressLayout(Context context) {
         super(context);
@@ -86,6 +85,13 @@ public class VideoProgressLayout extends RelativeLayout {
     public void setThumbnail(Bitmap bitmap) {
         mIvThumbnail.setVisibility(VISIBLE);
         mIvThumbnail.setImageBitmap(bitmap);
+    }
+
+    /**
+     * 设置缩略图
+     */
+    public void hideThumbnail() {
+        mIvThumbnail.setVisibility(GONE);
     }
 
     /**

@@ -10,26 +10,27 @@ import com.tencent.liteav.demo.superplayer.model.entity.PlayKeyFrameDescInfo;
 import com.tencent.liteav.demo.superplayer.model.entity.ResolutionName;
 import com.tencent.liteav.demo.superplayer.model.entity.VideoQuality;
 import com.tencent.liteav.demo.superplayer.model.net.HttpURLClient;
+import com.tencent.rtmp.TXLog;
+import com.tencent.rtmp.TXVodPlayer;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.List;
+import java.util.Random;
 
 /**
  * V4视频信息协议实现类
- *
+ * <p>
  * 负责V4视频信息协议的请求控制与数据获取
  */
 public class PlayInfoProtocolV4 implements IPlayInfoProtocol {
-    private static final String TAG = "TCPlayInfoProtocolV4";
-
-    private final String BASE_URLS_V4 = "https://playvideo.qcloud.com/getplayinfo/v4";  // V4协议请求地址
-
-    private Handler         mMainHandler;   // 用于切换线程
-    private PlayInfoParams  mParams;        // 协议请求输入的参数
-    private IPlayInfoParser mParser;        // 协议请求返回Json的解析对象
-    private String          mRequestContext;//透传字段
+    private static final String          TAG          = "TCPlayInfoProtocolV4";
+    private final        String          BASE_URLS_V4 = "https://playvideo.qcloud.com/getplayinfo/v4";  // V4协议请求地址
+    private              Handler         mMainHandler;   // 用于切换线程
+    private              PlayInfoParams  mParams;        // 协议请求输入的参数
+    private              IPlayInfoParser mParser;        // 协议请求返回Json的解析对象
+    private              String          mRequestContext;//透传字段
 
     public PlayInfoProtocolV4(PlayInfoParams params) {
         mParams = params;
@@ -104,6 +105,8 @@ public class PlayInfoProtocolV4 implements IPlayInfoProtocol {
             if (code == 0) {
                 int version = jsonObject.getInt("version");
                 if (version == 2) {
+                    mParams.videoId.overlayKey = null;
+                    mParams.videoId.overlayIv = null;
                     mParser = new PlayInfoParserV2(jsonObject);
                 } else if (version == 4) {
                     mParser = new PlayInfoParserV4(jsonObject);
@@ -165,6 +168,25 @@ public class PlayInfoProtocolV4 implements IPlayInfoProtocol {
 
         if (!TextUtils.isEmpty(psign)) {
             str.append("psign=" + psign + "&");
+            // 生成临时密钥并加密，跟psign一起写到请求云点播的querystring中
+            if (mParams.videoId != null) {
+                String keyId = "";
+                mParams.videoId.overlayKey = genRandomHexString();
+                mParams.videoId.overlayIv = genRandomHexString();
+                TXLog.i(TAG, "V4 protocol send request fileId : " + mParams.fileId +
+                        " | overlayKey: " + mParams.videoId.overlayKey +
+                        " | overlayIv: " + mParams.videoId.overlayIv);
+                String cipheredOverlayKey = TXVodPlayer.getEncryptedPlayKey(mParams.videoId.overlayKey);
+                String cipheredOverlayIv = TXVodPlayer.getEncryptedPlayKey(mParams.videoId.overlayIv);
+                if (!TextUtils.isEmpty(cipheredOverlayKey) && !TextUtils.isEmpty(cipheredOverlayIv)) {
+                    keyId = "1";
+                }
+                if (!TextUtils.isEmpty(keyId)) {
+                    str.append("cipheredOverlayKey=").append(cipheredOverlayKey).append("&");
+                    str.append("cipheredOverlayIv=").append(cipheredOverlayIv).append("&");
+                    str.append("keyId=").append(keyId).append("&");
+                }
+            }
         }
 
         if (!TextUtils.isEmpty(content)) {
@@ -174,6 +196,21 @@ public class PlayInfoProtocolV4 implements IPlayInfoProtocol {
             str.deleteCharAt(str.length() - 1);
         }
         return str.toString();
+    }
+
+    /**
+     * 获取32位随机字符串
+     * @return
+     */
+    private String genRandomHexString() {
+        final char[] HEX_ARRAY = "0123456789ABCDEF".toCharArray();  // 16进制字符数组
+        int keyLen = 32;
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < keyLen; i++) {
+            char randomChar = HEX_ARRAY[new Random().nextInt(HEX_ARRAY.length)];
+            sb.append(randomChar);
+        }
+        return sb.toString();
     }
 
     /**

@@ -10,37 +10,14 @@ import java.util.List;
 
 public interface SuperPlayer {
 
-    /**
-     * 开始播放
-     *
-     * @param url 视频地址
-     */
-    void play(String url);
 
     /**
      * 开始播放
      *
-     * @param appId 腾讯云视频appId
-     * @param url   直播播放地址
+     * @param model 超级播放器模型
      */
-    void play(int appId, String url);
+    void play(SuperPlayerModel model);
 
-    /**
-     * 开始播放
-     *
-     * @param appId  腾讯云视频appId
-     * @param fileId 腾讯云视频fileId
-     * @param psign  防盗链签名，开启防盗链的视频必填，非防盗链视频可不填
-     */
-    void play(int appId, String fileId, String psign);
-
-    /**
-     * 多分辨率播放
-     * @param appId             腾讯云视频appId
-     * @param superPlayerURLS   不同分辨率数据
-     * @param defaultIndex      默认播放Index
-     */
-    void play(int appId, List<SuperPlayerModel.SuperPlayerURL> superPlayerURLS, int defaultIndex);
 
     /**
      * 重播
@@ -77,6 +54,10 @@ public interface SuperPlayer {
      */
     void destroy();
 
+    void reset();
+
+    void revertSettings();
+
     /**
      * 切换播放器模式
      *
@@ -100,11 +81,7 @@ public interface SuperPlayer {
 
     void switchStream(VideoQuality quality);
 
-    void setLoop(boolean isLoop);
-
     String getPlayURL();
-
-    SuperPlayerModel getPlayerModel();
 
     /**
      * 获取当前播放器模式
@@ -134,17 +111,30 @@ public interface SuperPlayer {
      */
     SuperPlayerDef.PlayerType getPlayerType();
 
-
-    /**
-     * 获取当前播放器速率
-     *
-     */
-    float getPlayerRate();
-
     /**
      * 设置播放器状态回调
      *
      * @param observer {@link SuperPlayerObserver}
      */
     void setObserver(SuperPlayerObserver observer);
+
+    /**
+     * 设置是否循环
+     * @param isLoop true循环，false不循环
+     */
+    void setLoop(boolean isLoop);
+
+    /**
+     * 设置开始时间
+     * @param startPos 开始时间
+     */
+    void setStartTime(float startPos);
+
+    /**
+     * 设置是否自动播放
+     * @param isAutoPlay true自动播放，false不自动播放
+     */
+    void setAutoPlay(boolean isAutoPlay);
+
+    SuperPlayerModel getPlayerModel();
 }

@@ -26,15 +26,15 @@ import org.leanflutter.plugins.flutter_superplayer.R;
 
 /**
  * Created by yuejiaoli on 2018/7/4.
- *
+ * <p>
  * 更多选项弹框
- *
+ * <p>
  * 1、声音调节seekBar回调{@link #mVolumeChangeListener}
- *
+ * <p>
  * 2、亮度调节seekBar回调{@link #mLightChangeListener}
- *
+ * <p>
  * 3、倍速选择回调{@link #onCheckedChanged(RadioGroup, int)}
- *
+ * <p>
  * 4、镜像、硬件加速开关回调{@link #onCheckedChanged(CompoundButton, boolean)}
  */
 
@@ -43,22 +43,20 @@ public class VodMoreView extends RelativeLayout implements RadioGroup.OnCheckedC
     private static final String VOLUME_CHANGED_ACTION    = "android.media.VOLUME_CHANGED_ACTION";
     private static final String EXTRA_VOLUME_STREAM_TYPE = "android.media.EXTRA_VOLUME_STREAM_TYPE";
 
-    private Context mContext;
-
-    private SeekBar         mSeekBarVolume;     // 音量seekBar
-    private SeekBar         mSeekBarLight;      // 亮度seekBar
-    private Switch          mSwitchMirror;      // 镜像开关
-    private Switch          mSwitchAccelerate;  // 硬解开关
-    private Callback        mCallback;          // 回调
-    private AudioManager    mAudioManager;      // 音频管理器
-    private RadioGroup      mRadioGroup;        // 倍速选择radioGroup
-    private RadioButton     mRbSpeed1;          // 1.0倍速按钮
-    private RadioButton     mRbSpeed125;        // 1.25倍速按钮
-    private RadioButton     mRbSpeed15;         // 1.5倍速按钮
-    private RadioButton     mRbSpeed2;          // 2.0倍速按钮
-    private LinearLayout    mLayoutSpeed;       // 倍速按钮所在布局
-    private LinearLayout    mLayoutMirror;      // 镜像按钮所在布局
-
+    private Context                 mContext;
+    private SeekBar                 mSeekBarVolume;     // 音量seekBar
+    private SeekBar                 mSeekBarLight;      // 亮度seekBar
+    private Switch                  mSwitchMirror;      // 镜像开关
+    private Switch                  mSwitchAccelerate;  // 硬解开关
+    private Callback                mCallback;          // 回调
+    private AudioManager            mAudioManager;      // 音频管理器
+    private RadioGroup              mRadioGroup;        // 倍速选择radioGroup
+    private RadioButton             mRbSpeed1;          // 1.0倍速按钮
+    private RadioButton             mRbSpeed125;        // 1.25倍速按钮
+    private RadioButton             mRbSpeed15;         // 1.5倍速按钮
+    private RadioButton             mRbSpeed2;          // 2.0倍速按钮
+    private LinearLayout            mLayoutSpeed;       // 倍速按钮所在布局
+    private LinearLayout            mLayoutMirror;      // 镜像按钮所在布局
     private VolumeBroadcastReceiver mVolumeBroadcastReceiver;
 
     public VodMoreView(Context context) {
@@ -284,8 +282,12 @@ public class VodMoreView extends RelativeLayout implements RadioGroup.OnCheckedC
         if (visibility == View.VISIBLE) {
             updateCurrentVolume();
             updateCurrentLight();
+            SuperPlayerGlobalConfig config = SuperPlayerGlobalConfig.getInstance();
+            mSwitchAccelerate.setOnCheckedChangeListener(null);
+            mSwitchAccelerate.setChecked(config.enableHWAcceleration);
+            mSwitchAccelerate.setOnCheckedChangeListener(this);
             registerReceiver();
-        }else {
+        } else {
             unregisterReceiver();
         }
     }
@@ -310,6 +312,25 @@ public class VodMoreView extends RelativeLayout implements RadioGroup.OnCheckedC
         }
     }
 
+    /**
+     * 还原界面上的镜像按钮
+     * 还原倍速播放选项
+     */
+    public void revertUI() {
+        mRadioGroup.setOnCheckedChangeListener(null);
+        mRbSpeed1.setChecked(true);
+        mRbSpeed125.setChecked(false);
+        mRbSpeed15.setChecked(false);
+        mRbSpeed2.setChecked(false);
+        mRadioGroup.setOnCheckedChangeListener(this);
+        if (mSwitchMirror.isChecked()) {
+            mSwitchMirror.setOnCheckedChangeListener(null);
+            mSwitchMirror.setChecked(false);
+            mSwitchMirror.setOnCheckedChangeListener(this);
+        }
+    }
+
+
     private class VolumeBroadcastReceiver extends BroadcastReceiver {
 
         public void onReceive(Context context, Intent intent) {
@@ -323,6 +344,7 @@ public class VodMoreView extends RelativeLayout implements RadioGroup.OnCheckedC
 
     /**
      * 注册音量广播接收器
+     *
      * @return
      */
     public void registerReceiver() {

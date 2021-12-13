@@ -9,6 +9,7 @@ import android.widget.ImageView;
 
 import com.tencent.liteav.demo.superplayer.SuperPlayerDef;
 import com.tencent.liteav.demo.superplayer.SuperPlayerGlobalConfig;
+import com.tencent.liteav.demo.superplayer.ui.view.VipWatchView;
 import com.tencent.rtmp.ui.TXCloudVideoView;
 
 import org.leanflutter.plugins.flutter_superplayer.R;
@@ -22,17 +23,20 @@ import java.lang.reflect.Field;
  * <p>
  * 2、关闭悬浮窗{@link #onClick(View)}
  */
-public class FloatPlayer extends AbsPlayer implements View.OnClickListener {
+public class FloatPlayer extends AbsPlayer implements View.OnClickListener, VipWatchView.VipWatchViewClickListener {
 
     private TXCloudVideoView mFloatVideoView;   // 悬浮窗中的视频播放view
 
-    private int mStatusBarHeight;   // 系统状态栏的高度
+    private int   mStatusBarHeight;   // 系统状态栏的高度
     private float mXDownInScreen;   // 按下事件距离屏幕左边界的距离
     private float mYDownInScreen;   // 按下事件距离屏幕上边界的距离
     private float mXInScreen;       // 滑动事件距离屏幕左边界的距离
     private float mYInScreen;       // 滑动事件距离屏幕上边界的距离
     private float mXInView;         // 滑动事件距离自身左边界的距离
     private float mYInView;         // 滑动事件距离自身上边界的距离
+
+    private SuperPlayerDef.PlayerType mPlayType;        // 当前播放视频类型
+
 
     public FloatPlayer(Context context) {
         super(context);
@@ -57,6 +61,8 @@ public class FloatPlayer extends AbsPlayer implements View.OnClickListener {
         mFloatVideoView = (TXCloudVideoView) findViewById(R.id.superplayer_float_cloud_video_view);
         ImageView ivClose = (ImageView) findViewById(R.id.superplayer_iv_close);
         ivClose.setOnClickListener(this);
+        mVipWatchView = findViewById(R.id.superplayer_vip_watch_view);
+        mVipWatchView.setVipWatchViewClickListener(this);
     }
 
     /**
@@ -114,6 +120,23 @@ public class FloatPlayer extends AbsPlayer implements View.OnClickListener {
         return true;
     }
 
+    @Override
+    public void updatePlayType(SuperPlayerDef.PlayerType type) {
+        mPlayType = type;
+    }
+
+    @Override
+    public void setBackground(String imageUrl) {
+
+    }
+
+    @Override
+    public void updateVideoProgress(long current, long duration) {
+        if (mPlayType == SuperPlayerDef.PlayerType.VOD) {
+            mVipWatchView.setCurrentTime(current);
+        }
+    }
+
     /**
      * 获取系统状态栏高度
      */
@@ -147,4 +170,41 @@ public class FloatPlayer extends AbsPlayer implements View.OnClickListener {
             mControllerCallback.onFloatPositionChange(x, y);
         }
     }
+
+    @Override
+    public void onClickVipTitleBack() {
+        if (mControllerCallback != null) {
+            mControllerCallback.onClickVipTitleBack(SuperPlayerDef.PlayerMode.FLOAT);
+            mControllerCallback.onSeekTo(0);
+        }
+    }
+
+    @Override
+    public void onClickVipRetry() {
+        if (mControllerCallback != null) {
+            mControllerCallback.onClickVipRetry();
+        }
+    }
+
+    @Override
+    public void onShowVipView() {
+        if (mControllerCallback != null) {
+            mControllerCallback.onPause();
+        }
+    }
+
+    @Override
+    public void onClickVipBtn() {
+        if (mControllerCallback != null) {
+            mControllerCallback.onClickHandleVip();
+        }
+    }
+
+    @Override
+    public void onCloseVipTip() {
+        if (mControllerCallback != null) {
+            mControllerCallback.onCloseVipTip();
+        }
+    }
+
 }

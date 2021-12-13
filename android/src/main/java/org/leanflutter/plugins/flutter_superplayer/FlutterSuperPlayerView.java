@@ -9,6 +9,7 @@ import android.widget.FrameLayout;
 
 import androidx.annotation.NonNull;
 
+import com.tencent.liteav.basic.log.TXCLog;
 import com.tencent.liteav.demo.superplayer.SuperPlayerDef;
 import com.tencent.liteav.demo.superplayer.SuperPlayerGlobalConfig;
 import com.tencent.liteav.demo.superplayer.SuperPlayerModel;
@@ -74,12 +75,7 @@ public class FlutterSuperPlayerView implements PlatformView, MethodCallHandler, 
         superPlayerView.setPlayerViewCallback(this);
         containerView.addView(superPlayerView);
 
-        String controlViewType = (String) params.get("controlViewType");
-        setControlViewType(controlViewType);
-        if (params.containsKey("coverImageUrl")) {
-            String coverImageUrl = (String) params.get("coverImageUrl");
-            setCoverImage(coverImageUrl);
-        }
+        TXCLog.setConsoleEnabled(true);
     }
 
     @Override
@@ -108,12 +104,6 @@ public class FlutterSuperPlayerView implements PlatformView, MethodCallHandler, 
     public void onMethodCall(@NonNull MethodCall call, @NonNull MethodChannel.Result result) {
         if (call.method.equals("getModel")) {
             getModel(call, result);
-        } else if (call.method.equals("setControlViewType")) {
-            setControlViewType(call, result);
-        } else if (call.method.equals("setTitle")) {
-            setTitle(call, result);
-        } else if (call.method.equals("setCoverImage")) {
-            setCoverImage(call, result);
         } else if (call.method.equals("getPlayMode")) {
             getPlayMode(call, result);
         } else if (call.method.equals("getPlayState")) {
@@ -128,6 +118,8 @@ public class FlutterSuperPlayerView implements PlatformView, MethodCallHandler, 
             setVideoQuality(call, result);
         } else if (call.method.equals("resetPlayer")) {
             resetPlayer(call, result);
+        } else if (call.method.equals("setStartTime")) {
+            setStartTime(call, result);
         } else if (call.method.equals("playWithModel")) {
             playWithModel(call, result);
         } else if (call.method.equals("pause")) {
@@ -146,7 +138,7 @@ public class FlutterSuperPlayerView implements PlatformView, MethodCallHandler, 
     }
 
     void getModel(@NonNull MethodCall call, @NonNull Result result) {
-        SuperPlayerModel model = superPlayerView.getSuperPlayer().getPlayerModel();
+        SuperPlayerModel model = superPlayerView.getPlayerModel();
 
         final List<Map<String, Object>> multiURLs = new ArrayList<>();
         if (model != null && model.multiURLs != null) {
@@ -164,29 +156,6 @@ public class FlutterSuperPlayerView implements PlatformView, MethodCallHandler, 
         result.success(resultData);
     }
 
-    void setControlViewType(String controlViewType) {
-        superPlayerView.setControlViewType(controlViewType);
-    }
-
-    void setControlViewType(@NonNull MethodCall call, @NonNull Result result) {
-        String controlViewType = (String) call.argument("controlViewType");
-        superPlayerView.setControlViewType(controlViewType);
-    }
-
-    void setTitle(@NonNull MethodCall call, @NonNull Result result) {
-        String title = (String) call.argument("title");
-        superPlayerView.setTitle(title);
-    }
-
-    void setCoverImage(String coverImageUrl) {
-        superPlayerView.setCoverImage(coverImageUrl);
-    }
-
-    void setCoverImage(@NonNull MethodCall call, @NonNull Result result) {
-        String controlViewType = (String) call.argument("coverImageUrl");
-        superPlayerView.setCoverImage(controlViewType);
-    }
-
     void getPlayMode(@NonNull MethodCall call, @NonNull Result result) {
         int playMode = superPlayerView.getPlayerMode().ordinal();
         result.success(playMode);
@@ -198,8 +167,8 @@ public class FlutterSuperPlayerView implements PlatformView, MethodCallHandler, 
     }
 
     void getPlayRate(@NonNull MethodCall call, @NonNull Result result) {
-        float playRate = superPlayerView.getPlayerRate();
-        result.success(playRate);
+//        float playRate = superPlayerView.getPlayerRate();
+//        result.success(playRate);
     }
 
     void setPlayRate(@NonNull MethodCall call, @NonNull Result result) {
@@ -208,7 +177,7 @@ public class FlutterSuperPlayerView implements PlatformView, MethodCallHandler, 
     }
 
     void getVideoQuality(@NonNull MethodCall call, @NonNull Result result) {
-        SuperPlayerModel model = superPlayerView.getSuperPlayer().getPlayerModel();
+        SuperPlayerModel model = superPlayerView.getPlayerModel();
 
         try {
             SuperPlayerModel.SuperPlayerURL superPlayerURL = model.multiURLs.get(model.playDefaultIndex);
@@ -229,19 +198,24 @@ public class FlutterSuperPlayerView implements PlatformView, MethodCallHandler, 
 
         VideoQuality videoQuality = null;
 
-        SuperPlayerModel model = superPlayerView.getSuperPlayer().getPlayerModel();
+        SuperPlayerModel model = superPlayerView.getPlayerModel();
         for (int i = 0; i < model.multiURLs.size(); i++) {
             SuperPlayerModel.SuperPlayerURL superPlayerURL = model.multiURLs.get(i);
             if (superPlayerURL.qualityName.equals(qualityName) && superPlayerURL.url.equals(url)) {
-                videoQuality =  new VideoQuality(i, superPlayerURL.qualityName, superPlayerURL.url);
+                videoQuality = new VideoQuality(i, superPlayerURL.qualityName, superPlayerURL.url);
                 break;
             }
         }
         superPlayerView.getControllerCallback().onQualityChange(videoQuality);
     }
 
-    void resetPlayer(@NonNull MethodCall call, @NonNull Result result) {
+    private void resetPlayer(@NonNull MethodCall call, @NonNull Result result) {
         superPlayerView.resetPlayer();
+    }
+
+    private void setStartTime(@NonNull MethodCall call, @NonNull Result result) {
+        int startTime = (int) call.argument("startTime");
+        superPlayerView.setStartTime(startTime);
     }
 
     private void playWithModel(@NonNull MethodCall call, @NonNull Result result) {
@@ -251,8 +225,8 @@ public class FlutterSuperPlayerView implements PlatformView, MethodCallHandler, 
             model.appId = (int) call.argument("appId");
         if (call.hasArgument("url"))
             model.url = (String) call.argument("url");
-        if (call.hasArgument("title"))
-            model.title = (String) call.argument("title");
+        if (call.hasArgument("coverPictureUrl"))
+            model.coverPictureUrl = (String) call.argument("coverPictureUrl");
 
         if (call.hasArgument("videoId")) {
             HashMap<String, Object> videoIdJson = call.argument("videoId");
@@ -338,6 +312,21 @@ public class FlutterSuperPlayerView implements PlatformView, MethodCallHandler, 
 
     @Override
     public void onStartFloatWindowPlay() {
+    }
+
+    @Override
+    public void onPlaying() {
+
+    }
+
+    @Override
+    public void onPlayEnd() {
+
+    }
+
+    @Override
+    public void onError(int code) {
+
     }
 
     @Override

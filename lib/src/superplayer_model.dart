@@ -26,8 +26,8 @@ class SuperPlayerModel {
   @deprecated
   SuperPlayerVideoIdV2? videoIdV2;
 
-  /// 视频文件名 （用于显示在UI层);使用file id播放，若未指定title，则使用FileId返回的Title；使用url播放需要指定title，否则title显示为空
-  String? title = "";
+  /// 用户设置的封面图片
+  String? coverPictureUrl = "";
 
   SuperPlayerModel({
     this.appId,
@@ -36,7 +36,7 @@ class SuperPlayerModel {
     this.playDefaultIndex,
     this.videoId,
     this.videoIdV2,
-    this.title,
+    this.coverPictureUrl,
   });
 
   Map<String, dynamic> toJson() {
@@ -54,7 +54,8 @@ class SuperPlayerModel {
       jsonObject.putIfAbsent("videoId", () => videoId!.toJson());
     if (videoIdV2 != null)
       jsonObject.putIfAbsent("videoIdV2", () => videoIdV2!.toJson());
-    if (title != null) jsonObject.putIfAbsent("title", () => title);
+    if (coverPictureUrl != null)
+      jsonObject.putIfAbsent("coverPictureUrl", () => coverPictureUrl);
 
     return jsonObject;
   }

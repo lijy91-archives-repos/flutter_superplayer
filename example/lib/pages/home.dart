@@ -45,8 +45,6 @@ class _HomePageState extends State<HomePage> with SuperPlayerListener {
     _sdkVersion = await FlutterSuperPlayer.instance.sdkVersion;
 
     _playerController.setModel(this.testSuperPlayerModel);
-    // _playerController.setCoverImage(
-    //     'http://xiaozhibo-10055601.file.myqcloud.com/coverImg.jpg');
 
     if (!mounted) return;
 
@@ -122,8 +120,6 @@ class _HomePageState extends State<HomePage> with SuperPlayerListener {
                               ),
                             ),
                             onTap: () {
-                              _playerController.setCoverImage(
-                                  'http://xiaozhibo-10055601.file.myqcloud.com/coverImg.jpg');
                               // _playerController.resetPlayer();
                               _logs = [];
                               setState(() {});

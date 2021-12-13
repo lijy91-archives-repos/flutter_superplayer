@@ -42,7 +42,6 @@
         _superPlayerView.fatherView = _containerView;
         _superPlayerView.delegate = self;
         
-        [self setControlViewType:args[@"controlViewType"]];
         if (args[@"coverImageUrl"] != nil) {
             [self setCoverImage:args[@"coverImageUrl"]];
         }
@@ -62,17 +61,12 @@
 
 - (FlutterError*)onCancelWithArguments:(id)arguments {
     _eventSink = nil;
-    
     return nil;
 }
 
 - (void)onMethodCall:(FlutterMethodCall*)call result:(FlutterResult)result {
     if ([[call method] isEqualToString:@"getModel"]) {
         [self getModel:call result: result];
-    } else if ([[call method] isEqualToString:@"setControlViewType"]) {
-        [self setControlViewType:call result: result];
-    } else if ([[call method] isEqualToString:@"setTitle"]) {
-        [self setTitle:call result: result];
     } else if ([[call method] isEqualToString:@"setCoverImage"]) {
         [self setCoverImage:call result: result];
     } else if ([[call method] isEqualToString:@"getPlayMode"]) {
@@ -89,6 +83,8 @@
         [self setVideoQuality:call result: result];
     } else if ([[call method] isEqualToString:@"resetPlayer"]) {
         [self resetPlayer:call result: result];
+    } else if ([[call method] isEqualToString:@"setStartTime"]) {
+        [self setStartTime:call result: result];
     } else if ([[call method] isEqualToString:@"playWithModel"]) {
         [self playWithModel:call result: result];
     } else if ([[call method] isEqualToString:@"pause"]) {
@@ -107,7 +103,7 @@
 }
 
 - (void)getModel:(FlutterMethodCall*)call
-                     result:(FlutterResult)result
+          result:(FlutterResult)result
 {
     NSMutableArray *multiURLs = [[NSMutableArray alloc] init];
     for (SuperPlayerUrl *superPlayerUrl in _superPlayerView.playerModel.multiVideoURLs) {
@@ -188,7 +184,7 @@
 
 
 - (void)getVideoQuality:(FlutterMethodCall*)call
-             result:(FlutterResult)result
+                 result:(FlutterResult)result
 {
     SuperPlayerUrl *superPlayerUrl;
     
@@ -206,7 +202,7 @@
 }
 
 - (void)setVideoQuality:(FlutterMethodCall*)call
-             result:(FlutterResult)result
+                 result:(FlutterResult)result
 {
     NSString *qualityName = call.arguments[@"qualityName"];
     NSString *url = call.arguments[@"url"];
@@ -222,6 +218,16 @@
              result:(FlutterResult)result
 {
     [_superPlayerView resetPlayer];
+}
+
+
+- (void)setStartTime:(FlutterMethodCall*)call
+              result:(FlutterResult)result
+{
+    NSNumber *startTime = call.arguments[@"startTime"];
+    if (startTime.intValue > 0) {
+        [_superPlayerView setStartTime:startTime.intValue];
+    }
 }
 
 - (void)playWithModel:(FlutterMethodCall*)call
@@ -268,7 +274,7 @@
 - (void)release:(FlutterMethodCall*)call
          result:(FlutterResult)result
 {
-    // skip
+    _superPlayerView = nil;
 }
 
 - (void)seekTo:(FlutterMethodCall*)call
@@ -325,7 +331,7 @@
         @"listener": @"SuperPlayerListener",
         @"method": @"onPlayStateChange",
         @"data": @{
-                @"playState": [NSNumber numberWithInt:playState],
+            @"playState": [NSNumber numberWithInt:playState],
         },
     };
     self->_eventSink(eventData);
@@ -337,8 +343,8 @@
         @"listener": @"SuperPlayerListener",
         @"method": @"onPlayProgressChange",
         @"data": @{
-                @"current": [NSNumber numberWithInt:current],
-                @"duration": [NSNumber numberWithInt:duration],
+            @"current": [NSNumber numberWithInt:current],
+            @"duration": [NSNumber numberWithInt:duration],
         },
     };
     self->_eventSink(eventData);

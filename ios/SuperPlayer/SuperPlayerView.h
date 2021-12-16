@@ -1,12 +1,16 @@
 #import <UIKit/UIKit.h>
+
+#import "SPVideoFrameDescription.h"
 #import "SuperPlayer.h"
 #import "SuperPlayerModel.h"
 #import "SuperPlayerViewConfig.h"
-#import "SPVideoFrameDescription.h"
 
 @class SuperPlayerControlView;
 @class SuperPlayerView;
 @class TXImageSprite;
+@class TXVipTipView;
+@class TXVipWatchView;
+@class TXVipWatchModel;
 @protocol SuperPlayerDelegate <NSObject>
 @optional
 /// 返回事件
@@ -28,71 +32,74 @@
 
 /// 播放器的状态
 typedef NS_ENUM(NSInteger, SuperPlayerState) {
-    StateNone = -1,       // 初始状态
+    StateNone = -1,      // 初始状态
     StateFailed = 5,     // 播放失败
     StateBuffering = 3,  // 缓冲中
+    StatePrepare = 6,    // 准备就绪
     StatePlaying = 1,    // 播放中
     StateStopped = 4,    // 停止播放
     StatePause = 2,      // 暂停播放
 };
 
-
 /// 播放器布局样式
 typedef NS_ENUM(NSInteger, SuperPlayerLayoutStyle) {
-    SuperPlayerLayoutStyleCompact, ///< 精简模式
-    SuperPlayerLayoutStyleFullScreen ///< 全屏模式
+    SuperPlayerLayoutStyleCompact,    ///< 精简模式
+    SuperPlayerLayoutStyleFullScreen  ///< 全屏模式
 };
 
 @interface SuperPlayerView : UIView
 
 /** 设置代理 */
-@property (nonatomic, weak) id<SuperPlayerDelegate> delegate;
+@property(nonatomic, weak) id<SuperPlayerDelegate> delegate;
 
-@property (nonatomic, assign) SuperPlayerLayoutStyle layoutStyle;
+@property(nonatomic, assign) SuperPlayerLayoutStyle layoutStyle;
 
 /// 设置播放器的父view。播放过程中调用可实现播放窗口转移
-@property (nonatomic, weak) UIView *fatherView;
-
+@property(nonatomic, weak) UIView *fatherView;
 /// 播放器的状态
-@property (nonatomic, assign) SuperPlayerState state;
+@property(nonatomic, assign) SuperPlayerState state;
 /// 是否全屏
-@property (nonatomic, assign, setter=setFullScreen:) BOOL isFullScreen;
+@property(nonatomic, assign, setter=setFullScreen:) BOOL isFullScreen;
 /// 是否锁定旋转
-@property (nonatomic, assign) BOOL isLockScreen;
+@property(nonatomic, assign) BOOL isLockScreen;
 /// 是否是直播流
-@property (readonly) BOOL isLive;
+@property(readonly) BOOL isLive;
 /// 超级播放器控制层
-@property (nonatomic) SuperPlayerControlView *controlView;
+@property(nonatomic) SuperPlayerControlView *controlView;
 /// 是否允许竖屏手势
-@property (nonatomic) BOOL disableGesture;
+@property(nonatomic) BOOL disableGesture;
 /// 是否在手势中
-@property (readonly)  BOOL isDragging;
+@property(readonly) BOOL isDragging;
 /// 是否加载成功
-@property (readonly)  BOOL  isLoaded;
-/// 设置封面图片
-@property (nonatomic) UIImageView *coverImageView;
-/// 遮罩层
-@property (nonatomic, strong) UIView *maskView;
+@property(readonly) BOOL isLoaded;
+/// 封面图片
+@property(nonatomic) UIImageView *coverImageView;
+/// 设置vipTipView
+@property(nonatomic) TXVipTipView *vipTipView;
+/// 设置vipWatchView
+@property(nonatomic) TXVipWatchView *vipWatchView;
+/// 设置vip试看的model
+@property(nonatomic) TXVipWatchModel *vipWatchModel;
+/// 设置vip试看的model
+@property(nonatomic, assign) BOOL isCanShowVipTipView;
 /// 重播按钮
-@property (nonatomic, strong) UIButton *repeatBtn;
+@property(nonatomic, strong) UIButton *repeatBtn;
+/// 播放按钮
+@property(nonatomic, strong) UIButton *centerPlayBtn;
 /// 全屏退出
-@property (nonatomic, strong) UIButton *repeatBackBtn;
-/// 是否自动播放（在playWithModel前设置)
-@property BOOL autoPlay;
+@property(nonatomic, strong) UIButton *repeatBackBtn;
 /// 视频总时长
-@property (nonatomic) CGFloat playDuration;
-/// 原始视频总时长，主要用于试看场景下显示总时长
-@property (nonatomic) NSTimeInterval originalDuration;
+@property(nonatomic) CGFloat playDuration;
 /// 视频当前播放时间
-@property (nonatomic) CGFloat playCurrentTime;
+@property(nonatomic) CGFloat playCurrentTime;
 /// 起始播放时间，用于从上次位置开播
 @property CGFloat startTime;
 /// 播放的视频Model
-@property (readonly) SuperPlayerModel       *playerModel;
+@property(readonly) SuperPlayerModel *playerModel;
 /// 播放器配置
 @property SuperPlayerViewConfig *playerConfig;
 /// 循环播放
-@property (nonatomic) BOOL loop;
+@property(nonatomic) BOOL loop;
 /**
  * 视频雪碧图
  */
@@ -123,11 +130,43 @@ typedef NS_ENUM(NSInteger, SuperPlayerLayoutStyle) {
 - (void)pause;
 
 /**
+ * 停止播放
+ */
+- (void)removeVideo;
+
+/**
  *  从xx秒开始播放视频跳转
  *
  *  @param dragedSeconds 视频跳转的秒数
  */
 - (void)seekToTime:(NSInteger)dragedSeconds;
+
+/**
+ *  展示vipTipView
+ */
+- (void)showVipTipView;
+
+/**
+ *  隐藏vipTipView
+ */
+- (void)hideVipTipView;
+
+/**
+ *  展示vipWatchView
+ */
+- (void)showVipWatchView;
+
+/**
+ *  隐藏vipWatchView
+ */
+- (void)hideVipWatchView;
+
+/**
+ *  是否显示视频左上方的返回按钮
+ *
+ *  @param isShow 是否显示
+ */
+- (void)showOrHideBackBtn:(BOOL)isShow;
 
 /**
  * 设置播放速率

@@ -163,20 +163,6 @@ class SuperPlayerController {
     return await _channel!.invokeMethod('getPlayRate', {});
   }
 
-  void setControlViewType(String controlViewType) {
-    final Map<String, dynamic> arguments = {
-      'controlViewType': controlViewType,
-    };
-    _channel!.invokeMethod('setControlViewType', arguments);
-  }
-
-  void setTitle(String title) {
-    final Map<String, dynamic> arguments = {
-      'title': title,
-    };
-    _channel!.invokeMethod('setTitle', arguments);
-  }
-
   void setCoverImage(String coverImageUrl) {
     if (Platform.isAndroid) return;
 

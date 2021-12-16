@@ -41,10 +41,7 @@
         _superPlayerView = [[FLTSuperPlayerView alloc] init];
         _superPlayerView.fatherView = _containerView;
         _superPlayerView.delegate = self;
-        
-        if (args[@"coverImageUrl"] != nil) {
-            [self setCoverImage:args[@"coverImageUrl"]];
-        }
+        _superPlayerView.controlView = [[SPWithoutControlView alloc] initWithFrame:CGRectZero];
     }
     return self;
 }
@@ -118,29 +115,6 @@
         @"multiURLs": multiURLs,
     };
     result(resultData);
-}
-
-- (void)setControlViewType:(NSString *)controlViewType
-{
-    if  ([controlViewType isEqualToString:@"without"]) {
-        _superPlayerView.controlView = [[SPWithoutControlView alloc] initWithFrame:CGRectZero];
-    } else {
-        _superPlayerView.controlView = [[SPDefaultControlView alloc] initWithFrame:CGRectZero];
-    }
-}
-
-- (void)setControlViewType:(FlutterMethodCall*)call
-                    result:(FlutterResult)result
-{
-    NSString *controlViewType = call.arguments[@"controlViewType"];
-    [self setControlViewType:controlViewType];
-}
-
-- (void)setTitle:(FlutterMethodCall*)call
-          result:(FlutterResult)result
-{
-    NSString *title = call.arguments[@"title"];
-    [_superPlayerView.controlView setTitle:title];
 }
 
 - (void)setCoverImage:(NSString *)coverImageUrl

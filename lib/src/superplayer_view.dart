@@ -22,9 +22,7 @@ class _SuperPlayerNativeView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Map<String, dynamic> creationParams = {
-      'controlViewType': kControlViewTypeWithout,
-    }..removeWhere((String k, dynamic v) => v == null);
+    Map<String, dynamic> creationParams = {};
 
     if (Platform.isAndroid) {
       return AndroidView(

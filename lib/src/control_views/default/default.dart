@@ -227,24 +227,25 @@ class _SuperPlayerDefaultControlViewState
                     controller: widget.controller,
                   ),
                   Expanded(
-                    child: Center(
-                      child: Stack(
-                        children: [
-                          if (_playState == SuperPlayerConst.PLAYSTATE_LOADING)
-                            Container(
-                              width: 44,
-                              height: 44,
-                              child: CupertinoTheme(
-                                data: CupertinoTheme.of(context)
-                                    .copyWith(brightness: Brightness.dark),
-                                child: CupertinoActivityIndicator(
-                                  radius: 16,
-                                ),
-                              ),
-                            ),
-                        ],
-                      ),
-                    ),
+                    child: Container(),
+                    // child: Center(
+                    //   child: Stack(
+                    //     children: [
+                    //       if (_playState == SuperPlayerConst.PLAYSTATE_LOADING)
+                    //         Container(
+                    //           width: 44,
+                    //           height: 44,
+                    //           child: CupertinoTheme(
+                    //             data: CupertinoTheme.of(context)
+                    //                 .copyWith(brightness: Brightness.dark),
+                    //             child: CupertinoActivityIndicator(
+                    //               radius: 16,
+                    //             ),
+                    //           ),
+                    //         ),
+                    //     ],
+                    //   ),
+                    // ),
                   ),
                   _PlayerControlFooterBar(
                     controller: widget.controller,

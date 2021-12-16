@@ -6,8 +6,6 @@ import 'dart:async';
 import 'package:flutter_superplayer/flutter_superplayer.dart';
 import 'package:preference_list/preference_list.dart';
 
-const _kControlViewTypes = [kControlViewTypeDefault, kControlViewTypeWithout];
-
 class HomePage extends StatefulWidget {
   @override
   _HomePageState createState() => _HomePageState();
@@ -19,7 +17,6 @@ class _HomePageState extends State<HomePage> with SuperPlayerListener {
   String _sdkVersion = 'Unknown';
   List<String> _logs = [];
 
-  String _controlViewType = _kControlViewTypes.first;
   bool _isFullScreen = false;
 
   @override
@@ -148,28 +145,6 @@ class _HomePageState extends State<HomePage> with SuperPlayerListener {
                               }
                             },
                             isSelected: [false, false, false],
-                          ),
-                        ),
-                      ],
-                    ),
-                    PreferenceListSection(
-                      title: Text('Option'),
-                      children: [
-                        PreferenceListItem(
-                          title: Text('controlViewType'),
-                          accessoryView: ToggleButtons(
-                            children: <Widget>[
-                              for (var controlViewType in _kControlViewTypes)
-                                Text(controlViewType),
-                            ],
-                            onPressed: (int index) {
-                              _controlViewType = _kControlViewTypes[index];
-
-                              setState(() {});
-                            },
-                            isSelected: _kControlViewTypes
-                                .map((e) => e == _controlViewType)
-                                .toList(),
                           ),
                         ),
                       ],

@@ -446,7 +446,6 @@ class _PlayerControlHeaderBar extends StatelessWidget {
       height: _kPlayerControlHeaderBarHeight,
       padding: EdgeInsets.only(left: 0, right: 0),
       decoration: BoxDecoration(
-        // color: Colors.green.withOpacity(0.1),
         gradient: LinearGradient(
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,

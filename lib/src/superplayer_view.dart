@@ -10,14 +10,18 @@ import './superplayer_controller.dart';
 
 class _SuperPlayerNativeView extends StatelessWidget {
   final SuperPlayerController controller;
+  final VoidCallback? onViewCreated;
 
   _SuperPlayerNativeView({
     Key? key,
     required this.controller,
+    this.onViewCreated,
   }) : super(key: key);
 
   void _onPlatformViewCreated(int viewId) {
     controller.initWithViewId(viewId);
+
+    if (onViewCreated != null) onViewCreated!();
   }
 
   @override
@@ -46,11 +50,13 @@ class _SuperPlayerNativeView extends StatelessWidget {
 class SuperPlayerView extends StatelessWidget {
   final SuperPlayerController controller;
   final Widget? controlView;
+  final VoidCallback? onViewCreated;
 
   SuperPlayerView({
     Key? key,
     required this.controller,
     this.controlView,
+    this.onViewCreated,
   }) : super(key: key);
 
   @override
@@ -61,6 +67,7 @@ class SuperPlayerView extends StatelessWidget {
         children: [
           _SuperPlayerNativeView(
             controller: controller,
+            onViewCreated: onViewCreated,
           ),
           controlView ??
               SuperPlayerDefaultControlView(

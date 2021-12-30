@@ -115,12 +115,14 @@ class SuperPlayerController {
     final Map<dynamic, dynamic> resultData =
         await _channel!.invokeMethod('getModel', {});
 
-    _model!.multiURLs = (resultData['multiURLs'] as List)
-        .map((e) => SuperPlayerURL(
-              qualityName: e['qualityName'],
-              url: e['url'],
-            ))
-        .toList();
+    if ((_model?.multiURLs ?? []).isEmpty) {
+      _model!.multiURLs = (resultData['multiURLs'] as List)
+          .map((e) => SuperPlayerURL(
+                qualityName: e['qualityName'],
+                url: e['url'],
+              ))
+          .toList();
+    }
 
     print(resultData);
     print(_model!.toJson());

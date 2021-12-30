@@ -180,14 +180,21 @@ public class FlutterSuperPlayerView implements PlatformView, MethodCallHandler, 
         SuperPlayerModel model = superPlayerView.getPlayerModel();
 
         try {
-            SuperPlayerModel.SuperPlayerURL superPlayerURL = model.multiURLs.get(model.playDefaultIndex);
+            String qualityName = "自动";
+            String url = superPlayerView.getSuperPlayer().getPlayURL();
+            try {
+                SuperPlayerModel.SuperPlayerURL superPlayerURL = model.multiURLs.get(model.playDefaultIndex);
+                qualityName = superPlayerURL.qualityName;
+                url = superPlayerURL.url;
+            } catch (Exception error) {}
 
             final Map<String, Object> resultData = new HashMap<>();
-            resultData.put("qualityName", superPlayerURL.qualityName);
-            resultData.put("url", superPlayerURL.url);
+            resultData.put("qualityName", qualityName);
+            resultData.put("url", url);
 
             result.success(resultData);
         } catch (Exception e) {
+            e.printStackTrace();
             result.success(null);
         }
     }
@@ -196,7 +203,7 @@ public class FlutterSuperPlayerView implements PlatformView, MethodCallHandler, 
         String qualityName = (String) call.argument("qualityName");
         String url = (String) call.argument("url");
 
-        VideoQuality videoQuality = null;
+        VideoQuality videoQuality = new VideoQuality(0, qualityName, url);
 
         SuperPlayerModel model = superPlayerView.getPlayerModel();
         for (int i = 0; i < model.multiURLs.size(); i++) {
@@ -239,6 +246,23 @@ public class FlutterSuperPlayerView implements PlatformView, MethodCallHandler, 
                 videoId.pSign = (String) videoIdJson.get("pSign");
 
             model.videoId = videoId;
+        }
+
+        if (call.hasArgument("multiURLs")) {
+            List<HashMap<String, Object>> multiURLsJsonArray = call.argument("multiURLs");
+            assert multiURLsJsonArray != null;
+
+            List<SuperPlayerModel.SuperPlayerURL> multiURLs = new ArrayList<>();
+
+            for (HashMap<String, Object> urlJsonObject : multiURLsJsonArray) {
+                SuperPlayerModel.SuperPlayerURL superPlayerURL = new SuperPlayerModel.SuperPlayerURL();
+                if (urlJsonObject.containsKey("url"))
+                    superPlayerURL.url = (String) urlJsonObject.get("url");
+                if (urlJsonObject.containsKey("qualityName"))
+                    superPlayerURL.qualityName = (String) urlJsonObject.get("qualityName");
+            }
+
+            model.multiURLs = multiURLs;
         }
 
         superPlayerView.playWithModel(model);

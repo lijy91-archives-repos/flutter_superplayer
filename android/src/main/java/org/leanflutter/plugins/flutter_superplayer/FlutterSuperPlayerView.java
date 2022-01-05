@@ -104,6 +104,8 @@ public class FlutterSuperPlayerView implements PlatformView, MethodCallHandler, 
     public void onMethodCall(@NonNull MethodCall call, @NonNull MethodChannel.Result result) {
         if (call.method.equals("getModel")) {
             getModel(call, result);
+        } else if (call.method.equals("setRenderMode")) {
+            setRenderMode(call, result);
         } else if (call.method.equals("getPlayMode")) {
             getPlayMode(call, result);
         } else if (call.method.equals("getPlayState")) {
@@ -154,6 +156,12 @@ public class FlutterSuperPlayerView implements PlatformView, MethodCallHandler, 
         resultData.put("multiURLs", multiURLs);
 
         result.success(resultData);
+    }
+
+    void setRenderMode(@NonNull MethodCall call, @NonNull Result result) {
+        int renderMode = (int) call.argument("renderMode");
+        superPlayerView.getSuperPlayer().setRenderMode(renderMode);
+        result.success(true);
     }
 
     void getPlayMode(@NonNull MethodCall call, @NonNull Result result) {

@@ -1002,6 +1002,12 @@ public class SuperPlayerImpl implements SuperPlayer, ITXVodPlayListener, ITXLive
     }
 
     @Override
+    public void setRenderMode(int renderMode) {
+        mVodPlayer.setRenderMode(renderMode);
+        mLivePlayer.setRenderMode(renderMode);
+    }
+
+    @Override
     public SuperPlayerModel getPlayerModel() {
         return this.mCurrentModel;
     }

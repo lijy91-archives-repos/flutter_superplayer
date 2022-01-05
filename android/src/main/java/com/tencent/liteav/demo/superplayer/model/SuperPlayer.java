@@ -136,5 +136,7 @@ public interface SuperPlayer {
      */
     void setAutoPlay(boolean isAutoPlay);
 
+    void setRenderMode(int renderMode);
+
     SuperPlayerModel getPlayerModel();
 }

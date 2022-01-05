@@ -153,6 +153,22 @@ class SuperPlayerController {
     }
   }
 
+  void setCoverImage(String coverImageUrl) {
+    if (Platform.isAndroid) return;
+
+    final Map<String, dynamic> arguments = {
+      'coverImageUrl': coverImageUrl,
+    };
+    _channel!.invokeMethod('setCoverImage', arguments);
+  }
+
+  void setRenderMode(int renderMode) {
+    final Map<String, dynamic> arguments = {
+      'renderMode': renderMode,
+    };
+    _channel!.invokeMethod('setRenderMode', arguments);
+  }
+
   Future<int> getPlayMode() async {
     return await _channel!.invokeMethod('getPlayMode', {});
   }
@@ -163,15 +179,6 @@ class SuperPlayerController {
 
   Future<num> getPlayRate() async {
     return await _channel!.invokeMethod('getPlayRate', {});
-  }
-
-  void setCoverImage(String coverImageUrl) {
-    if (Platform.isAndroid) return;
-
-    final Map<String, dynamic> arguments = {
-      'coverImageUrl': coverImageUrl,
-    };
-    _channel!.invokeMethod('setCoverImage', arguments);
   }
 
   void setPlayRate(num playRate) {

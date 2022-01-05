@@ -6,6 +6,7 @@ export 'src/control_views/default/default.dart';
 export 'src/constants.dart';
 export 'src/superplayer_const.dart';
 export 'src/superplayer_controller.dart';
+export 'src/superplayer_globle_config.dart';
 export 'src/superplayer_listener.dart';
 export 'src/superplayer_model.dart';
 export 'src/superplayer_video_id.dart';

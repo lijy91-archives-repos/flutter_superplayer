@@ -66,6 +66,8 @@
         [self getModel:call result: result];
     } else if ([[call method] isEqualToString:@"setCoverImage"]) {
         [self setCoverImage:call result: result];
+    } else if ([[call method] isEqualToString:@"setRenderMode"]) {
+        [self setRenderMode:call result: result];
     } else if ([[call method] isEqualToString:@"getPlayMode"]) {
         [self getPlayMode:call result: result];
     } else if ([[call method] isEqualToString:@"getPlayState"]) {
@@ -128,6 +130,13 @@
 {
     NSString *coverImageUrl = call.arguments[@"coverImageUrl"];
     [self setCoverImage:coverImageUrl];
+}
+
+- (void)setRenderMode:(FlutterMethodCall*)call
+               result:(FlutterResult)result
+{
+    NSNumber *renderMode = call.arguments[@"renderMode"];
+    _superPlayerView.playerConfig.renderMode = renderMode.intValue;
 }
 
 - (void)getPlayMode:(FlutterMethodCall*)call

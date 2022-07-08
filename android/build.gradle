@@ -38,7 +38,7 @@ android {
     }
 
     dependencies {
-        implementation 'com.tencent.liteav:LiteAVSDK_Professional:latest.release'
+        implementation 'com.tencent.liteav:LiteAVSDK_Professional:9.5.11585'
         implementation 'com.github.bumptech.glide:glide:4.12.0'
     }
 }
